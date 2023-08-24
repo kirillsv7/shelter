@@ -27,6 +27,7 @@ services:
             - meilisearch
             - mailpit
             - selenium
+            - adminer
     mysql:
         image: 'mysql/mysql-server:8.0'
         ports:
@@ -96,6 +97,12 @@ services:
             - 'host.docker.internal:host-gateway'
         volumes:
             - '/dev/shm:/dev/shm'
+        networks:
+            - sail
+    adminer:
+        image: 'adminer:latest'
+        ports:
+            - 8080:8080
         networks:
             - sail
 networks:

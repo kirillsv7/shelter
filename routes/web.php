@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Source\Interface\Animal\Controllers\AnimalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return config('app.name').' is running';
 });
+
+Route::get('animals', [AnimalController::class, 'index'])->name('animal.index');
+Route::get('{animals}', [AnimalController::class, 'indexByType'])->name('animal.index-by-type');
+
+Route::post('animals', [AnimalController::class, 'store'])->name('animal.store');
+Route::get('animals/{id}', [AnimalController::class, 'getById'])->name('animal.get-by-id');
+Route::put('animals/{id}', [AnimalController::class, 'update'])->name('animal.update');
+Route::put('animals/status/{id}', [AnimalController::class, 'statusUpdate'])->name('animal.status-update');
+Route::post('animals/publish/{id}', [AnimalController::class, 'publish'])->name('animal.publish');
+Route::post('animals/unpublish/{id}', [AnimalController::class, 'unpublish'])->name('animal.unpublish');
+Route::get('{animal}/{slug}', [AnimalController::class, 'getBySlug'])->name('animal.get-by-slug');
