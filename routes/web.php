@@ -27,4 +27,5 @@ Route::put('animals/{id}', [AnimalController::class, 'update'])->name('animal.up
 Route::put('animals/status/{id}', [AnimalController::class, 'statusUpdate'])->name('animal.status-update');
 Route::post('animals/publish/{id}', [AnimalController::class, 'publish'])->name('animal.publish');
 Route::post('animals/unpublish/{id}', [AnimalController::class, 'unpublish'])->name('animal.unpublish');
+Route::delete('animals/{id}', [AnimalController::class, 'destroy'])->name('animal.destroy');
 Route::get('{animal}/{slug}', [AnimalController::class, 'getBySlug'])->name('animal.get-by-slug');

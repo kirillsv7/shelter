@@ -111,6 +111,11 @@ final class AnimalRepository implements AnimalRepositoryContract
         });
     }
 
+    public function delete(UuidInterface $id): void
+    {
+        AnimalModel::destroy([$id]);
+    }
+
     public function criteriaTotalCount(AnimalSearchCriteria $criteria): int
     {
         $animalQueryBuilder = $this->handleCriteria($criteria);

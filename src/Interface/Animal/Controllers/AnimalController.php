@@ -5,6 +5,7 @@ namespace Source\Interface\Animal\Controllers;
 use Illuminate\Http\JsonResponse;
 use Ramsey\Uuid\Uuid;
 use Source\Application\Animal\UseCases\AnimalCreateUseCase;
+use Source\Application\Animal\UseCases\AnimalDestroyUseCase;
 use Source\Application\Animal\UseCases\AnimalGetByIdUseCase;
 use Source\Application\Animal\UseCases\AnimalGetBySlugUseCase;
 use Source\Application\Animal\UseCases\AnimalIndexUseCase;
@@ -221,6 +222,20 @@ final class AnimalController extends Controller
         return response()->json(
             ['animal' => $animal->toArray()],
             JsonResponse::HTTP_ACCEPTED
+        );
+    }
+
+    public function destroy(
+        string $id,
+        AnimalDestroyUseCase $animalDestroyUseCase
+    ): JsonResponse {
+        $animalDestroyUseCase->apply(
+            Uuid::fromString($id)
+        );
+
+        return response()->json(
+            [],
+            JsonResponse::HTTP_NO_CONTENT
         );
     }
 

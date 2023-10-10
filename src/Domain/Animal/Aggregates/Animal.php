@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Ramsey\Uuid\UuidInterface;
 use Source\Domain\Animal\Enums\AnimalStatus;
 use Source\Domain\Animal\Events\AnimalCreated;
+use Source\Domain\Animal\Events\AnimalDeleted;
 use Source\Domain\Animal\Events\AnimalPublished;
 use Source\Domain\Animal\Events\AnimalStatusChanged;
 use Source\Domain\Animal\Events\AnimalUnpublished;
@@ -96,7 +97,7 @@ final class Animal implements Entity
 
     public function publish(): void
     {
-        if (! $this->published) {
+        if (!$this->published) {
             $this->published = true;
             $this->addEvent(new AnimalPublished($this->id()));
         }
@@ -108,6 +109,11 @@ final class Animal implements Entity
             $this->published = false;
             $this->addEvent(new AnimalUnpublished($this->id()));
         }
+    }
+
+    public function delete(): void
+    {
+        $this->addEvent(new AnimalDeleted($this->id()));
     }
 
     public function addSlug(Slug $slug)

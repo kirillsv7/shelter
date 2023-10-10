@@ -271,6 +271,15 @@ class AnimalRequestsTest extends FeatureTestCase
             ]);
     }
 
+    public function testAnimalDestroy()
+    {
+        $animal = AnimalModel::factory()->create();
+
+        $response = $this->delete(route('animal.destroy', ['id' => $animal->id]));
+
+        $response->assertNoContent();
+    }
+
     private function generateAnimalDataForRequest(): array
     {
         return [

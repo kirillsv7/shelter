@@ -10,6 +10,7 @@ use Source\Domain\Animal\Enums\AnimalGender;
 use Source\Domain\Animal\Enums\AnimalStatus;
 use Source\Domain\Animal\Enums\AnimalType;
 use Source\Domain\Animal\Events\AnimalCreated;
+use Source\Domain\Animal\Events\AnimalDeleted;
 use Source\Domain\Animal\Events\AnimalPublished;
 use Source\Domain\Animal\Events\AnimalStatusChanged;
 use Source\Domain\Animal\Events\AnimalUnpublished;
@@ -60,7 +61,16 @@ class AnimalTest extends UnitTestCase
 
         $this->assertEventsHas(AnimalUnpublished::class, $animal->releaseEvents());
 
-        $this->assertTrue(! $animal->published());
+        $this->assertTrue(!$animal->published());
+    }
+
+    public function testAnimalDelete()
+    {
+        $animal = $this->animalCreate();
+
+        $animal->delete();
+
+        $this->assertEventsHas(AnimalDeleted::class, $animal->releaseEvents());
     }
 
     public function testAnimalAddSlug()
