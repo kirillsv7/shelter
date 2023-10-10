@@ -24,14 +24,12 @@ final class Slug
         BaseModel $sluggableType,
         UuidInterface $sluggableId,
     ): Slug {
-        $slug = new self(
+        return new self(
             id: $id,
             value: $value,
             sluggableType: $sluggableType,
             sluggableId: $sluggableId,
         );
-
-        return $slug;
     }
 
     public function id(): int

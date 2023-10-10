@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Source\Interface\Animal\Controllers\AnimalController;
+use Source\Interface\Slug\Controllers\SlugController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,3 +30,5 @@ Route::post('animals/publish/{id}', [AnimalController::class, 'publish'])->name(
 Route::post('animals/unpublish/{id}', [AnimalController::class, 'unpublish'])->name('animal.unpublish');
 Route::delete('animals/{id}', [AnimalController::class, 'destroy'])->name('animal.destroy');
 Route::get('{animal}/{slug}', [AnimalController::class, 'getBySlug'])->name('animal.get-by-slug');
+
+Route::post('slug/{id}', [SlugController::class, 'update'])->name('slug.update');

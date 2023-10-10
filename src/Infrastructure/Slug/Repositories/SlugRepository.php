@@ -41,11 +41,34 @@ final class SlugRepository implements \Source\Domain\Slug\Repositories\SlugRepos
             ->where('sluggable_id', $sluggableId)
             ->first();
 
-        if (! $model) {
+        if (!$model) {
             throw new SlugNotFoundException('Slug doesn\'t exists');
         }
 
         return $this->map($model);
+    }
+
+    public function getBySluggableUuid(UuidInterface $id): ?Slug
+    {
+        $model = SlugModel::query()
+            ->where('sluggable_id', $id)
+            ->first();
+
+        if (!$model) {
+            throw new SlugNotFoundException('Slug doesn\'t exists');
+        }
+
+        return $this->map($model);
+    }
+
+    public function update(Slug $slug): void
+    {
+        $model = SlugModel::query()->find($slug->id());
+
+        $this->connection->transaction(function () use ($model, $slug) {
+            $model->slug = $slug->value();
+            $model->save();
+        });
     }
 
     private function map(SlugModel $model): Slug

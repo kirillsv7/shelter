@@ -15,4 +15,11 @@ interface SlugRepository
      * @throws SlugNotFoundException
      */
     public function getBySluggable(BaseModel $sluggableType, UuidInterface $sluggableId): ?Slug;
+
+    /**
+     * @throws SlugNotFoundException
+     */
+    public function getBySluggableUuid(UuidInterface $id): ?Slug;
+
+    public function update(Slug $slug): void;
 }

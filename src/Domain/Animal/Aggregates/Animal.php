@@ -116,7 +116,7 @@ final class Animal implements Entity
         $this->addEvent(new AnimalDeleted($this->id()));
     }
 
-    public function addSlug(Slug $slug)
+    public function addSlug(Slug $slug): void
     {
         $this->slug = $slug;
     }
