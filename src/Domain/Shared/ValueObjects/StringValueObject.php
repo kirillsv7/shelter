@@ -2,10 +2,11 @@
 
 namespace Source\Domain\Shared\ValueObjects;
 
-class StringValueObject
+/** @phpstan-consistent-constructor */
+readonly class StringValueObject
 {
-    final public function __construct(
-        private readonly string $value
+    protected function __construct(
+        private string $value
     ) {
         if ($this->empty()) {
             throw new \InvalidArgumentException(sprintf('%s must have value', get_class($this)));

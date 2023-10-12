@@ -5,9 +5,9 @@ namespace Source\Infrastructure\Slug\Repositories;
 use Illuminate\Database\ConnectionInterface;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
-use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Domain\Slug\Aggregates\Slug;
 use Source\Domain\Slug\Exceptions\SlugNotFoundException;
+use Source\Domain\Slug\ValueObjects\SlugString;
 use Source\Infrastructure\Laravel\Models\BaseModel;
 use Source\Infrastructure\Slug\Models\SlugModel;
 
@@ -75,7 +75,7 @@ final class SlugRepository implements \Source\Domain\Slug\Repositories\SlugRepos
     {
         return Slug::create(
             id: $model->id,
-            value: StringValueObject::fromString($model->slug),
+            value: SlugString::fromString($model->slug),
             sluggableType: new $model->sluggable_type(),
             sluggableId: Uuid::fromString($model->sluggable_id)
         );

@@ -21,7 +21,7 @@ final class SlugController extends Controller
         );
 
         return response()->json(
-            ['slug' => $slug->value()->value()],
+            ['slug' => (string)$slug],
             JsonResponse::HTTP_ACCEPTED
         );
     }

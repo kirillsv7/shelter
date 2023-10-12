@@ -4,6 +4,6 @@ namespace Source\Domain\Animal\ValueObjects;
 
 use Source\Domain\Shared\ValueObjects\StringValueObject;
 
-final class Breed extends StringValueObject
+final readonly class Breed extends StringValueObject
 {
 }

@@ -104,9 +104,9 @@ final class AnimalController extends Controller
             $request->validated()
         );
 
-        $slugString = $animal->info()->name() . '-' .
-            $animal->info()->type()->value . '-' .
-            $animal->info()->gender()->value . '-' .
+        $slugString = $animal->info()->name() . ' ' .
+            $animal->info()->type()->value . ' ' .
+            $animal->info()->gender()->value . ' ' .
             $animal->info()->breed();
 
         $slug = $slugCreateUseCase->apply(

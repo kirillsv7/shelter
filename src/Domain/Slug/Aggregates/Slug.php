@@ -3,7 +3,7 @@
 namespace Source\Domain\Slug\Aggregates;
 
 use Ramsey\Uuid\UuidInterface;
-use Source\Domain\Shared\ValueObjects\StringValueObject;
+use Source\Domain\Slug\ValueObjects\SlugString;
 use Source\Infrastructure\Laravel\Models\BaseModel;
 
 final class Slug
@@ -12,7 +12,7 @@ final class Slug
 
     private function __construct(
         private readonly ?int $id,
-        private StringValueObject $value,
+        private SlugString $value,
         private readonly BaseModel $sluggableType,
         private readonly UuidInterface $sluggableId,
     ) {
@@ -20,7 +20,7 @@ final class Slug
 
     public static function create(
         ?int $id,
-        StringValueObject $value,
+        SlugString $value,
         BaseModel $sluggableType,
         UuidInterface $sluggableId,
     ): Slug {
@@ -37,7 +37,7 @@ final class Slug
         return $this->id;
     }
 
-    public function value(): StringValueObject
+    public function value(): SlugString
     {
         return $this->value;
     }
@@ -52,7 +52,7 @@ final class Slug
         return $this->sluggableId;
     }
 
-    public function changeSlug(StringValueObject $value)
+    public function changeSlug(SlugString $value): void
     {
         $this->value = $value;
     }
@@ -68,5 +68,10 @@ final class Slug
         $this->events = [];
 
         return $events;
+    }
+
+    public function __toString(): string
+    {
+        return $this->value;
     }
 }

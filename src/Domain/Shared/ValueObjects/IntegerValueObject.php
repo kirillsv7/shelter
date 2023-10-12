@@ -2,9 +2,10 @@
 
 namespace Source\Domain\Shared\ValueObjects;
 
+/** @phpstan-consistent-constructor */
 readonly class IntegerValueObject
 {
-    final private function __construct(
+    protected function __construct(
         public int $value
     ) {
     }

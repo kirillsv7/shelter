@@ -3,9 +3,9 @@
 namespace Source\Application\Slug\UseCases;
 
 use Ramsey\Uuid\UuidInterface;
-use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Domain\Slug\Aggregates\Slug;
 use Source\Domain\Slug\Repositories\SlugRepository;
+use Source\Domain\Slug\ValueObjects\SlugString;
 use Source\Infrastructure\Laravel\Models\BaseModel;
 
 final class SlugCreateUseCase
@@ -22,7 +22,7 @@ final class SlugCreateUseCase
     ): Slug {
         $slug = Slug::create(
             id: null,
-            value: StringValueObject::fromString($slugString),
+            value: SlugString::fromString($slugString),
             sluggableType: $sluggableType,
             sluggableId: $sluggableId
         );
