@@ -145,6 +145,7 @@ final class Animal implements Entity
         return [
             'id' => $this->id(),
             'info' => $this->info()->toArray(),
+            'age' => $this->age()->value,
             'status' => $this->status,
             'published' => $this->published(),
             'created_at' => $this->createdAt(),

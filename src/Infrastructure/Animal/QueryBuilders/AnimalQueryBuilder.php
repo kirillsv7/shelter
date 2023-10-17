@@ -39,7 +39,7 @@ final class AnimalQueryBuilder extends Builder
 
     public function ageMax(IntegerValueObject $ageMax): self
     {
-        return $this->where('birthdate', '>=', Carbon::now()->subYears($ageMax->value));
+        return $this->where('birthdate', '>=', Carbon::now()->startOfYear()->subYears($ageMax->value));
     }
 
     public function status(AnimalStatus $status): self
