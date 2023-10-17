@@ -127,7 +127,7 @@ final class AnimalRepository implements AnimalRepositoryContract
     {
         $animalQueryBuilder = AnimalModel::query();
 
-        if($criteria->name) {
+        if ($criteria->name) {
             $animalQueryBuilder = $animalQueryBuilder->name($criteria->name);
         }
 
@@ -137,6 +137,14 @@ final class AnimalRepository implements AnimalRepositoryContract
 
         if ($criteria->gender) {
             $animalQueryBuilder = $animalQueryBuilder->gender($criteria->gender);
+        }
+
+        if ($criteria->ageMin) {
+            $animalQueryBuilder = $animalQueryBuilder->ageMin($criteria->ageMin);
+        }
+
+        if ($criteria->ageMax) {
+            $animalQueryBuilder = $animalQueryBuilder->ageMax($criteria->ageMax);
         }
 
         return $animalQueryBuilder;

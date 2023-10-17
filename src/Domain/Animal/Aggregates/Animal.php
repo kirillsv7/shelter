@@ -12,6 +12,7 @@ use Source\Domain\Animal\Events\AnimalStatusChanged;
 use Source\Domain\Animal\Events\AnimalUnpublished;
 use Source\Domain\Animal\ValueObjects\Slug;
 use Source\Domain\Shared\Entity;
+use Source\Domain\Shared\ValueObjects\IntegerValueObject;
 
 final class Animal implements Entity
 {
@@ -59,6 +60,11 @@ final class Animal implements Entity
     public function info(): AnimalInfo
     {
         return $this->info;
+    }
+
+    public function age(): IntegerValueObject
+    {
+        return IntegerValueObject::fromInteger($this->info()->birthdate()->age);
     }
 
     public function status(): AnimalStatus
