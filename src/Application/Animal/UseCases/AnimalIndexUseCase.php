@@ -6,6 +6,7 @@ use Source\Domain\Animal\AnimalSearchCriteria;
 use Source\Domain\Animal\Enums\AnimalGender;
 use Source\Domain\Animal\Enums\AnimalType;
 use Source\Domain\Animal\Repositories\AnimalRepository;
+use Source\Domain\Animal\ValueObjects\Name;
 use Source\Domain\Shared\Model\Pagination;
 
 final class AnimalIndexUseCase
@@ -16,11 +17,13 @@ final class AnimalIndexUseCase
     }
 
     public function apply(
+        ?Name $name,
         ?AnimalType $type,
         ?AnimalGender $gender,
         ?int $page
     ): array {
         $criteria = AnimalSearchCriteria::create(
+            $name,
             $type,
             $gender
         );

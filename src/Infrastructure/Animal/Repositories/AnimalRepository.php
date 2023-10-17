@@ -127,6 +127,10 @@ final class AnimalRepository implements AnimalRepositoryContract
     {
         $animalQueryBuilder = AnimalModel::query();
 
+        if($criteria->name) {
+            $animalQueryBuilder = $animalQueryBuilder->name($criteria->name);
+        }
+
         if ($criteria->type) {
             $animalQueryBuilder = $animalQueryBuilder->type($criteria->type);
         }

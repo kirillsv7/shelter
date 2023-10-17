@@ -19,6 +19,7 @@ use Source\Domain\Animal\Aggregates\Animal;
 use Source\Domain\Animal\Enums\AnimalGender;
 use Source\Domain\Animal\Enums\AnimalStatus;
 use Source\Domain\Animal\Enums\AnimalType;
+use Source\Domain\Animal\ValueObjects\Name;
 use Source\Domain\Animal\ValueObjects\Slug;
 use Source\Infrastructure\Animal\Models\AnimalModel;
 use Source\Infrastructure\Laravel\Controllers\Controller;
@@ -34,6 +35,9 @@ final class AnimalController extends Controller
         AnimalIndexRequest $request,
         AnimalIndexUseCase $animalIndexUseCase,
     ): JsonResponse {
+        $name = $request->validated('name')
+            ? Name::fromString($request->validated('name'))
+            : null;
         $type = $request->validated('type')
             ? AnimalType::single($request->validated('type'))
             : null;
@@ -43,6 +47,7 @@ final class AnimalController extends Controller
         $page = $request->validated('page');
 
         $result = $animalIndexUseCase->apply(
+            $name,
             $type,
             $gender,
             $page
@@ -67,13 +72,18 @@ final class AnimalController extends Controller
         AnimalIndexRequest $request,
         AnimalIndexUseCase $animalIndexUseCase,
     ): JsonResponse {
+        $name = $request->validated('name')
+            ? Name::fromString($request->validated('name'))
+            : null;
+        $type = AnimalType::single($type);
         $gender = $request->validated('gender')
             ? AnimalGender::tryFrom($request->validated('gender'))
             : null;
         $page = $request->validated('page');
 
         $result = $animalIndexUseCase->apply(
-            AnimalType::single($type),
+            $name,
+            $type,
             $gender,
             $page
         );

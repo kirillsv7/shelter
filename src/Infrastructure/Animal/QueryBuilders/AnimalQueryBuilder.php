@@ -6,12 +6,18 @@ use Illuminate\Database\Eloquent\Builder;
 use Source\Domain\Animal\Enums\AnimalGender;
 use Source\Domain\Animal\Enums\AnimalStatus;
 use Source\Domain\Animal\Enums\AnimalType;
+use Source\Domain\Animal\ValueObjects\Name;
 
 final class AnimalQueryBuilder extends Builder
 {
     public function slug(string $slug): self
     {
         return $this->whereRelation('slug', 'slug', '=', $slug);
+    }
+
+    public function name(Name $name): self
+    {
+        return $this->where('name', 'LIKE', '%' . $name->value() . '%');
     }
 
     public function type(AnimalType $type): self

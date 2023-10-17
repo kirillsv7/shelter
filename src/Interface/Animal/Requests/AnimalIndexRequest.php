@@ -11,6 +11,7 @@ final class AnimalIndexRequest extends FormRequest
     public function rules()
     {
         return [
+            'name' => ['string'],
             'type' => ['string'],
             'gender' => [new Enum(AnimalGender::class)],
             'page' => ['integer'],

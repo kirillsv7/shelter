@@ -34,8 +34,15 @@ class AnimalRequestsTest extends FeatureTestCase
 
     public function testAnimalIndexWithParams()
     {
-        AnimalModel::factory(100)->create();
+        $name = 'Dobby';
 
+        AnimalModel::factory(50)->create();
+        AnimalModel::factory()->create([
+            'name' => $name
+        ]);
+        AnimalModel::factory(50)->create();
+
+        $responseNameDobby = $this->getJson(route('animal.index', ['name' => $name]));
         $responseTypeDogs = $this->getJson(route('animal.index', ['type' => 'dogs']));
         $responseGenderMale = $this->getJson(route('animal.index', ['gender' => 'male']));
         $responseTypeCatsAndGenderFemale = $this->getJson(
@@ -44,6 +51,10 @@ class AnimalRequestsTest extends FeatureTestCase
                 'gender' => 'female'
             ])
         );
+
+        $responseNameDobby
+            ->assertOk()
+            ->assertJsonFragment(['name' => $name]);
 
         $responseTypeDogs
             ->assertOk()
