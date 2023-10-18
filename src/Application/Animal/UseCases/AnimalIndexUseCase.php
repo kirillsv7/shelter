@@ -23,6 +23,7 @@ final class AnimalIndexUseCase
         ?AnimalGender $gender,
         ?IntegerValueObject $ageMin,
         ?IntegerValueObject $ageMax,
+        ?int $limit,
         ?int $page
     ): array {
         $criteria = AnimalSearchCriteria::create(
@@ -33,7 +34,10 @@ final class AnimalIndexUseCase
             $ageMax,
         );
 
-        $pagination = Pagination::create(page: $page);
+        $pagination = Pagination::create(
+            $limit,
+            $page
+        );
 
         $animals = $this->repository->index(
             $criteria,

@@ -39,6 +39,7 @@ final class AnimalController extends Controller
             $request->getGender(),
             $request->getAgeMin(),
             $request->getAgeMax(),
+            $request->getLimit(),
             $request->getPage()
         );
 
@@ -69,6 +70,7 @@ final class AnimalController extends Controller
             $request->getGender(),
             $request->getAgeMin(),
             $request->getAgeMax(),
+            $request->getLimit(),
             $request->getPage()
         );
 

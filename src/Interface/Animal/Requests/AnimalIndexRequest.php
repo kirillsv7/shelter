@@ -19,6 +19,7 @@ final class AnimalIndexRequest extends FormRequest
             'gender' => [new Enum(AnimalGender::class)],
             'age_min' => ['integer'],
             'age_max' => ['integer'],
+            'limit' => ['integer'],
             'page' => ['integer'],
         ];
     }
@@ -56,6 +57,11 @@ final class AnimalIndexRequest extends FormRequest
         return $this->input('age_max')
             ? IntegerValueObject::fromInteger($this->input('age_max'))
             : null;
+    }
+
+    public function getLimit(): ?int
+    {
+        return $this->input('limit');
     }
 
     public function getPage(): ?int
