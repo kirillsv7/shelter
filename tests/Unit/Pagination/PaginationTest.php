@@ -55,14 +55,22 @@ class PaginationTest extends UnitTestCase
             $this->assertEquals($limit, $paginationLinks['per_page']);
             $this->assertEquals($onPage, $paginationLinks['on_page']);
             $this->assertEquals(max($page, 1), $paginationLinks['current']);
-            $this->assertEquals(
-                $page > 1 ? $page - 1 : null,
-                $paginationLinks['previous']
-            );
+
+            $previousPage = null;
+            if ($page > 1 && $page <= $paginationLinks['last']) {
+                $previousPage = $page - 1;
+            }
+            if ($page > $paginationLinks['last']) {
+                $previousPage = $paginationLinks['last'];
+            }
+
+            $this->assertEquals($previousPage, $paginationLinks['previous']);
+
             $this->assertEquals(
                 $total - ($limit * $page) > 0 ? max($page, 1) + 1 : null,
                 $paginationLinks['next']
             );
+
             $this->assertEquals(
                 ceil($total / $limit),
                 $paginationLinks['last']

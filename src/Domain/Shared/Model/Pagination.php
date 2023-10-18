@@ -61,6 +61,10 @@ final class Pagination
             return null;
         }
 
+        if ($this->page->isGreaterThan($this->lastPage())) {
+            return $this->lastPage();
+        }
+
         return $this->page->decrement();
     }
 
