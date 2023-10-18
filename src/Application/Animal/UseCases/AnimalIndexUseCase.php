@@ -44,7 +44,7 @@ final class AnimalIndexUseCase
             $pagination
         );
 
-        $animalsTotalCount = $this->repository->criteriaTotalCount($criteria);
+        $animalsTotalCount = $this->repository->totalCountByCriteria($criteria);
 
         $paginationLinks = $pagination->generateLinks($animalsTotalCount);
 

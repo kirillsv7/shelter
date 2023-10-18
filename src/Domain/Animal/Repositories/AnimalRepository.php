@@ -38,5 +38,5 @@ interface AnimalRepository
 
     public function delete(UuidInterface $id): void;
 
-    public function criteriaTotalCount(AnimalSearchCriteria $criteria): int;
+    public function totalCountByCriteria(AnimalSearchCriteria $criteria): int;
 }

@@ -2,7 +2,7 @@
 
 namespace Source\Domain\Shared\Model;
 
-use Source\Domain\Shared\Model\PaginationValueObjects\Items;
+use Source\Domain\Shared\Model\PaginationValueObjects\TotalItems;
 use Source\Domain\Shared\Model\PaginationValueObjects\Limit;
 use Source\Domain\Shared\Model\PaginationValueObjects\Page;
 use Source\Domain\Shared\ValueObjects\IntegerValueObject;
@@ -11,7 +11,7 @@ final class Pagination
 {
     private const LIMIT = 20;
 
-    private ?Items $itemsTotal = null;
+    private ?TotalItems $totalItems = null;
 
     private function __construct(
         public readonly Limit $limit,
@@ -34,10 +34,10 @@ final class Pagination
 
     public function generateLinks(int $itemsTotal): array
     {
-        $this->itemsTotal = Items::fromInteger($itemsTotal);
+        $this->totalItems = TotalItems::fromInteger($itemsTotal);
 
         return [
-            'total_items' => $this->itemsTotal->value,
+            'total_items' => $this->totalItems->value,
             'per_page' => $this->limit->value,
             'on_page' => $this->calculateItemsOnPage()->value,
             'current' => $this->page->value,
@@ -49,7 +49,7 @@ final class Pagination
 
     private function calculateItemsOnPage(): IntegerValueObject
     {
-        return $this->itemsTotal
+        return $this->totalItems
             ->subtract($this->limit->multiply($this->page->decrement()))
             ->max(IntegerValueObject::fromInteger(0))
             ->min($this->limit);
@@ -78,6 +78,6 @@ final class Pagination
 
     private function lastPage(): IntegerValueObject
     {
-        return $this->itemsTotal->divideCeil($this->limit);
+        return $this->totalItems->divideCeil($this->limit);
     }
 }

@@ -116,7 +116,7 @@ final class AnimalRepository implements AnimalRepositoryContract
         AnimalModel::destroy([$id]);
     }
 
-    public function criteriaTotalCount(AnimalSearchCriteria $criteria): int
+    public function totalCountByCriteria(AnimalSearchCriteria $criteria): int
     {
         $animalQueryBuilder = $this->handleCriteria($criteria);
 
