@@ -26,6 +26,7 @@ final class SlugRepository implements \Source\Domain\Slug\Repositories\SlugRepos
             $model->slug = $slug->value();
             $model->sluggable_type = $slug->sluggableType();
             $model->sluggable_id = $slug->sluggableId();
+
             $model->save();
         });
 
@@ -67,6 +68,7 @@ final class SlugRepository implements \Source\Domain\Slug\Repositories\SlugRepos
 
         $this->connection->transaction(function () use ($model, $slug) {
             $model->slug = $slug->value();
+
             $model->save();
         });
     }
