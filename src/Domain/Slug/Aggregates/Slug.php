@@ -3,12 +3,14 @@
 namespace Source\Domain\Slug\Aggregates;
 
 use Ramsey\Uuid\UuidInterface;
+use Source\Domain\Shared\AggregateTraits\UseAggregateEvents;
+use Source\Domain\Shared\AggregateWithEvents;
 use Source\Domain\Slug\ValueObjects\SlugString;
 use Source\Infrastructure\Laravel\Models\BaseModel;
 
-final class Slug
+final class Slug implements AggregateWithEvents
 {
-    private array $events = [];
+    use UseAggregateEvents;
 
     private function __construct(
         private readonly ?int $id,
@@ -55,19 +57,6 @@ final class Slug
     public function changeSlug(SlugString $value): void
     {
         $this->value = $value;
-    }
-
-    protected function addEvent($event): void
-    {
-        $this->events[] = $event;
-    }
-
-    public function releaseEvents(): array
-    {
-        $events = $this->events;
-        $this->events = [];
-
-        return $events;
     }
 
     public function __toString(): string

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Source\Interface\Animal\Controllers\AnimalController;
+use Source\Interface\MediaFile\Controllers\MediaFileController;
 use Source\Interface\Slug\Controllers\SlugController;
 
 /*
@@ -16,7 +17,7 @@ use Source\Interface\Slug\Controllers\SlugController;
 */
 
 Route::get('/', function () {
-    return config('app.name').' is running';
+    return config('app.name') . ' is running';
 });
 
 Route::get('animals', [AnimalController::class, 'index'])->name('animal.index');
@@ -32,3 +33,5 @@ Route::delete('animals/{id}', [AnimalController::class, 'destroy'])->name('anima
 Route::get('{animal}/{slug}', [AnimalController::class, 'getBySlug'])->name('animal.get-by-slug');
 
 Route::post('slug/{id}', [SlugController::class, 'update'])->name('slug.update');
+
+Route::post('mediafile', [MediaFileController::class, 'store'])->name('mediafile.store');

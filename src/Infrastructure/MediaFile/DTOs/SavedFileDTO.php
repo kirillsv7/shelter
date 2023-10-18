@@ -1,6 +1,6 @@
 <?php
 
-namespace Source\MediaFiles\DTOs;
+namespace Source\Infrastructure\MediaFile\DTOs;
 
 readonly class SavedFileDTO
 {

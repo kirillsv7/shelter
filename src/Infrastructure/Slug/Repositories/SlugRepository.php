@@ -7,11 +7,12 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Source\Domain\Slug\Aggregates\Slug;
 use Source\Domain\Slug\Exceptions\SlugNotFoundException;
+use Source\Domain\Slug\Repositories\SlugRepository as SlugRepositoryContract;
 use Source\Domain\Slug\ValueObjects\SlugString;
 use Source\Infrastructure\Laravel\Models\BaseModel;
 use Source\Infrastructure\Slug\Models\SlugModel;
 
-final class SlugRepository implements \Source\Domain\Slug\Repositories\SlugRepository
+final class SlugRepository implements SlugRepositoryContract
 {
     public function __construct(
         protected ConnectionInterface $connection

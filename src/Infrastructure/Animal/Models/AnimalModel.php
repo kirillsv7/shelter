@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Source\Infrastructure\Animal\Factories\AnimalFactory;
 use Source\Infrastructure\Animal\QueryBuilders\AnimalQueryBuilder;
 use Source\Infrastructure\Laravel\Models\BaseModel;
+use Source\Infrastructure\MediaFile\Models\MediaFileModel;
 use Source\Infrastructure\Slug\Models\SlugModel;
-use Source\MediaFiles\Models\MediaFile;
 
 /**
  * Source\Infrastructure\Animal\Models\AnimalModel
@@ -28,7 +28,7 @@ use Source\MediaFiles\Models\MediaFile;
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, MediaFile> $mediaFiles
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, MediaFileModel> $mediaFiles
  * @property-read int|null $media_files_count
  * @property-read SlugModel|null $slug
  *
@@ -98,6 +98,6 @@ final class AnimalModel extends BaseModel
 
     public function mediaFiles(): MorphMany
     {
-        return $this->morphMany(MediaFile::class, 'mediable');
+        return $this->morphMany(MediaFileModel::class, 'mediable');
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
-namespace Source\MediaFiles\Services;
+namespace Source\Domain\MediaFile\Services;
 
 use Illuminate\Http\UploadedFile;
-use Source\MediaFiles\DTOs\SavedFileDTO;
+use Source\Infrastructure\MediaFile\DTOs\SavedFileDTO;
 
 interface Storage
 {

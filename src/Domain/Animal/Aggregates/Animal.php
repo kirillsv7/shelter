@@ -11,14 +11,16 @@ use Source\Domain\Animal\Events\AnimalPublished;
 use Source\Domain\Animal\Events\AnimalStatusChanged;
 use Source\Domain\Animal\Events\AnimalUnpublished;
 use Source\Domain\Animal\ValueObjects\Slug;
+use Source\Domain\Shared\AggregateTraits\UseAggregateEvents;
+use Source\Domain\Shared\AggregateWithEvents;
 use Source\Domain\Shared\Entity;
 use Source\Domain\Shared\ValueObjects\IntegerValueObject;
 
-final class Animal implements Entity
+final class Animal implements Entity, AggregateWithEvents
 {
-    private ?Slug $slug = null;
+    use UseAggregateEvents;
 
-    private array $events = [];
+    private ?Slug $slug = null;
 
     private function __construct(
         private readonly UuidInterface $id,
@@ -125,19 +127,6 @@ final class Animal implements Entity
     public function addSlug(Slug $slug): void
     {
         $this->slug = $slug;
-    }
-
-    protected function addEvent($event): void
-    {
-        $this->events[] = $event;
-    }
-
-    public function releaseEvents(): array
-    {
-        $events = $this->events;
-        $this->events = [];
-
-        return $events;
     }
 
     public function toArray(): array

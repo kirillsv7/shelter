@@ -1,10 +1,11 @@
 <?php
 
-namespace Source\MediaFiles\Services;
+namespace Source\Infrastructure\MediaFile\Services;
 
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Http\UploadedFile;
-use Source\MediaFiles\DTOs\SavedFileDTO;
+use Source\Domain\MediaFile\Services\Storage;
+use Source\Infrastructure\MediaFile\DTOs\SavedFileDTO;
 
 final class PublicStorage implements Storage
 {

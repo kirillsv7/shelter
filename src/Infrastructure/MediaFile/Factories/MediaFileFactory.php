@@ -1,13 +1,13 @@
 <?php
 
-namespace Source\MediaFiles\Factories;
+namespace Source\Infrastructure\MediaFile\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Source\MediaFiles\Models\MediaFile;
+use Source\Infrastructure\MediaFile\Models\MediaFileModel;
 
 class MediaFileFactory extends Factory
 {
-    protected $model = MediaFile::class;
+    protected $model = MediaFileModel::class;
 
     /**
      * Define the model's default state.

@@ -4,10 +4,10 @@ namespace Tests\Feature\MediaFiles;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Source\Application\MediaFile\MediaFileUploadUseCase;
+use Source\Domain\MediaFile\Services\Storage as StorageInterface;
 use Source\Infrastructure\Animal\Models\AnimalModel;
-use Source\MediaFiles\MediaUploader;
-use Source\MediaFiles\Services\PublicStorage;
-use Source\MediaFiles\Services\Storage as StorageInterface;
+use Source\Infrastructure\MediaFile\Services\PublicStorage;
 use Tests\FeatureTestCase;
 
 class MediaUploaderTest extends FeatureTestCase
@@ -34,7 +34,7 @@ class MediaUploaderTest extends FeatureTestCase
                 'path' => $filePath,
             ]);
 
-        $mediaUploader = $this->app->make(MediaUploader::class);
+        $mediaUploader = $this->app->make(MediaFileUploadUseCase::class);
 
         $mediaUploader->upload($uploadedFile, $folderName, $animal);
 

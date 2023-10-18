@@ -23,8 +23,13 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            \Source\MediaFiles\Services\Storage::class,
-            \Source\MediaFiles\Services\PublicStorage::class
+            \Source\Domain\MediaFile\Repositories\MediaFileRepository::class,
+            \Source\Infrastructure\MediaFile\Repositories\MediaFileRepository::class
+        );
+
+        $this->app->bind(
+            \Source\Domain\MediaFile\Services\Storage::class,
+            \Source\Infrastructure\MediaFile\Services\PublicStorage::class
         );
     }
 
