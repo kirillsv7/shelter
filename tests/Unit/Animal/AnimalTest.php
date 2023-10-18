@@ -95,6 +95,7 @@ class AnimalTest extends UnitTestCase
         $this->assertEquals($animalArray, [
             'id' => $animal->id(),
             'info' => $animal->info()->toArray(),
+            'age' => $animal->age()->value,
             'status' => $animal->status(),
             'published' => $animal->published(),
             'created_at' => $animal->createdAt(),
