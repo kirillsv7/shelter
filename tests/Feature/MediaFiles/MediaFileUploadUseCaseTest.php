@@ -10,17 +10,17 @@ use Source\Infrastructure\Animal\Models\AnimalModel;
 use Source\Infrastructure\MediaFile\Services\PublicStorage;
 use Tests\FeatureTestCase;
 
-class MediaUploaderTest extends FeatureTestCase
+class MediaFileUploadUseCaseTest extends FeatureTestCase
 {
     public function testMediaUploaderIsWorking(): void
     {
         $animal = AnimalModel::factory()->create();
 
-        $fileName = $animal->name.'.jpg';
+        $fileName = $animal->name . '.jpg';
 
         $folderName = 'animals';
 
-        $filePath = $folderName.'/'.$fileName;
+        $filePath = $folderName . '/' . $fileName;
 
         $uploadedFile = UploadedFile::fake()->image($fileName);
 
@@ -34,9 +34,14 @@ class MediaUploaderTest extends FeatureTestCase
                 'path' => $filePath,
             ]);
 
-        $mediaUploader = $this->app->make(MediaFileUploadUseCase::class);
+        $mediaFileUploadUseCase = $this->app->make(MediaFileUploadUseCase::class);
 
-        $mediaUploader->upload($uploadedFile, $folderName, $animal);
+        $mediaFileUploadUseCase->upload(
+            $uploadedFile,
+            $folderName,
+            $animal,
+            $animal->id
+        );
 
         $this->assertDatabaseHas('media_files', [
             'disk' => 'public',
@@ -50,7 +55,7 @@ class MediaUploaderTest extends FeatureTestCase
     {
         Storage::fake('public');
 
-        $fileName = fake()->firstName.'.jpg';
+        $fileName = fake()->firstName . '.jpg';
 
         $uploadedFile = UploadedFile::fake()->image($fileName);
 
