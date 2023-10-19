@@ -33,6 +33,7 @@ class MediaFilesRequestsTest extends FeatureTestCase
             ->assertJsonFragment([
                 'disk' => $disk,
                 'path' => 'images/animals/' . $image->hashName(),
+                'url' => Storage::url('images/animals/' . $image->hashName()),
                 'mediableType' => get_class(new AnimalModel()),
                 'mediableId' => $animal->id,
             ]);
