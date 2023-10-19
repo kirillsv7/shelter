@@ -17,12 +17,14 @@ class MediaFilesRequestsTest extends FeatureTestCase
 
         $animal = AnimalModel::factory()->create();
 
+        $image = UploadedFile::fake()->image($animal->name . '.jpg');
+
         $response = $this->post(
             route('mediafile.store'),
             [
                 'model' => get_class(new AnimalModel()),
                 'id' => (string)$animal->id,
-                'file' => UploadedFile::fake()->image($animal->name . '.jpg')
+                'file' => $image
             ]
         );
 
@@ -30,7 +32,7 @@ class MediaFilesRequestsTest extends FeatureTestCase
             ->assertCreated()
             ->assertJsonFragment([
                 'disk' => $disk,
-                'path' => 'animals/' . $animal->name .'.jpg',
+                'path' => 'images/animals/' . $image->hashName(),
                 'mediableType' => get_class(new AnimalModel()),
                 'mediableId' => $animal->id,
             ]);
