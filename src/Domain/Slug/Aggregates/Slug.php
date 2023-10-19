@@ -13,7 +13,7 @@ final class Slug implements AggregateWithEvents
     use UseAggregateEvents;
 
     private function __construct(
-        private readonly ?int $id,
+        private readonly UuidInterface $id,
         private SlugString $value,
         private readonly BaseModel $sluggableType,
         private readonly UuidInterface $sluggableId,
@@ -21,7 +21,7 @@ final class Slug implements AggregateWithEvents
     }
 
     public static function create(
-        ?int $id,
+        UuidInterface $id,
         SlugString $value,
         BaseModel $sluggableType,
         UuidInterface $sluggableId,
@@ -34,7 +34,7 @@ final class Slug implements AggregateWithEvents
         );
     }
 
-    public function id(): int
+    public function id(): UuidInterface
     {
         return $this->id;
     }

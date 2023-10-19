@@ -1,8 +1,8 @@
 <?php
 
-namespace Source\Infrastructure\MediaFile\DTOs;
+namespace Source\Domain\MediaFile\ValueObjects;
 
-readonly class SavedFileDTO
+final readonly class SavedFile
 {
     public function __construct(
         public string $disk,

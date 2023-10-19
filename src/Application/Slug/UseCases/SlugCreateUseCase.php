@@ -2,6 +2,7 @@
 
 namespace Source\Application\Slug\UseCases;
 
+use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Source\Domain\Slug\Aggregates\Slug;
 use Source\Domain\Slug\Repositories\SlugRepository;
@@ -21,7 +22,7 @@ final class SlugCreateUseCase
         UuidInterface $sluggableId,
     ): Slug {
         $slug = Slug::create(
-            id: null,
+            id: Uuid::uuid4(),
             value: SlugString::fromString($slugString),
             sluggableType: $sluggableType,
             sluggableId: $sluggableId

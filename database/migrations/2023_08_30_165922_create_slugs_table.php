@@ -11,7 +11,7 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::create('slugs', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id');
             $table->string('slug');
             $table->string('sluggable_type');
             $table->uuid('sluggable_id');

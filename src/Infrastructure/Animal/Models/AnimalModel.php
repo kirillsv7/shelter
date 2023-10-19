@@ -31,8 +31,11 @@ use Source\Infrastructure\Slug\Models\SlugModel;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, MediaFileModel> $mediaFiles
  * @property-read int|null $media_files_count
  * @property-read SlugModel|null $slug
- *
+ * @method static AnimalQueryBuilder|AnimalModel ageMax(\Source\Domain\Shared\ValueObjects\IntegerValueObject $ageMax)
+ * @method static AnimalQueryBuilder|AnimalModel ageMin(\Source\Domain\Shared\ValueObjects\IntegerValueObject $ageMin)
  * @method static \Source\Infrastructure\Animal\Factories\AnimalFactory factory($count = null, $state = [])
+ * @method static AnimalQueryBuilder|AnimalModel gender(\Source\Domain\Animal\Enums\AnimalGender $gender)
+ * @method static AnimalQueryBuilder|AnimalModel name(\Source\Domain\Animal\ValueObjects\Name $name)
  * @method static AnimalQueryBuilder|AnimalModel newModelQuery()
  * @method static AnimalQueryBuilder|AnimalModel newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AnimalModel onlyTrashed()
@@ -55,7 +58,6 @@ use Source\Infrastructure\Slug\Models\SlugModel;
  * @method static AnimalQueryBuilder|AnimalModel whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AnimalModel withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|AnimalModel withoutTrashed()
- *
  * @mixin \Eloquent
  */
 final class AnimalModel extends BaseModel

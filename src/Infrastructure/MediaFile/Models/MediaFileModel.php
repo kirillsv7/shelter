@@ -3,6 +3,7 @@
 namespace Source\Infrastructure\MediaFile\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Carbon;
@@ -10,17 +11,16 @@ use Source\Infrastructure\Laravel\Models\BaseModel;
 use Source\Infrastructure\MediaFile\Factories\MediaFileFactory;
 
 /**
- * Source\MediaFiles\Models\MediaFile
+ * Source\Infrastructure\MediaFile\Models\MediaFileModel
  *
- * @property int $id
+ * @property string $id
  * @property string $disk
  * @property string $path
  * @property string $mediable_type
  * @property string $mediable_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property-read BaseModel|\Eloquent $mediable
- *
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $mediable
  * @method static \Source\Infrastructure\MediaFile\Factories\MediaFileFactory factory($count = null, $state = [])
  * @method static Builder|MediaFileModel newModelQuery()
  * @method static Builder|MediaFileModel newQuery()
@@ -32,11 +32,11 @@ use Source\Infrastructure\MediaFile\Factories\MediaFileFactory;
  * @method static Builder|MediaFileModel whereMediableType($value)
  * @method static Builder|MediaFileModel wherePath($value)
  * @method static Builder|MediaFileModel whereUpdatedAt($value)
- *
  * @mixin \Eloquent
  */
 class MediaFileModel extends BaseModel
 {
+    use HasUuids;
     use HasFactory;
 
     protected $table = 'media_files';

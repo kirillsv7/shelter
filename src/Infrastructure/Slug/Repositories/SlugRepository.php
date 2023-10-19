@@ -19,19 +19,18 @@ final class SlugRepository implements SlugRepositoryContract
     ) {
     }
 
-    public function create(Slug $slug): int
+    public function create(Slug $slug): void
     {
         $model = new SlugModel();
 
         $this->connection->transaction(function () use ($model, $slug) {
+            $model->id = $slug->id();
             $model->slug = $slug->value();
             $model->sluggable_type = $slug->sluggableType();
             $model->sluggable_id = $slug->sluggableId();
 
             $model->save();
         });
-
-        return $model->id;
     }
 
     public function getBySluggable(
@@ -77,7 +76,7 @@ final class SlugRepository implements SlugRepositoryContract
     private function map(SlugModel $model): Slug
     {
         return Slug::create(
-            id: $model->id,
+            id: Uuid::fromString($model->id),
             value: SlugString::fromString($model->slug),
             sluggableType: new $model->sluggable_type(),
             sluggableId: Uuid::fromString($model->sluggable_id)

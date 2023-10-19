@@ -9,7 +9,7 @@ use Source\Infrastructure\Laravel\Models\BaseModel;
 
 interface SlugRepository
 {
-    public function create(Slug $slug): int;
+    public function create(Slug $slug): void;
 
     /**
      * @throws SlugNotFoundException

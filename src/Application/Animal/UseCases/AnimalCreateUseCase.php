@@ -17,14 +17,10 @@ final class AnimalCreateUseCase
 
     public function apply(array $data): Animal
     {
-        $id = Uuid::uuid4();
-        $info = AnimalInfo::fromArray($data);
-        $createdAt = Carbon::now();
-
         $animal = Animal::create(
-            id: $id,
-            info: $info,
-            createdAt: $createdAt
+            id: Uuid::uuid4(),
+            info: AnimalInfo::fromArray($data),
+            createdAt: Carbon::now()
         );
 
         $this->repository->create($animal);

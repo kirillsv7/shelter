@@ -7,7 +7,7 @@ use Source\Application\MediaFile\MediaFileUploadUseCase;
 use Source\Infrastructure\Laravel\Controllers\Controller;
 use Source\Interface\MediaFile\Requests\MediaFileStoreRequest;
 
-class MediaFileController extends Controller
+final class MediaFileController extends Controller
 {
     public function store(
         MediaFileStoreRequest $request,
@@ -23,15 +23,7 @@ class MediaFileController extends Controller
         );
 
         return response()->json(
-            [
-                'mediafile' => [
-                    'disk' => $mediaFile->disk(),
-                    'path' => $mediaFile->path(),
-                    'fullPath' => $mediaFile->fullPath(),
-                    'mediableType' => $mediaFile->mediableType(),
-                    'mediableId' => $mediaFile->mediableId()
-                ]
-            ],
+            ['mediafile' => $mediaFile->toArray()],
             JsonResponse::HTTP_CREATED
         );
     }

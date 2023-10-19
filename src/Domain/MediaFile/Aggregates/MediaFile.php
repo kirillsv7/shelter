@@ -2,17 +2,20 @@
 
 namespace Source\Domain\MediaFile\Aggregates;
 
+use Illuminate\Filesystem\FilesystemManager;
 use Ramsey\Uuid\UuidInterface;
 use Source\Domain\Shared\AggregateTraits\UseAggregateEvents;
 use Source\Domain\Shared\AggregateWithEvents;
+use Source\Domain\Shared\Entity;
 use Source\Infrastructure\Laravel\Models\BaseModel;
 
-class MediaFile implements AggregateWithEvents
+final class MediaFile implements Entity, AggregateWithEvents
 {
     use UseAggregateEvents;
 
     private function __construct(
-        private readonly ?int $id,
+        protected FilesystemManager $filesystemManager,
+        private readonly UuidInterface $id,
         private string $disk,
         private string $path,
         private readonly BaseModel $mediableType,
@@ -21,13 +24,14 @@ class MediaFile implements AggregateWithEvents
     }
 
     public static function create(
-        ?int $id,
+        UuidInterface $id,
         string $disk,
         string $path,
         BaseModel $mediableType,
         UuidInterface $mediableId,
     ): MediaFile {
         return new self(
+            filesystemManager: new FilesystemManager(app()),
             id: $id,
             disk: $disk,
             path: $path,
@@ -36,7 +40,7 @@ class MediaFile implements AggregateWithEvents
         );
     }
 
-    public function id(): int
+    public function id(): UuidInterface
     {
         return $this->id;
     }
@@ -51,9 +55,9 @@ class MediaFile implements AggregateWithEvents
         return $this->path;
     }
 
-    public function fullPath(): string
+    public function url(): string
     {
-        return $this->disk() . '/' . $this->path();
+        return $this->filesystemManager->url($this->path());
     }
 
     public function mediableType(): string
@@ -64,5 +68,17 @@ class MediaFile implements AggregateWithEvents
     public function mediableId(): UuidInterface
     {
         return $this->mediableId;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id(),
+            'disk' => $this->disk(),
+            'path' => $this->path(),
+            'url' => $this->url(),
+            'mediableType' => $this->mediableType(),
+            'mediableId' => $this->mediableId(),
+        ];
     }
 }

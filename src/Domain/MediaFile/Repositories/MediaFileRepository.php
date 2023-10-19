@@ -6,5 +6,5 @@ use Source\Domain\MediaFile\Aggregates\MediaFile;
 
 interface MediaFileRepository
 {
-    public function create(MediaFile $mediaFile): int;
+    public function create(MediaFile $mediaFile): void;
 }

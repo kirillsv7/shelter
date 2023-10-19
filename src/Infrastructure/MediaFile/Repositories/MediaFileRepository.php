@@ -14,11 +14,12 @@ class MediaFileRepository implements MediaFileRepositoryContract
     ) {
     }
 
-    public function create(MediaFile $mediaFile): int
+    public function create(MediaFile $mediaFile): void
     {
         $model = new MediaFileModel();
 
         $this->connection->transaction(function () use ($model, $mediaFile) {
+            $model->id = $mediaFile->id();
             $model->disk = $mediaFile->disk();
             $model->path = $mediaFile->path();
             $model->mediable_type = $mediaFile->mediableType();
@@ -26,7 +27,5 @@ class MediaFileRepository implements MediaFileRepositoryContract
 
             $model->save();
         });
-
-        return $model->id;
     }
 }

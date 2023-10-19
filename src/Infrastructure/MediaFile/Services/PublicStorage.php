@@ -5,7 +5,7 @@ namespace Source\Infrastructure\MediaFile\Services;
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Http\UploadedFile;
 use Source\Domain\MediaFile\Services\Storage;
-use Source\Infrastructure\MediaFile\DTOs\SavedFileDTO;
+use Source\Domain\MediaFile\ValueObjects\SavedFile;
 
 final class PublicStorage implements Storage
 {
@@ -16,11 +16,11 @@ final class PublicStorage implements Storage
     ) {
     }
 
-    public function saveFile(UploadedFile $file, string $folderName = null): SavedFileDTO
+    public function saveFile(UploadedFile $file, string $folderName = null): SavedFile
     {
-        $fileName = $file->getClientOriginalName();
+        $fileName = $file->hashName();
 
-        $filePath = $folderName ? $folderName.'/'.$fileName : $fileName;
+        $filePath = $folderName ? $folderName . '/' . $fileName : $fileName;
 
         $result = $this->fileSystem
             ->disk(self::DISK)
@@ -29,11 +29,11 @@ final class PublicStorage implements Storage
                 $file->getContent()
             );
 
-        if (! $result) {
+        if (!$result) {
             throw new \RuntimeException('File not saved');
         }
 
-        return new SavedFileDTO(
+        return new SavedFile(
             disk: self::DISK,
             path: $filePath,
         );

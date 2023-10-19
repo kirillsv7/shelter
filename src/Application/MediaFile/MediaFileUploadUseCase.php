@@ -23,10 +23,15 @@ final class MediaFileUploadUseCase
         BaseModel $model,
         string $id
     ): MediaFile {
-        $savedFile = $this->storage->saveFile(file: $file, folderName: $folderName);
+        $fileTypeFolder = $this->guessFolderFromMimeType($file);
+
+        $savedFile = $this->storage->saveFile(
+            file: $file,
+            folderName: $fileTypeFolder . '/' . $folderName
+        );
 
         $mediaFile = MediaFile::create(
-            id: null,
+            id: Uuid::uuid4(),
             disk: $savedFile->disk,
             path: $savedFile->path,
             mediableType: $model,
@@ -36,5 +41,20 @@ final class MediaFileUploadUseCase
         $this->repository->create($mediaFile);
 
         return $mediaFile;
+    }
+
+    private function guessFolderFromMimeType(UploadedFile $file): string
+    {
+        $mimeType = $file->getMimeType();
+
+        $folder = 'other';
+
+        if (str_contains($mimeType, 'image')) {
+            $folder = 'images';
+        } elseif (str_contains($mimeType, 'video')) {
+            $folder = 'videos';
+        }
+
+        return $folder;
     }
 }
