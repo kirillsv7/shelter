@@ -102,7 +102,7 @@ services:
     adminer:
         image: 'adminer:latest'
         ports:
-            - 8080:8080
+            - '${FORWARD_ADMINER_PORT:-8080}:8080'
         networks:
             - sail
 networks:
