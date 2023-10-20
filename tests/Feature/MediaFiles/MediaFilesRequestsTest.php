@@ -4,6 +4,7 @@ namespace Tests\Feature\MediaFiles;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Source\Infrastructure\Animal\Models\AnimalModel;
 use Tests\FeatureTestCase;
 
@@ -19,6 +20,14 @@ class MediaFilesRequestsTest extends FeatureTestCase
 
         $image = UploadedFile::fake()->image($animal->name . '.jpg');
 
+        $filePath = implode('/', [
+            $animal->getTable(),
+            $animal->id,
+            'images',
+            Str::before($image->hashName(), '.'),
+            'original.' . $image->extension()
+        ]);
+
         $response = $this->post(
             route('mediafile.store'),
             [
@@ -32,8 +41,8 @@ class MediaFilesRequestsTest extends FeatureTestCase
             ->assertCreated()
             ->assertJsonFragment([
                 'disk' => $disk,
-                'path' => 'images/animals/' . $image->hashName(),
-                'url' => Storage::url('images/animals/' . $image->hashName()),
+                'path' => $filePath,
+                'url' => Storage::url($filePath),
                 'mediableType' => get_class(new AnimalModel()),
                 'mediableId' => $animal->id,
             ]);

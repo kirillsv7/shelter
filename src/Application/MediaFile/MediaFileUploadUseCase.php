@@ -6,7 +6,7 @@ use Illuminate\Http\UploadedFile;
 use Ramsey\Uuid\Uuid;
 use Source\Domain\MediaFile\Aggregates\MediaFile;
 use Source\Domain\MediaFile\Repositories\MediaFileRepository;
-use Source\Domain\MediaFile\Services\Storage;
+use Source\Domain\MediaFile\Contracts\Storage;
 use Source\Infrastructure\Laravel\Models\BaseModel;
 
 final class MediaFileUploadUseCase
@@ -19,15 +19,14 @@ final class MediaFileUploadUseCase
 
     public function upload(
         UploadedFile $file,
-        string $folderName,
+        string $filePath,
         BaseModel $model,
         string $id
     ): MediaFile {
-        $fileTypeFolder = $this->guessFolderFromMimeType($file);
 
         $savedFile = $this->storage->saveFile(
             file: $file,
-            folderName: $fileTypeFolder . '/' . $folderName
+            filePath: $filePath
         );
 
         $mediaFile = MediaFile::create(
@@ -43,18 +42,5 @@ final class MediaFileUploadUseCase
         return $mediaFile;
     }
 
-    private function guessFolderFromMimeType(UploadedFile $file): string
-    {
-        $mimeType = $file->getMimeType();
 
-        $folder = 'other';
-
-        if (str_contains($mimeType, 'image')) {
-            $folder = 'images';
-        } elseif (str_contains($mimeType, 'video')) {
-            $folder = 'videos';
-        }
-
-        return $folder;
-    }
 }

@@ -5,15 +5,19 @@ namespace Tests\Feature\MediaFiles;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Source\Application\MediaFile\MediaFileUploadUseCase;
-use Source\Domain\MediaFile\Services\Storage as StorageInterface;
+use Source\Domain\MediaFile\Contracts\Storage as StorageInterface;
 use Source\Infrastructure\Animal\Models\AnimalModel;
-use Source\Infrastructure\MediaFile\Services\PublicStorage;
+use Source\Infrastructure\MediaFile\Storages\PublicStorage;
 use Tests\FeatureTestCase;
 
 class MediaFileUploadUseCaseTest extends FeatureTestCase
 {
     public function testMediaUploaderIsWorking(): void
     {
+        $disk = 'public';
+
+        Storage::fake($disk);
+
         $animal = AnimalModel::factory()->create();
 
         $fileName = $animal->name . '.jpg';
@@ -22,7 +26,12 @@ class MediaFileUploadUseCaseTest extends FeatureTestCase
 
         $uploadedFile = UploadedFile::fake()->image($fileName);
 
-        $filePath = $folderName . '/' . $uploadedFile->hashName();
+        $filePath = implode('/', [
+            $animal->getTable(),
+            $animal->id,
+            'images',
+            $uploadedFile->hashName()
+        ]);
 
         $storageMock = \Mockery::mock(StorageInterface::class);
 
@@ -30,7 +39,7 @@ class MediaFileUploadUseCaseTest extends FeatureTestCase
             ->shouldReceive('saveFile')
             ->with($uploadedFile, $folderName)
             ->andReturn([
-                'disk' => 'public',
+                'disk' => $disk,
                 'path' => $filePath,
             ]);
 
@@ -38,14 +47,14 @@ class MediaFileUploadUseCaseTest extends FeatureTestCase
 
         $mediaFileUploadUseCase->upload(
             $uploadedFile,
-            $folderName,
+            $filePath,
             $animal,
             $animal->id
         );
 
         $this->assertDatabaseHas('media_files', [
-            'disk' => 'public',
-            'path' => 'images/' . $filePath,
+            'disk' => $disk,
+            'path' => $filePath,
             'mediable_type' => get_class($animal),
             'mediable_id' => $animal->id,
         ]);
@@ -53,7 +62,9 @@ class MediaFileUploadUseCaseTest extends FeatureTestCase
 
     public function testPublicStorageImplementationIsWorking(): void
     {
-        Storage::fake('public');
+        $disk = 'public';
+
+        Storage::fake($disk);
 
         $fileName = fake()->firstName . '.jpg';
 
@@ -61,8 +72,11 @@ class MediaFileUploadUseCaseTest extends FeatureTestCase
 
         $publicStorage = $this->app->make(PublicStorage::class);
 
-        $publicStorage->saveFile($uploadedFile);
+        $savedFile = $publicStorage->saveFile(
+            $uploadedFile,
+            $uploadedFile->hashName()
+        );
 
-        Storage::disk('public')->assertExists($uploadedFile->hashName());
+        Storage::disk($disk)->assertExists($uploadedFile->hashName());
     }
 }

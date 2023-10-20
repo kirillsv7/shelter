@@ -1,10 +1,10 @@
 <?php
 
-namespace Source\Infrastructure\MediaFile\Services;
+namespace Source\Infrastructure\MediaFile\Storages;
 
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Http\UploadedFile;
-use Source\Domain\MediaFile\Services\Storage;
+use Source\Domain\MediaFile\Contracts\Storage;
 use Source\Domain\MediaFile\ValueObjects\SavedFile;
 
 final class PublicStorage implements Storage
@@ -16,12 +16,8 @@ final class PublicStorage implements Storage
     ) {
     }
 
-    public function saveFile(UploadedFile $file, string $folderName = null): SavedFile
+    public function saveFile(UploadedFile $file, string $filePath): SavedFile
     {
-        $fileName = $file->hashName();
-
-        $filePath = $folderName ? $folderName . '/' . $fileName : $fileName;
-
         $result = $this->fileSystem
             ->disk(self::DISK)
             ->put(
