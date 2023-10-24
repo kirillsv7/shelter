@@ -2,8 +2,8 @@
 
 namespace Source\Domain\MediaFile\Aggregates;
 
-use Illuminate\Filesystem\FilesystemManager;
 use Ramsey\Uuid\UuidInterface;
+use Source\Domain\MediaFile\Contracts\Storage;
 use Source\Domain\Shared\AggregateTraits\UseAggregateEvents;
 use Source\Domain\Shared\AggregateWithEvents;
 use Source\Domain\Shared\Entity;
@@ -14,10 +14,10 @@ final class MediaFile implements Entity, AggregateWithEvents
     use UseAggregateEvents;
 
     private function __construct(
-        protected FilesystemManager $filesystemManager,
+        private readonly Storage $storage,
         private readonly UuidInterface $id,
-        private string $disk,
-        private string $path,
+        private readonly string $disk,
+        private readonly string $path,
         private readonly BaseModel $mediableType,
         private readonly UuidInterface $mediableId,
     ) {
@@ -31,7 +31,7 @@ final class MediaFile implements Entity, AggregateWithEvents
         UuidInterface $mediableId,
     ): MediaFile {
         return new self(
-            filesystemManager: new FilesystemManager(app()),
+            storage: app(Storage::class),
             id: $id,
             disk: $disk,
             path: $path,
@@ -57,7 +57,7 @@ final class MediaFile implements Entity, AggregateWithEvents
 
     public function url(): string
     {
-        return $this->filesystemManager->url($this->path());
+        return $this->storage->getFileUrl($this->path());
     }
 
     public function mediableType(): string

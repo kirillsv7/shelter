@@ -34,4 +34,9 @@ final class PublicStorage implements Storage
             path: $filePath,
         );
     }
+
+    public function getFileUrl(string $path): string
+    {
+        return $this->fileSystem->url($path);
+    }
 }
