@@ -6,6 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use Source\Application\MediaFile\MediaFileUploadUseCase;
+use Source\Domain\MediaFile\Enums\MediableModel;
 use Source\Infrastructure\Laravel\Controllers\Controller;
 use Source\Infrastructure\Laravel\Models\BaseModel;
 use Source\Interface\MediaFile\Requests\MediaFileStoreRequest;
@@ -16,18 +17,20 @@ final class MediaFileController extends Controller
         MediaFileStoreRequest $request,
         MediaFileUploadUseCase $mediaFileUploadUseCase
     ): JsonResponse {
-        /** @var BaseModel $model */
-        $model = app($request->validated('model'));
+        $model = MediableModel::fromName($request->validated('model'));
+        /** @var BaseModel $mediableModel */
+        $mediableModel = app($model->value);
         $id = $request->validated('id');
-        $model->findOrFail($id);
+
+        $mediableModel->findOrFail($id);
 
         /** @var UploadedFile $file */
         $file = $request->validated('file');
 
-        $modelFolder = $model->getTable();
+        $mediableModelFolder = $mediableModel->getTable();
         $fileTypeFolder = $this->guessFolderFromMimeType($file);
         $filePath = implode('/', [
-            $modelFolder,
+            $mediableModelFolder,
             $id,
             $fileTypeFolder,
             Str::before($file->hashName(), '.'),
@@ -37,7 +40,7 @@ final class MediaFileController extends Controller
         $mediaFile = $mediaFileUploadUseCase->upload(
             $request->validated('file'),
             $filePath,
-            $model,
+            $mediableModel,
             $request->validated('id')
         );
 

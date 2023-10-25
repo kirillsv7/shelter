@@ -16,6 +16,8 @@ class MediaFilesRequestsTest extends FeatureTestCase
 
         Storage::fake($disk);
 
+        $model = 'Animal';
+
         $animal = AnimalModel::factory()->create();
 
         $image = UploadedFile::fake()->image($animal->name . '.jpg');
@@ -31,7 +33,7 @@ class MediaFilesRequestsTest extends FeatureTestCase
         $response = $this->post(
             route('mediafile.store'),
             [
-                'model' => get_class(new AnimalModel()),
+                'model' => $model,
                 'id' => (string)$animal->id,
                 'file' => $image
             ]
