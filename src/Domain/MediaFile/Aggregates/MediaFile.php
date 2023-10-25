@@ -3,7 +3,6 @@
 namespace Source\Domain\MediaFile\Aggregates;
 
 use Ramsey\Uuid\UuidInterface;
-use Source\Domain\MediaFile\Contracts\Storage;
 use Source\Domain\Shared\AggregateTraits\UseAggregateEvents;
 use Source\Domain\Shared\AggregateWithEvents;
 use Source\Domain\Shared\Entity;
@@ -14,7 +13,6 @@ final class MediaFile implements Entity, AggregateWithEvents
     use UseAggregateEvents;
 
     private function __construct(
-        private readonly Storage $storage,
         private readonly UuidInterface $id,
         private readonly string $disk,
         private readonly string $path,
@@ -31,7 +29,6 @@ final class MediaFile implements Entity, AggregateWithEvents
         UuidInterface $mediableId,
     ): MediaFile {
         return new self(
-            storage: app(Storage::class),
             id: $id,
             disk: $disk,
             path: $path,
@@ -55,11 +52,6 @@ final class MediaFile implements Entity, AggregateWithEvents
         return $this->path;
     }
 
-    public function url(): string
-    {
-        return $this->storage->getFileUrl($this->path());
-    }
-
     public function mediableType(): string
     {
         return get_class($this->mediableType);
@@ -76,7 +68,6 @@ final class MediaFile implements Entity, AggregateWithEvents
             'id' => $this->id(),
             'disk' => $this->disk(),
             'path' => $this->path(),
-            'url' => $this->url(),
             'mediableType' => $this->mediableType(),
             'mediableId' => $this->mediableId(),
         ];

@@ -5,6 +5,7 @@ namespace Source\Interface\MediaFile\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
+use Source\Application\MediaFile\MediaFileGetUrlUseCase;
 use Source\Application\MediaFile\MediaFileUploadUseCase;
 use Source\Domain\MediaFile\Enums\MediableModel;
 use Source\Infrastructure\Laravel\Controllers\Controller;
@@ -15,7 +16,8 @@ final class MediaFileController extends Controller
 {
     public function store(
         MediaFileStoreRequest $request,
-        MediaFileUploadUseCase $mediaFileUploadUseCase
+        MediaFileUploadUseCase $mediaFileUploadUseCase,
+        MediaFileGetUrlUseCase $mediaFileGetUrlUseCase
     ): JsonResponse {
         $model = MediableModel::fromName($request->validated('model'));
         /** @var BaseModel $mediableModel */
@@ -44,8 +46,12 @@ final class MediaFileController extends Controller
             $request->validated('id')
         );
 
+        $mediaFileArray = $mediaFile->toArray();
+
+        $mediaFileArray['url'] = $mediaFileGetUrlUseCase($mediaFile->path());
+
         return response()->json(
-            ['mediafile' => $mediaFile->toArray()],
+            ['mediafile' => $mediaFileArray],
             JsonResponse::HTTP_CREATED
         );
     }
