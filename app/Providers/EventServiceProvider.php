@@ -7,8 +7,10 @@ use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Source\Domain\Animal\Events\AnimalCreated;
 use Source\Domain\Animal\Events\AnimalStatusChanged;
+use Source\Domain\MediaFile\Events\MediaFileCreated;
 use Source\Infrastructure\Animal\EventListeners\AnimalCreatedLogEventListener;
 use Source\Infrastructure\Animal\EventListeners\AnimalStatusChangedLogEventListener;
+use Source\Infrastructure\MediaFile\EventListeners\MediaFileGenerateThumbs;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -21,11 +23,16 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+
         AnimalCreated::class => [
             AnimalCreatedLogEventListener::class
         ],
         AnimalStatusChanged::class => [
             AnimalStatusChangedLogEventListener::class
+        ],
+
+        MediaFileCreated::class => [
+            MediaFileGenerateThumbs::class
         ]
     ];
 

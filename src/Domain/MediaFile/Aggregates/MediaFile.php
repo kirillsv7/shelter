@@ -3,6 +3,7 @@
 namespace Source\Domain\MediaFile\Aggregates;
 
 use Ramsey\Uuid\UuidInterface;
+use Source\Domain\MediaFile\Events\MediaFileCreated;
 use Source\Domain\Shared\AggregateTraits\UseAggregateEvents;
 use Source\Domain\Shared\AggregateWithEvents;
 use Source\Domain\Shared\Entity;
@@ -21,13 +22,13 @@ final class MediaFile implements Entity, AggregateWithEvents
     ) {
     }
 
-    public static function create(
+    public static function make(
         UuidInterface $id,
         string $disk,
         string $path,
         BaseModel $mediableType,
         UuidInterface $mediableId,
-    ): MediaFile {
+    ): self {
         return new self(
             id: $id,
             disk: $disk,
@@ -35,6 +36,26 @@ final class MediaFile implements Entity, AggregateWithEvents
             mediableType: $mediableType,
             mediableId: $mediableId,
         );
+    }
+
+    public static function create(
+        UuidInterface $id,
+        string $disk,
+        string $path,
+        BaseModel $mediableType,
+        UuidInterface $mediableId,
+    ): self {
+        $mediaFile = self::make(
+            id: $id,
+            disk: $disk,
+            path: $path,
+            mediableType: $mediableType,
+            mediableId: $mediableId,
+        );
+
+        $mediaFile->addEvent(new MediaFileCreated($mediaFile->id()));
+
+        return $mediaFile;
     }
 
     public function id(): UuidInterface
