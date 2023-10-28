@@ -7,11 +7,13 @@ use Ramsey\Uuid\Uuid;
 use Source\Domain\Animal\Aggregates\Animal;
 use Source\Domain\Animal\Aggregates\AnimalInfo;
 use Source\Domain\Animal\Repositories\AnimalRepository;
+use Source\Infrastructure\Laravel\Events\MultiDispatcher;
 
 final class AnimalCreateUseCase
 {
     public function __construct(
-        protected AnimalRepository $repository
+        protected AnimalRepository $repository,
+        protected MultiDispatcher $dispatcher
     ) {
     }
 
@@ -24,6 +26,8 @@ final class AnimalCreateUseCase
         );
 
         $this->repository->create($animal);
+
+        $this->dispatcher->multiDispatch($animal->releaseEvents());
 
         return $animal;
     }

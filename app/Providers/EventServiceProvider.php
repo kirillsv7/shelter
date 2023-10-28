@@ -5,7 +5,10 @@ namespace App\Providers;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
+use Source\Domain\Animal\Events\AnimalCreated;
+use Source\Domain\Animal\Events\AnimalStatusChanged;
+use Source\Infrastructure\Animal\EventListeners\AnimalCreatedLogEventListener;
+use Source\Infrastructure\Animal\EventListeners\AnimalStatusChangedLogEventListener;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -18,6 +21,12 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        AnimalCreated::class => [
+            AnimalCreatedLogEventListener::class
+        ],
+        AnimalStatusChanged::class => [
+            AnimalStatusChangedLogEventListener::class
+        ]
     ];
 
     /**

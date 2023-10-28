@@ -32,6 +32,24 @@ final class Animal implements Entity, AggregateWithEvents
     ) {
     }
 
+    public static function make(
+        UuidInterface $id,
+        AnimalInfo $info,
+        AnimalStatus $status = AnimalStatus::Checking,
+        int|bool $published = false,
+        Carbon $createdAt = null,
+        Carbon $updatedAt = null,
+    ): self {
+        return new self(
+            id: $id,
+            info: $info,
+            status: $status,
+            published: $published,
+            createdAt: $createdAt,
+            updatedAt: $updatedAt,
+        );
+    }
+
     public static function create(
         UuidInterface $id,
         AnimalInfo $info,
@@ -39,8 +57,8 @@ final class Animal implements Entity, AggregateWithEvents
         int|bool $published = false,
         Carbon $createdAt = null,
         Carbon $updatedAt = null,
-    ): Animal {
-        $animal = new self(
+    ): self {
+        $animal = self::make(
             id: $id,
             info: $info,
             status: $status,
@@ -49,7 +67,12 @@ final class Animal implements Entity, AggregateWithEvents
             updatedAt: $updatedAt,
         );
 
-        $animal->addEvent(new AnimalCreated($animal->id()));
+        $animal->addEvent(
+            new AnimalCreated(
+                $animal->id(),
+                $animal->info()->name()
+            )
+        );
 
         return $animal;
     }
@@ -97,9 +120,17 @@ final class Animal implements Entity, AggregateWithEvents
     public function changeStatus(AnimalStatus $status): void
     {
         if ($this->status !== $status) {
+            $oldStatus = $this->status;
             $this->status = $status;
 
-            $this->addEvent(new AnimalStatusChanged($this->id(), $this->status()));
+            $this->addEvent(
+                new AnimalStatusChanged(
+                    $this->id(),
+                    $this->info()->name(),
+                    $this->status(),
+                    $oldStatus
+                )
+            );
         }
     }
 

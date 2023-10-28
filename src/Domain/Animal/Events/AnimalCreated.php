@@ -3,16 +3,13 @@
 namespace Source\Domain\Animal\Events;
 
 use Ramsey\Uuid\UuidInterface;
+use Source\Domain\Animal\ValueObjects\Name;
 
 final readonly class AnimalCreated
 {
     public function __construct(
-        private UuidInterface $id
+        public UuidInterface $id,
+        public Name $name
     ) {
-    }
-
-    public function getId(): UuidInterface
-    {
-        return $this->id;
     }
 }

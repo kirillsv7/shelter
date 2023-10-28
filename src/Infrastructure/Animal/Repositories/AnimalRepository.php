@@ -152,7 +152,7 @@ final class AnimalRepository implements AnimalRepositoryContract
 
     private static function map(AnimalModel $model): Animal
     {
-        return Animal::create(
+        return Animal::make(
             id: Uuid::fromString($model->id),
             info: AnimalInfo::create(
                 name: Name::fromString($model->name),

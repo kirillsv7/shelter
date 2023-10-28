@@ -13,6 +13,11 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
+            \Source\Infrastructure\Laravel\Events\MultiDispatcher::class,
+            \Source\Infrastructure\Laravel\Events\LaravelMultiDispatcher::class
+        );
+
+        $this->app->bind(
             \Source\Domain\Animal\Repositories\AnimalRepository::class,
             \Source\Infrastructure\Animal\Repositories\AnimalRepository::class
         );
