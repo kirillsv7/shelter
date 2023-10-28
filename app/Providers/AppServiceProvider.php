@@ -18,6 +18,11 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            \Source\Infrastructure\MediaFile\Services\MediaFilePathGenerator::class,
+            \Source\Infrastructure\MediaFile\Services\PublicStorageMediaFilePathGenerator::class
+        );
+
+        $this->app->bind(
             \Source\Domain\Animal\Repositories\AnimalRepository::class,
             \Source\Infrastructure\Animal\Repositories\AnimalRepository::class
         );

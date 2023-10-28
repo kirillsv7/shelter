@@ -6,6 +6,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Source\Infrastructure\Animal\Models\AnimalModel;
+use Source\Infrastructure\MediaFile\Services\PublicStorageMediaFilePathGenerator;
 use Tests\FeatureTestCase;
 
 class MediaFilesRequestsTest extends FeatureTestCase
@@ -22,13 +23,13 @@ class MediaFilesRequestsTest extends FeatureTestCase
 
         $image = UploadedFile::fake()->image($animal->name . '.jpg');
 
-        $filePath = implode('/', [
-            $animal->getTable(),
+        $mediaFilePathGenerator = $this->app->make(PublicStorageMediaFilePathGenerator::class);
+
+        $filePath = $mediaFilePathGenerator(
+            $animal,
             $animal->id,
-            'images',
-            Str::before($image->hashName(), '.'),
-            'original.' . $image->extension()
-        ]);
+            $image
+        );
 
         $response = $this->post(
             route('mediafile.store'),
