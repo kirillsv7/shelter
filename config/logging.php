@@ -58,9 +58,9 @@ return [
             'ignore_exceptions' => false,
         ],
 
-        'debugging' => [
+        'development' => [
             'driver' => 'single',
-            'path' => storage_path('logs/debugging.log'),
+            'path' => storage_path('logs/development.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'replace_placeholders' => true,
         ],

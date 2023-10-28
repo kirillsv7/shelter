@@ -9,7 +9,7 @@ final readonly class AnimalCreatedLogEventListener
 {
     public function handle(AnimalCreated $animalCreated): void
     {
-        Log::channel('debugging')
+        Log::channel('development')
             ->info('New animal created', [
                 'id' => (string)$animalCreated->id,
                 'name' => $animalCreated->name->value()
