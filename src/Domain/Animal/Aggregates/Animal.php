@@ -119,35 +119,41 @@ final class Animal implements Entity, AggregateWithEvents
 
     public function changeStatus(AnimalStatus $status): void
     {
-        if ($this->status !== $status) {
-            $oldStatus = $this->status;
-            $this->status = $status;
-
-            $this->addEvent(
-                new AnimalStatusChanged(
-                    $this->id(),
-                    $this->info()->name(),
-                    $this->status(),
-                    $oldStatus
-                )
-            );
+        if ($this->status === $status) {
+            return;
         }
+
+        $oldStatus = $this->status;
+        $this->status = $status;
+
+        $this->addEvent(
+            new AnimalStatusChanged(
+                $this->id(),
+                $this->info()->name(),
+                $this->status(),
+                $oldStatus
+            )
+        );
     }
 
     public function publish(): void
     {
-        if (!$this->published) {
-            $this->published = true;
-            $this->addEvent(new AnimalPublished($this->id()));
+        if ($this->published) {
+            return;
         }
+
+        $this->published = true;
+        $this->addEvent(new AnimalPublished($this->id()));
     }
 
     public function unpublish(): void
     {
-        if ($this->published) {
-            $this->published = false;
-            $this->addEvent(new AnimalUnpublished($this->id()));
+        if (!$this->published) {
+            return;
         }
+
+        $this->published = false;
+        $this->addEvent(new AnimalUnpublished($this->id()));
     }
 
     public function delete(): void
