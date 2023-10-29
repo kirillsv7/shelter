@@ -5,7 +5,7 @@ namespace Source\Infrastructure\MediaFile\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Source\Infrastructure\MediaFile\Models\MediaFileModel;
 
-class MediaFileFactory extends Factory
+final class MediaFileFactory extends Factory
 {
     protected $model = MediaFileModel::class;
 

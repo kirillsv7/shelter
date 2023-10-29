@@ -4,7 +4,7 @@ namespace Source\Infrastructure\Laravel\Events;
 
 use Illuminate\Contracts\Events\Dispatcher;
 
-class LaravelMultiDispatcher implements MultiDispatcher
+final class LaravelMultiDispatcher implements MultiDispatcher
 {
     public function __construct(
         public Dispatcher $dispatcher

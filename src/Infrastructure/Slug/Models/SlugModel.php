@@ -24,7 +24,7 @@ use Source\Infrastructure\Laravel\Models\BaseModel;
  * @method static Builder|SlugModel whereSluggableType($value)
  * @mixin \Eloquent
  */
-class SlugModel extends BaseModel
+final class SlugModel extends BaseModel
 {
     use HasUuids;
 

@@ -4,7 +4,7 @@ namespace Source\Infrastructure\MediaFile\Services;
 
 use Illuminate\Http\UploadedFile;
 
-class GeneralMediaFileNameGenerator implements MediaFileNameGenerator
+final class GeneralMediaFileNameGenerator implements MediaFileNameGenerator
 {
     public function __invoke(UploadedFile $uploadedFile): string
     {

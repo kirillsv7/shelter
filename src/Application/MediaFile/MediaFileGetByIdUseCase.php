@@ -6,7 +6,7 @@ use Ramsey\Uuid\UuidInterface;
 use Source\Domain\MediaFile\Aggregates\MediaFile;
 use Source\Domain\MediaFile\Repositories\MediaFileRepository;
 
-class MediaFileGetByIdUseCase
+final class MediaFileGetByIdUseCase
 {
     final public function __construct(
         protected MediaFileRepository $repository

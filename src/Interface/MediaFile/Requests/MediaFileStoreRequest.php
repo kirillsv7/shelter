@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Source\Domain\MediaFile\Enums\MediableModel;
 
-class MediaFileStoreRequest extends FormRequest
+final class MediaFileStoreRequest extends FormRequest
 {
     public function rules(): array
     {

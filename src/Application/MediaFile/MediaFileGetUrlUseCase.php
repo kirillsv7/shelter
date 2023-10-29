@@ -4,7 +4,7 @@ namespace Source\Application\MediaFile;
 
 use Source\Domain\MediaFile\Contracts\Storage;
 
-class MediaFileGetUrlUseCase
+final class MediaFileGetUrlUseCase
 {
     public function __construct(
         public Storage $storage

@@ -12,7 +12,7 @@ use Source\Domain\Animal\Enums\AnimalType;
 use Source\Infrastructure\Animal\Models\AnimalModel;
 use Source\Infrastructure\Slug\Models\SlugModel;
 
-class AnimalFactory extends Factory
+final class AnimalFactory extends Factory
 {
     protected $model = AnimalModel::class;
 

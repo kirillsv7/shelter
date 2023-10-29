@@ -7,7 +7,7 @@ use Source\Domain\Slug\Aggregates\Slug;
 use Source\Domain\Slug\Repositories\SlugRepository;
 use Source\Infrastructure\Laravel\Models\BaseModel;
 
-class SlugGetBySluggableUseCase
+final class SlugGetBySluggableUseCase
 {
     public function __construct(
         protected SlugRepository $repository
