@@ -7,7 +7,14 @@ use Source\Domain\MediaFile\ValueObjects\SavedFile;
 
 interface Storage
 {
-    public function saveFile(UploadedFile $file, string $filePath): SavedFile;
+    public function saveFile(
+        UploadedFile $file,
+        string $fileRoute,
+        string $fileName
+    ): SavedFile;
 
-    public function getFileUrl(string $path): string;
+    public function getFileUrl(
+        string $fileRoute,
+        string $fileName
+    ): string;
 }

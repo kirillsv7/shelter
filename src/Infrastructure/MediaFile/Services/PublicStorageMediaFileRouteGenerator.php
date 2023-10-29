@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use Ramsey\Uuid\UuidInterface;
 use Source\Infrastructure\Laravel\Models\BaseModel;
 
-class PublicStorageMediaFilePathGenerator implements MediaFilePathGenerator
+final class PublicStorageMediaFileRouteGenerator implements MediaFileRouteGenerator
 {
     public function __invoke(
         BaseModel $mediableModel,
@@ -19,7 +19,6 @@ class PublicStorageMediaFilePathGenerator implements MediaFilePathGenerator
         $mediableIdFolder = $mediableId->toString();
         $mimeTypeFolder = $this->guessFolderNameFromMimeType($uploadedFile);
         $hashedFolderBasedOnFileName = Str::before($uploadedFile->hashName(), '.');
-        $fileNameWithExtension = 'original.' . $uploadedFile->extension();
 
         return implode(DIRECTORY_SEPARATOR, [
             $rootFolder,
@@ -27,7 +26,6 @@ class PublicStorageMediaFilePathGenerator implements MediaFilePathGenerator
             $mediableIdFolder,
             $mimeTypeFolder,
             $hashedFolderBasedOnFileName,
-            $fileNameWithExtension
         ]);
     }
 

@@ -150,7 +150,7 @@ final class AnimalRepository implements AnimalRepositoryContract
         return $animalQueryBuilder;
     }
 
-    private static function map(AnimalModel $model): Animal
+    public static function map(AnimalModel $model): Animal
     {
         return Animal::make(
             id: Uuid::fromString($model->id),

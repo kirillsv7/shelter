@@ -4,9 +4,8 @@ namespace Tests\Feature\MediaFiles;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Source\Infrastructure\Animal\Models\AnimalModel;
-use Source\Infrastructure\MediaFile\Services\PublicStorageMediaFilePathGenerator;
+use Source\Infrastructure\MediaFile\Services\PublicStorageMediaFileRouteGenerator;
 use Tests\FeatureTestCase;
 
 class MediaFilesRequestsTest extends FeatureTestCase
@@ -23,16 +22,18 @@ class MediaFilesRequestsTest extends FeatureTestCase
 
         $image = UploadedFile::fake()->image($animal->name . '.jpg');
 
-        $mediaFilePathGenerator = $this->app->make(PublicStorageMediaFilePathGenerator::class);
+        $fileName = 'original.' . $image->extension();
 
-        $filePath = $mediaFilePathGenerator(
+        $mediaFileRouteGenerator = $this->app->make(PublicStorageMediaFileRouteGenerator::class);
+
+        $fileRoute = $mediaFileRouteGenerator(
             $animal,
             $animal->id,
             $image
         );
 
         $response = $this->post(
-            route('mediafile.store'),
+            route('media-file.store'),
             [
                 'model' => $model,
                 'id' => (string)$animal->id,
@@ -43,9 +44,11 @@ class MediaFilesRequestsTest extends FeatureTestCase
         $response
             ->assertCreated()
             ->assertJsonFragment([
-                'disk' => $disk,
-                'path' => $filePath,
-                'url' => Storage::url($filePath),
+                'storage_info' => [
+                    'disk' => $disk,
+                    'route' => $fileRoute,
+                    'fileName' => $fileName
+                ],
                 'mediableType' => get_class(new AnimalModel()),
                 'mediableId' => $animal->id,
             ]);

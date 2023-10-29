@@ -9,19 +9,22 @@ use Source\Domain\MediaFile\ValueObjects\SavedFile;
 
 final class PublicStorage implements Storage
 {
-    private const DISK = 'public';
+    protected const DISK = 'public';
 
     public function __construct(
         private readonly FilesystemManager $fileSystem
     ) {
     }
 
-    public function saveFile(UploadedFile $file, string $filePath): SavedFile
-    {
+    public function saveFile(
+        UploadedFile $file,
+        string $fileRoute,
+        string $fileName,
+    ): SavedFile {
         $result = $this->fileSystem
             ->disk(self::DISK)
             ->put(
-                $filePath,
+                $fileRoute . DIRECTORY_SEPARATOR . $fileName,
                 $file->getContent()
             );
 
@@ -31,12 +34,15 @@ final class PublicStorage implements Storage
 
         return new SavedFile(
             disk: self::DISK,
-            path: $filePath,
+            route: $fileRoute,
+            name: $fileName,
         );
     }
 
-    public function getFileUrl(string $path): string
-    {
-        return $this->fileSystem->url($path);
+    public function getFileUrl(
+        string $fileRoute,
+        string $fileName
+    ): string {
+        return $this->fileSystem->url($fileRoute . DIRECTORY_SEPARATOR . $fileName);
     }
 }

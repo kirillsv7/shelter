@@ -11,8 +11,13 @@ class MediaFileGetUrlUseCase
     ) {
     }
 
-    public function __invoke(string $path): string
-    {
-        return $this->storage->getFileUrl($path);
+    public function __invoke(
+        string $fileRoute,
+        string $fileName
+    ): string {
+        return $this->storage->getFileUrl(
+            $fileRoute,
+            $fileName
+        );
     }
 }

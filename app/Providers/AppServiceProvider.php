@@ -18,8 +18,13 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            \Source\Infrastructure\MediaFile\Services\MediaFilePathGenerator::class,
-            \Source\Infrastructure\MediaFile\Services\PublicStorageMediaFilePathGenerator::class
+            \Source\Infrastructure\MediaFile\Services\MediaFileRouteGenerator::class,
+            \Source\Infrastructure\MediaFile\Services\PublicStorageMediaFileRouteGenerator::class
+        );
+
+        $this->app->bind(
+            \Source\Infrastructure\MediaFile\Services\MediaFileNameGenerator::class,
+            \Source\Infrastructure\MediaFile\Services\GeneralMediaFileNameGenerator::class
         );
 
         $this->app->bind(

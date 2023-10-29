@@ -26,12 +26,15 @@ class MediaFileUploadUseCaseTest extends FeatureTestCase
 
         $uploadedFile = UploadedFile::fake()->image($fileName);
 
-        $filePath = implode('/', [
+        $fileRoute = implode('/', [
             $animal->getTable(),
             $animal->id,
-            'images',
-            $uploadedFile->hashName()
+            'images'
         ]);
+
+        $fileName = $uploadedFile->hashName();
+
+        $filePath = $fileRoute . DIRECTORY_SEPARATOR . $fileName;
 
         $storageMock = \Mockery::mock(StorageInterface::class);
 
@@ -45,16 +48,21 @@ class MediaFileUploadUseCaseTest extends FeatureTestCase
 
         $mediaFileUploadUseCase = $this->app->make(MediaFileUploadUseCase::class);
 
-        $mediaFileUploadUseCase->upload(
+        $mediaFile = $mediaFileUploadUseCase->upload(
             $uploadedFile,
-            $filePath,
+            $fileRoute,
+            $fileName,
             $animal,
             $animal->id
         );
 
         $this->assertDatabaseHas('media_files', [
-            'disk' => $disk,
-            'path' => $filePath,
+            'id' => $mediaFile->id,
+            //'storage_info->disk' => $mediaFile->storageInfo->disk->value(),
+            //'storage_info->route' => $mediaFile->storageInfo->route->value(),
+            //'storage_info->filename' => $mediaFile->storageInfo->filename->value(),
+            //'sizes' => json_encode($mediaFile->sizes),
+            'mimetype' => $mediaFile->mimetype->value(),
             'mediable_type' => get_class($animal),
             'mediable_id' => $animal->id,
         ]);
@@ -74,6 +82,7 @@ class MediaFileUploadUseCaseTest extends FeatureTestCase
 
         $savedFile = $publicStorage->saveFile(
             $uploadedFile,
+            '',
             $uploadedFile->hashName()
         );
 

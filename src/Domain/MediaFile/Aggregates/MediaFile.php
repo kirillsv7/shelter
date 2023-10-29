@@ -2,11 +2,13 @@
 
 namespace Source\Domain\MediaFile\Aggregates;
 
+use Illuminate\Support\Carbon;
 use Ramsey\Uuid\UuidInterface;
 use Source\Domain\MediaFile\Events\MediaFileCreated;
 use Source\Domain\Shared\AggregateTraits\UseAggregateEvents;
 use Source\Domain\Shared\AggregateWithEvents;
 use Source\Domain\Shared\Entity;
+use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Infrastructure\Laravel\Models\BaseModel;
 
 final class MediaFile implements Entity, AggregateWithEvents
@@ -14,83 +16,96 @@ final class MediaFile implements Entity, AggregateWithEvents
     use UseAggregateEvents;
 
     private function __construct(
-        private readonly UuidInterface $id,
-        private readonly string $disk,
-        private readonly string $path,
-        private readonly BaseModel $mediableType,
-        private readonly UuidInterface $mediableId,
+        public readonly UuidInterface $id,
+        public readonly StorageInfo $storageInfo,
+        private array $sizes,
+        public readonly StringValueObject $mimetype,
+        public readonly BaseModel $mediableType,
+        public readonly UuidInterface $mediableId,
+        public readonly ?Carbon $createdAt = null,
+        public readonly ?Carbon $updatedAt = null
     ) {
     }
 
     public static function make(
         UuidInterface $id,
-        string $disk,
-        string $path,
+        StorageInfo $storageInfo,
+        array $sizes,
+        StringValueObject $mimetype,
         BaseModel $mediableType,
         UuidInterface $mediableId,
+        Carbon $createdAt = null,
+        Carbon $updatedAt = null,
     ): self {
         return new self(
             id: $id,
-            disk: $disk,
-            path: $path,
+            storageInfo: $storageInfo,
+            sizes: $sizes,
+            mimetype: $mimetype,
             mediableType: $mediableType,
             mediableId: $mediableId,
+            createdAt: $createdAt,
+            updatedAt: $updatedAt,
         );
     }
 
     public static function create(
         UuidInterface $id,
-        string $disk,
-        string $path,
+        StorageInfo $storageInfo,
+        array $sizes,
+        StringValueObject $mimetype,
         BaseModel $mediableType,
         UuidInterface $mediableId,
+        Carbon $createdAt = null,
+        Carbon $updatedAt = null,
     ): self {
         $mediaFile = self::make(
             id: $id,
-            disk: $disk,
-            path: $path,
+            storageInfo: $storageInfo,
+            sizes: $sizes,
+            mimetype: $mimetype,
             mediableType: $mediableType,
             mediableId: $mediableId,
+            createdAt: $createdAt,
+            updatedAt: $updatedAt,
         );
 
-        $mediaFile->addEvent(new MediaFileCreated($mediaFile->id()));
+        $mediaFile->addEvent(new MediaFileCreated($mediaFile->id));
 
         return $mediaFile;
     }
 
-    public function id(): UuidInterface
+    public function sizes(): array
     {
-        return $this->id;
+        return  $this->sizes;
     }
 
-    public function disk(): string
+    public function filePath(): string
     {
-        return $this->disk;
+        return $this->storageInfo->route . DIRECTORY_SEPARATOR . $this->storageInfo->fileName;
     }
 
-    public function path(): string
+    public function mediableType(): StringValueObject
     {
-        return $this->path;
+        return StringValueObject::fromString(get_class($this->mediableType));
     }
 
-    public function mediableType(): string
+    public function addSize(string $size): void
     {
-        return get_class($this->mediableType);
-    }
-
-    public function mediableId(): UuidInterface
-    {
-        return $this->mediableId;
+        $this->sizes[] = $size;
     }
 
     public function toArray(): array
     {
         return [
-            'id' => $this->id(),
-            'disk' => $this->disk(),
-            'path' => $this->path(),
-            'mediableType' => $this->mediableType(),
-            'mediableId' => $this->mediableId(),
+            'id' => $this->id,
+            'storage_info' => $this->storageInfo->toArray(),
+            'sizes' => $this->sizes(),
+            'mimetype' => $this->mimetype->value(),
+            'mediableType' => $this->mediableType()->value(),
+            'mediableId' => $this->mediableId,
+            'created_at' => $this->createdAt,
+            'updated_at' => $this->updatedAt,
         ];
     }
 }

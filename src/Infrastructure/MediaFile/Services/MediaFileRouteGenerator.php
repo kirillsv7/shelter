@@ -6,7 +6,7 @@ use Illuminate\Http\UploadedFile;
 use Ramsey\Uuid\UuidInterface;
 use Source\Infrastructure\Laravel\Models\BaseModel;
 
-interface MediaFilePathGenerator
+interface MediaFileRouteGenerator
 {
     public function __invoke(
         BaseModel $mediableModel,

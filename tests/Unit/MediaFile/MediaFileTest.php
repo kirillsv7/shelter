@@ -1,25 +1,14 @@
 <?php
 
-namespace MediaFile;
+namespace Tests\Unit\MediaFile;
 
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use Ramsey\Uuid\Uuid;
-use Source\Domain\Animal\Aggregates\Animal;
-use Source\Domain\Animal\Aggregates\AnimalInfo;
-use Source\Domain\Animal\Enums\AnimalGender;
-use Source\Domain\Animal\Enums\AnimalStatus;
-use Source\Domain\Animal\Enums\AnimalType;
-use Source\Domain\Animal\Events\AnimalDeleted;
-use Source\Domain\Animal\Events\AnimalPublished;
-use Source\Domain\Animal\Events\AnimalStatusChanged;
-use Source\Domain\Animal\Events\AnimalUnpublished;
-use Source\Domain\Animal\ValueObjects\Breed;
-use Source\Domain\Animal\ValueObjects\Name;
-use Source\Domain\Animal\ValueObjects\Slug;
 use Source\Domain\MediaFile\Aggregates\MediaFile;
+use Source\Domain\MediaFile\Aggregates\StorageInfo;
 use Source\Domain\MediaFile\Events\MediaFileCreated;
+use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Infrastructure\Animal\Models\AnimalModel;
-use Source\Infrastructure\MediaFile\Storages\PublicStorage;
 use Tests\UnitTestCase;
 
 class MediaFileTest extends UnitTestCase
@@ -40,11 +29,14 @@ class MediaFileTest extends UnitTestCase
         $this->assertIsArray($mediaFileArray);
 
         $this->assertEquals($mediaFileArray, [
-            'id' => $mediaFile->id(),
-            'disk' => $mediaFile->disk(),
-            'path' => $mediaFile->path(),
-            'mediableType' => $mediaFile->mediableType(),
-            'mediableId' => $mediaFile->mediableId(),
+            'id' => $mediaFile->id,
+            'storage_info' => $mediaFile->storageInfo->toArray(),
+            'sizes' => $mediaFile->sizes(),
+            'mimetype' => $mediaFile->mimetype->value(),
+            'mediableType' => $mediaFile->mediableType()->value(),
+            'mediableId' => $mediaFile->mediableId,
+            'created_at' => $mediaFile->createdAt,
+            'updated_at' => $mediaFile->updatedAt,
         ]);
     }
 
@@ -52,10 +44,16 @@ class MediaFileTest extends UnitTestCase
     {
         return MediaFile::create(
             id: Uuid::uuid4(),
-            disk: 'public',
-            path: 'media_files/test.jpg',
+            storageInfo: StorageInfo::make(
+                disk: StringValueObject::fromString('public'),
+                route: StringValueObject::fromString('media_files'),
+                fileName: StringValueObject::fromString('test.jpg')
+            ),
+            sizes: [],
+            mimetype: StringValueObject::fromString('image/jpeg'),
             mediableType: new AnimalModel(),
-            mediableId: Uuid::uuid4()
+            mediableId: Uuid::uuid4(),
+            createdAt: Carbon::now()
         );
     }
 }

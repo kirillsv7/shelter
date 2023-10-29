@@ -12,8 +12,9 @@ return new class () extends Migration {
     {
         Schema::create('media_files', function (Blueprint $table) {
             $table->uuid('id');
-            $table->string('disk');
-            $table->string('path');
+            $table->json('storage_info');
+            $table->json('sizes');
+            $table->string('mimetype');
             $table->string('mediable_type');
             $table->uuid('mediable_id');
             $table->timestamp('created_at')->useCurrent();

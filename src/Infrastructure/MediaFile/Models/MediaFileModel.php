@@ -14,8 +14,9 @@ use Source\Infrastructure\MediaFile\Factories\MediaFileFactory;
  * Source\Infrastructure\MediaFile\Models\MediaFileModel
  *
  * @property string $id
- * @property string $disk
- * @property string $path
+ * @property array $storage_info
+ * @property array $sizes
+ * @property string $mimetype
  * @property string $mediable_type
  * @property string $mediable_id
  * @property Carbon $created_at
@@ -26,15 +27,16 @@ use Source\Infrastructure\MediaFile\Factories\MediaFileFactory;
  * @method static Builder|MediaFileModel newQuery()
  * @method static Builder|MediaFileModel query()
  * @method static Builder|MediaFileModel whereCreatedAt($value)
- * @method static Builder|MediaFileModel whereDisk($value)
  * @method static Builder|MediaFileModel whereId($value)
  * @method static Builder|MediaFileModel whereMediableId($value)
  * @method static Builder|MediaFileModel whereMediableType($value)
- * @method static Builder|MediaFileModel wherePath($value)
+ * @method static Builder|MediaFileModel whereMimetype($value)
+ * @method static Builder|MediaFileModel whereSizes($value)
+ * @method static Builder|MediaFileModel whereStorageInfo($value)
  * @method static Builder|MediaFileModel whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class MediaFileModel extends BaseModel
+final class MediaFileModel extends BaseModel
 {
     use HasUuids;
     use HasFactory;
@@ -42,10 +44,16 @@ class MediaFileModel extends BaseModel
     protected $table = 'media_files';
 
     protected $fillable = [
-        'disk',
-        'path',
+        'storage_info',
+        'sizes',
+        'mimetype',
         'mediable_type',
         'mediable_id',
+    ];
+
+    protected $casts = [
+        'storage_info' => 'array',
+        'sizes' => 'array'
     ];
 
     public function newEloquentBuilder($query): Builder
