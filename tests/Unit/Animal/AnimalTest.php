@@ -41,6 +41,20 @@ class AnimalTest extends UnitTestCase
         $this->assertEquals($animal->status(), $animalStatus);
     }
 
+    public function testAnimalStatusDoesntChange()
+    {
+        $animal = $this->animalCreate();
+
+        $animalStatus = AnimalStatus::Adoption;
+        $animal->changeStatus($animalStatus);
+        $animal->releaseEvents();
+        $animal->changeStatus($animalStatus);
+
+        $this->assertEventsHasNot(AnimalStatusChanged::class, $animal->releaseEvents());
+
+        $this->assertEquals($animal->status(), $animalStatus);
+    }
+
     public function testAnimalPublish()
     {
         $animal = $this->animalCreate();
@@ -52,14 +66,38 @@ class AnimalTest extends UnitTestCase
         $this->assertTrue($animal->published());
     }
 
+    public function testAnimalAlreadyPublished(){
+        $animal = $this->animalCreate();
+
+        $animal->publish();
+        $animal->releaseEvents();
+
+        $animal->publish();
+
+        $this->assertEventsHasNot(AnimalPublished::class, $animal->releaseEvents());
+
+        $this->assertTrue($animal->published());
+    }
+
     public function testAnimalUnpublish()
     {
         $animal = $this->animalCreate();
 
         $animal->publish();
+        $animal->releaseEvents();
         $animal->unpublish();
 
         $this->assertEventsHas(AnimalUnpublished::class, $animal->releaseEvents());
+
+        $this->assertTrue(!$animal->published());
+    }
+
+    public function testAnimalAlreadyUnpublished(){
+        $animal = $this->animalCreate();
+
+        $animal->unpublish();
+
+        $this->assertEventsHasNot(AnimalUnpublished::class, $animal->releaseEvents());
 
         $this->assertTrue(!$animal->published());
     }
