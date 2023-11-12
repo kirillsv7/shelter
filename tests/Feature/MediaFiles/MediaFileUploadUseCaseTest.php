@@ -58,10 +58,11 @@ class MediaFileUploadUseCaseTest extends FeatureTestCase
 
         $this->assertDatabaseHas('media_files', [
             'id' => $mediaFile->id,
-            //'storage_info->disk' => $mediaFile->storageInfo->disk->value(),
-            //'storage_info->route' => $mediaFile->storageInfo->route->value(),
-            //'storage_info->filename' => $mediaFile->storageInfo->filename->value(),
-            //'sizes' => json_encode($mediaFile->sizes),
+            /*'storage_info' => [
+                'disk' => $mediaFile->storageInfo->disk->value(),
+                'route' => $mediaFile->storageInfo->route->value(),
+                'fileName' => $mediaFile->storageInfo->fileName->value(),
+            ],*/
             'mimetype' => $mediaFile->mimetype->value(),
             'mediable_type' => get_class($animal),
             'mediable_id' => $animal->id,

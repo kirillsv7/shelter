@@ -2,6 +2,11 @@
 
 namespace Source\Domain\MediaFile\Exceptions;
 
-class MediaFileNotFoundException extends \Exception
+use Illuminate\Http\JsonResponse;
+use Source\Infrastructure\Laravel\Exceptions\DefaultException;
+
+class MediaFileNotFoundException extends DefaultException
 {
+    protected $code = JsonResponse::HTTP_NOT_FOUND;
+    protected $message = 'MediaFile doesn\'t exists';
 }

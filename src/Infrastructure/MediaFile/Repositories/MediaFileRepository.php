@@ -26,7 +26,7 @@ final class MediaFileRepository implements MediaFileRepositoryContract
         $model = MediaFileModel::query()->find($id);
 
         if (!$model) {
-            throw new MediaFileNotFoundException('MediaFile doesn\'t exists');
+            throw new MediaFileNotFoundException();
         }
 
         return self::map($model);
