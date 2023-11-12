@@ -66,7 +66,8 @@ class AnimalTest extends UnitTestCase
         $this->assertTrue($animal->published());
     }
 
-    public function testAnimalAlreadyPublished(){
+    public function testAnimalAlreadyPublished()
+    {
         $animal = $this->animalCreate();
 
         $animal->publish();
@@ -92,7 +93,8 @@ class AnimalTest extends UnitTestCase
         $this->assertTrue(!$animal->published());
     }
 
-    public function testAnimalAlreadyUnpublished(){
+    public function testAnimalAlreadyUnpublished()
+    {
         $animal = $this->animalCreate();
 
         $animal->unpublish();

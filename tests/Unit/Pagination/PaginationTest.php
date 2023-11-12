@@ -21,6 +21,13 @@ class PaginationTest extends UnitTestCase
         $this->assertEquals(60, $paginationWithPageOnly->offset()->value);
     }
 
+    public function testPaginationLimitException()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        Pagination::create(-10);
+    }
+
     /**
      * @dataProvider paginationVariations
      */

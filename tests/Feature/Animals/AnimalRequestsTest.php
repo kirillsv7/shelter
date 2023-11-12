@@ -51,6 +51,8 @@ class AnimalRequestsTest extends FeatureTestCase
                 'gender' => 'female'
             ])
         );
+        $responseAgeMin4 = $this->getJson(route('animal.index', ['age_min' => 4]));
+        $responseAgeMax2 = $this->getJson(route('animal.index', ['age_max' => 2]));
 
         $responseNameDobby
             ->assertOk()
@@ -72,6 +74,16 @@ class AnimalRequestsTest extends FeatureTestCase
             ->assertJsonFragment(['gender' => 'female'])
             ->assertJsonMissing(['type' => 'dog'])
             ->assertJsonMissing(['gender' => 'male']);
+
+        $responseAgeMin4
+            ->assertOk()
+            ->assertJsonMissing(['age' => rand(1, 3)])
+            ->assertJsonFragment(['age' => 4]);
+
+        $responseAgeMax2
+            ->assertOk()
+            ->assertJsonMissing(['age' => rand(3, 7)])
+            ->assertJsonFragment(['age' => rand(1, 2)]);
     }
 
     public function testAnimalIndexByType()
@@ -182,6 +194,17 @@ class AnimalRequestsTest extends FeatureTestCase
             ]);
     }
 
+    public function testAnimalGetByIdNotFound()
+    {
+        AnimalModel::factory()->create();
+
+        $response = $this->getJson(
+            route('animal.get-by-id', ['id' => fake()->uuid()])
+        );
+
+        $response->assertNotFound();
+    }
+
     public function testAnimalGetBySlug()
     {
         $animal = AnimalModel::factory()->create();
@@ -209,6 +232,20 @@ class AnimalRequestsTest extends FeatureTestCase
                 'published' => $animal->published,
                 'slug' => $animal->slug->slug,
             ]);
+    }
+
+    public function testAnimalGetBySlugNotFound()
+    {
+        $animal = AnimalModel::factory()->create();
+
+        $response = $this->getJson(
+            route('animal.get-by-slug', [
+                'animal' => $animal->type,
+                'slug' => $animal->slug->slug . '-false',
+            ])
+        );
+
+        $response->assertNotFound();
     }
 
     public function testAnimalUpdate()

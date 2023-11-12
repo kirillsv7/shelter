@@ -43,7 +43,7 @@ final class SlugRepository implements SlugRepositoryContract
             ->first();
 
         if (!$model) {
-            throw new SlugNotFoundException('Slug doesn\'t exists');
+            throw new SlugNotFoundException();
         }
 
         return $this->map($model);
@@ -56,7 +56,7 @@ final class SlugRepository implements SlugRepositoryContract
             ->first();
 
         if (!$model) {
-            throw new SlugNotFoundException('Slug doesn\'t exists');
+            throw new SlugNotFoundException();
         }
 
         return $this->map($model);

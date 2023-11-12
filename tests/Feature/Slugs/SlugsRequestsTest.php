@@ -23,4 +23,17 @@ class SlugsRequestsTest extends FeatureTestCase
                 'slug' => $newSlug
             ]);
     }
+
+    public function testSlugUpdateNotFoundSlug()
+    {
+        AnimalModel::factory()->create();
+
+        $newSlug = 'this-is-test-slug';
+
+        $response = $this->post(route('slug.update', ['id' => fake()->uuid()]), [
+            'slug' => $newSlug
+        ]);
+
+        $response->assertNotFound();
+    }
 }

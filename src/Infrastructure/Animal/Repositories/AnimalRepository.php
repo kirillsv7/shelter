@@ -50,7 +50,7 @@ final class AnimalRepository implements AnimalRepositoryContract
         $model = AnimalModel::query()->find($id);
 
         if (!$model) {
-            throw new AnimalNotFoundException('Animal doesn\'t exists');
+            throw new AnimalNotFoundException();
         }
 
         return self::map($model);
@@ -65,7 +65,7 @@ final class AnimalRepository implements AnimalRepositoryContract
             ->first();
 
         if (!$model) {
-            throw new AnimalNotFoundException('Animal doesn\'t exists');
+            throw new AnimalNotFoundException();
         }
 
         return self::map($model);
