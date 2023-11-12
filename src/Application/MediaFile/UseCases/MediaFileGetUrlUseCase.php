@@ -1,6 +1,6 @@
 <?php
 
-namespace Source\Application\MediaFile;
+namespace Source\Application\MediaFile\UseCases;
 
 use Source\Domain\MediaFile\Contracts\Storage;
 

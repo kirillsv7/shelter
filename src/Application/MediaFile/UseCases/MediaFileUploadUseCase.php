@@ -1,6 +1,6 @@
 <?php
 
-namespace Source\Application\MediaFile;
+namespace Source\Application\MediaFile\UseCases;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
@@ -8,8 +8,8 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Source\Domain\MediaFile\Aggregates\MediaFile;
 use Source\Domain\MediaFile\Aggregates\StorageInfo;
-use Source\Domain\MediaFile\Repositories\MediaFileRepository;
 use Source\Domain\MediaFile\Contracts\Storage;
+use Source\Domain\MediaFile\Repositories\MediaFileRepository;
 use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Infrastructure\Laravel\Events\MultiDispatcher;
 use Source\Infrastructure\Laravel\Models\BaseModel;

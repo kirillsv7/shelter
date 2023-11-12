@@ -4,7 +4,7 @@ namespace Tests\Feature\MediaFiles;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Source\Application\MediaFile\MediaFileUploadUseCase;
+use Source\Application\MediaFile\UseCases\MediaFileUploadUseCase;
 use Source\Domain\MediaFile\Contracts\Storage as StorageInterface;
 use Source\Infrastructure\Animal\Models\AnimalModel;
 use Source\Infrastructure\MediaFile\Storages\PublicStorage;
