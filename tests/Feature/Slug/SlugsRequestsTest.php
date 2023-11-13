@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Slugs;
+namespace Tests\Feature\Slug;
 
 use Source\Infrastructure\Animal\Models\AnimalModel;
 use Tests\FeatureTestCase;

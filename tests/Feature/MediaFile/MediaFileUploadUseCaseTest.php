@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\MediaFiles;
+namespace Tests\Feature\MediaFile;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;

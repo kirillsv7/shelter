@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Slugs;
+namespace Tests\Feature\Slug;
 
 use Ramsey\Uuid\Uuid;
 use Source\Application\Slug\UseCases\SlugGetBySluggableUseCase;

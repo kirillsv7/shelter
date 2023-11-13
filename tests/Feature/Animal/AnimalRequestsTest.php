@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Animals;
+namespace Tests\Feature\Animal;
 
 use Illuminate\Support\Carbon;
 use Source\Domain\Animal\Enums\AnimalGender;
