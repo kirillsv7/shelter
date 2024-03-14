@@ -1,6 +1,6 @@
 <?php
 
-namespace Source\Infrastructure\MediaFile\Services;
+namespace Source\Domain\MediaFile\Contracts;
 
 use Illuminate\Http\UploadedFile;
 

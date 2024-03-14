@@ -8,11 +8,11 @@ use Ramsey\Uuid\Uuid;
 use Source\Application\MediaFile\UseCases\MediaFileGetByIdUseCase;
 use Source\Application\MediaFile\UseCases\MediaFileGetUrlUseCase;
 use Source\Application\MediaFile\UseCases\MediaFileUploadUseCase;
+use Source\Domain\MediaFile\Contracts\MediaFileNameGenerator;
+use Source\Domain\MediaFile\Contracts\MediaFileRouteGenerator;
 use Source\Domain\MediaFile\Enums\MediableModel;
 use Source\Infrastructure\Laravel\Controllers\Controller;
 use Source\Infrastructure\Laravel\Models\BaseModel;
-use Source\Infrastructure\MediaFile\Services\MediaFileNameGenerator;
-use Source\Infrastructure\MediaFile\Services\MediaFileRouteGenerator;
 use Source\Interface\MediaFile\Requests\MediaFileStoreRequest;
 
 final class MediaFileController extends Controller

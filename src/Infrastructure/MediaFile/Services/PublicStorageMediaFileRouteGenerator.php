@@ -5,6 +5,7 @@ namespace Source\Infrastructure\MediaFile\Services;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use Ramsey\Uuid\UuidInterface;
+use Source\Domain\MediaFile\Contracts\MediaFileRouteGenerator;
 use Source\Infrastructure\Laravel\Models\BaseModel;
 
 final class PublicStorageMediaFileRouteGenerator implements MediaFileRouteGenerator
