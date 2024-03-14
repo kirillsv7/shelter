@@ -37,8 +37,12 @@ final class PublicStorageMediaFileRouteGenerator implements MediaFileRouteGenera
 
         if (str_contains($mimeType, 'image')) {
             $folder = 'images';
-        } elseif (str_contains($mimeType, 'video')) {
+        }
+        if (str_contains($mimeType, 'video')) {
             $folder = 'videos';
+        }
+        if (str_contains($mimeType, 'pdf')) {
+            $folder = 'documents';
         }
 
         return $folder;
