@@ -83,7 +83,7 @@ class AnimalRequestsTest extends FeatureTestCase
         $responseAgeMax2
             ->assertOk()
             ->assertJsonMissing(['age' => rand(3, 7)])
-            ->assertJsonFragment(['age' => rand(1, 2)]);
+            ->assertJsonFragment(['age' => 2]);
     }
 
     public function testAnimalIndexByType()
