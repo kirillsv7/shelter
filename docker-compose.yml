@@ -1,117 +1,71 @@
 services:
     php:
         build:
-            context: ./docker/8.2
-            dockerfile: Dockerfile
+            context: ./docker/php
             args:
-                WWWGROUP: '${WWWGROUP}'
-        image: sail-8.2/app
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
-        ports:
-            - '${APP_PORT:-80}:80'
-            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
-        environment:
-            WWWUSER: '${WWWUSER}'
-            LARAVEL_SAIL: 1
-            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
-            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
-            IGNITION_LOCAL_SITES_PATH: '${PWD}'
+                UID: ${UID}
+                GID: ${GID}
+            dockerfile: Dockerfile
+        container_name: php
         volumes:
-            - '.:/var/www/html'
+            - .:/var/www/html
         networks:
-            - sail
+            - appnet
         depends_on:
             - mysql
             - redis
-            #- meilisearch
-            #- mailpit
-            #- selenium
-            - adminer
+
+    nginx:
+        image: nginx:latest
+        container_name: nginx
+        ports:
+            - '${APP_PORT:-80}:80'
+            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+        volumes:
+            - .:/var/www/html
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+        networks:
+            - appnet
+        depends_on:
+            - php
+
     mysql:
-        image: 'mysql/mysql-server:8.0'
+        image: mysql:8.0
+        container_name: mysql
         ports:
             - '${FORWARD_DB_PORT:-3306}:3306'
         environment:
-            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ROOT_HOST: '%'
-            MYSQL_DATABASE: '${DB_DATABASE}'
-            MYSQL_USER: '${DB_USERNAME}'
-            MYSQL_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ALLOW_EMPTY_PASSWORD: 1
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_USER: ${DB_USERNAME}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
         volumes:
-            - 'sail-mysql:/var/lib/mysql'
-            - './docker/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+            - mysql-data:/var/lib/mysql
         networks:
-            - sail
-        healthcheck:
-            test:
-                - CMD
-                - mysqladmin
-                - ping
-                - '-p${DB_PASSWORD}'
-            retries: 3
-            timeout: 5s
+            - appnet
+
     redis:
-        image: 'redis:alpine'
+        image: redis:alpine
+        container_name: redis
         ports:
             - '${FORWARD_REDIS_PORT:-6379}:6379'
         volumes:
-            - 'sail-redis:/data'
+            - redis-data:/data
         networks:
-            - sail
-        healthcheck:
-            test:
-                - CMD
-                - redis-cli
-                - ping
-            retries: 3
-            timeout: 5s
-#    meilisearch:
-#        image: 'getmeili/meilisearch:latest'
-#        ports:
-#            - '${FORWARD_MEILISEARCH_PORT:-7700}:7700'
-#        volumes:
-#            - 'sail-meilisearch:/meili_data'
-#        networks:
-#            - sail
-#        healthcheck:
-#            test:
-#                - CMD
-#                - wget
-#                - '--no-verbose'
-#                - '--spider'
-#                - 'http://localhost:7700/health'
-#            retries: 3
-#            timeout: 5s
-#    mailpit:
-#        image: 'axllent/mailpit:latest'
-#        ports:
-#            - '${FORWARD_MAILPIT_PORT:-1025}:1025'
-#            - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
-#        networks:
-#            - sail
-#    selenium:
-#        image: selenium/standalone-chrome
-#        extra_hosts:
-#            - 'host.docker.internal:host-gateway'
-#        volumes:
-#            - '/dev/shm:/dev/shm'
-#        networks:
-#            - sail
+            - appnet
+
     adminer:
-        image: 'adminer:latest'
+        image: adminer:latest
+        container_name: adminer
         ports:
             - '${FORWARD_ADMINER_PORT:-8080}:8080'
         networks:
-            - sail
+            - appnet
+
 networks:
-    sail:
+    appnet:
         driver: bridge
+
 volumes:
-    sail-mysql:
-        driver: local
-    sail-redis:
-        driver: local
-#    sail-meilisearch:
-#        driver: local
+    mysql-data:
+    redis-data:
