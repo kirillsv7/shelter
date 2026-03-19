@@ -45,7 +45,7 @@ final class AnimalInfo
         ?Breed $breed,
         ?Carbon $birthdate,
         ?Carbon $entrydate
-    ) {
+    ): void {
         if ($name) {
             $this->changeName($name);
         }

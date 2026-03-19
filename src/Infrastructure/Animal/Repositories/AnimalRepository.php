@@ -44,7 +44,10 @@ final class AnimalRepository implements AnimalRepositoryContract
         );
     }
 
-    public function getById(UuidInterface $id): ?Animal
+    /**
+     * @throws AnimalNotFoundException
+     */
+    public function getById(UuidInterface $id): Animal
     {
         /** @var ?AnimalModel $model */
         $model = AnimalModel::query()->find($id);
@@ -56,7 +59,10 @@ final class AnimalRepository implements AnimalRepositoryContract
         return self::map($model);
     }
 
-    public function getBySlug(AnimalType $type, string $slug): ?Animal
+    /**
+     * @throws AnimalNotFoundException
+     */
+    public function getBySlug(AnimalType $type, string $slug): Animal
     {
         /** @var ?AnimalModel $model */
         $model = AnimalModel::query()

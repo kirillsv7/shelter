@@ -19,11 +19,11 @@ final readonly class AnimalSearchCriteria
     }
 
     public static function create(
-        Name $name = null,
-        AnimalType $type = null,
-        AnimalGender $gender = null,
-        IntegerValueObject $ageMin = null,
-        IntegerValueObject $ageMax = null,
+        ?Name $name = null,
+        ?AnimalType $type = null,
+        ?AnimalGender $gender = null,
+        ?IntegerValueObject $ageMin = null,
+        ?IntegerValueObject $ageMax = null,
     ): self {
         return new self(
             $name,

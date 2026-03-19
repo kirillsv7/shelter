@@ -36,7 +36,7 @@ final class SlugRepository implements SlugRepositoryContract
     public function getBySluggable(
         BaseModel $sluggableType,
         UuidInterface $sluggableId
-    ): ?Slug {
+    ): Slug {
         $model = SlugModel::query()
             ->where('sluggable_type', get_class($sluggableType))
             ->where('sluggable_id', $sluggableId)
@@ -49,7 +49,7 @@ final class SlugRepository implements SlugRepositoryContract
         return $this->map($model);
     }
 
-    public function getBySluggableUuid(UuidInterface $id): ?Slug
+    public function getBySluggableUuid(UuidInterface $id): Slug
     {
         $model = SlugModel::query()
             ->where('sluggable_id', $id)

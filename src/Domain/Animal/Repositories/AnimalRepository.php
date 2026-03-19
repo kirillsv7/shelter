@@ -19,12 +19,12 @@ interface AnimalRepository
     /**
      * @throws AnimalNotFoundException
      */
-    public function getById(UuidInterface $id): ?Animal;
+    public function getById(UuidInterface $id): Animal;
 
     /**
      * @throws AnimalNotFoundException
      */
-    public function getBySlug(AnimalType $type, string $slug): ?Animal;
+    public function getBySlug(AnimalType $type, string $slug): Animal;
 
     /**
      * @throws \Throwable
