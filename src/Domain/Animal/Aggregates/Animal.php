@@ -28,7 +28,7 @@ final class Animal implements Entity, AggregateWithEvents
         private AnimalStatus $status,
         private int|bool $published = false,
         private readonly ?Carbon $createdAt = null,
-        private readonly ?Carbon $updatedAt = null
+        private readonly ?Carbon $updatedAt = null,
     ) {
     }
 
@@ -37,8 +37,8 @@ final class Animal implements Entity, AggregateWithEvents
         AnimalInfo $info,
         AnimalStatus $status = AnimalStatus::Checking,
         int|bool $published = false,
-        Carbon $createdAt = null,
-        Carbon $updatedAt = null,
+        ?Carbon $createdAt = null,
+        ?Carbon $updatedAt = null,
     ): self {
         return new self(
             id: $id,
@@ -55,8 +55,8 @@ final class Animal implements Entity, AggregateWithEvents
         AnimalInfo $info,
         AnimalStatus $status = AnimalStatus::Checking,
         int|bool $published = false,
-        Carbon $createdAt = null,
-        Carbon $updatedAt = null,
+        ?Carbon $createdAt = null,
+        ?Carbon $updatedAt = null,
     ): self {
         $animal = self::make(
             id: $id,

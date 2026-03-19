@@ -28,9 +28,7 @@ class PaginationTest extends UnitTestCase
         Pagination::create(-10);
     }
 
-    /**
-     * @dataProvider paginationVariations
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('paginationVariations')]
     public function testPaginationLinksGeneration($limit, $page, $total)
     {
         $pagination = Pagination::create(

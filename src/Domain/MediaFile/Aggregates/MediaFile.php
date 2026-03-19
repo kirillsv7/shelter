@@ -23,7 +23,7 @@ final class MediaFile implements Entity, AggregateWithEvents
         public readonly BaseModel $mediableType,
         public readonly UuidInterface $mediableId,
         public readonly ?Carbon $createdAt = null,
-        public readonly ?Carbon $updatedAt = null
+        public readonly ?Carbon $updatedAt = null,
     ) {
     }
 
@@ -34,8 +34,8 @@ final class MediaFile implements Entity, AggregateWithEvents
         StringValueObject $mimetype,
         BaseModel $mediableType,
         UuidInterface $mediableId,
-        Carbon $createdAt = null,
-        Carbon $updatedAt = null,
+        ?Carbon $createdAt = null,
+        ?Carbon $updatedAt = null,
     ): self {
         return new self(
             id: $id,
@@ -56,8 +56,8 @@ final class MediaFile implements Entity, AggregateWithEvents
         StringValueObject $mimetype,
         BaseModel $mediableType,
         UuidInterface $mediableId,
-        Carbon $createdAt = null,
-        Carbon $updatedAt = null,
+        ?Carbon $createdAt = null,
+        ?Carbon $updatedAt = null,
     ): self {
         $mediaFile = self::make(
             id: $id,

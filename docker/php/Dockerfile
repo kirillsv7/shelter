@@ -5,7 +5,11 @@ ARG GID=1000
 
 # System dependencies (run as root)
 RUN apt-get update && apt-get install -y \
-    git curl zip unzip libpng-dev libonig-dev libxml2-dev libzip-dev \
+    git curl zip unzip libpng-dev libjpeg-dev libfreetype6-dev libwebp-dev libonig-dev libxml2-dev libzip-dev \
+    && docker-php-ext-configure gd \
+        --with-jpeg \
+        --with-webp \
+        --with-freetype \
     && docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd
 
 # Xdebug
