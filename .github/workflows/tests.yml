@@ -10,11 +10,12 @@ jobs:
   tests:
     name: Run tests
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Cache composer dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: vendor
           key: composer-${{ hashFiles('**/composer.lock') }}
@@ -24,18 +25,19 @@ jobs:
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
+          php-version: 8.5
+          extensions: mbstring, pdo_sqlite, sqlite3, gd, zip, bcmath
+          coverage: none
 
-      - name: Copy .env file
+      - name: Copy .env files
         run: |
           cp .env.ci .env
           cp .env.ci .env.testing
 
-      - name: Run composer
-        run: |
-          composer install --no-interaction
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist
 
-      - name: Create Database
+      - name: Create SQLite database
         run: |
           touch database.sqlite
 
@@ -43,13 +45,10 @@ jobs:
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: database.sqlite
-        run: |
-          php artisan test
+        run: php artisan test
 
       - name: Run Larastan
-        run: |
-          ./vendor/bin/phpstan analyse
+        run: ./vendor/bin/phpstan analyse
 
       - name: Run Pint
-        run: |
-          ./vendor/bin/pint --test
+        run: ./vendor/bin/pint --test
