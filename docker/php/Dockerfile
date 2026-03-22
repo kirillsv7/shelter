@@ -16,6 +16,9 @@ RUN apt-get update && apt-get install -y \
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug
 
+# Increase memory limit for CLI tools (PHPStan, PHPUnit, etc.)
+RUN echo "memory_limit=1G" > /usr/local/etc/php/conf.d/memory-limit.ini
+
 # Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
