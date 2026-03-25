@@ -8,8 +8,13 @@
             "statements": [
                 "break",
                 "continue",
+                "declare",
+                "foreach",
                 "return",
-                "throw"
+                "switch",
+                "throw",
+                "try",
+                "while"
             ]
         },
         "trailing_comma_in_multiline": true
