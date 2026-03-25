@@ -36,6 +36,14 @@ final class AnimalModel extends BaseModel
         'slug',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'birthdate' => 'immutable_date',
+            'entrydate' => 'immutable_date',
+        ];
+    }
+
     public function newEloquentBuilder($query): AnimalQueryBuilder
     {
         return new AnimalQueryBuilder($query);

@@ -40,20 +40,21 @@ final class AnimalController extends Controller
             $request->getAgeMin(),
             $request->getAgeMax(),
             $request->getLimit(),
-            $request->getPage()
+            $request->getPage(),
         );
 
         $animals = array_map(
             function (Animal $animal) {
                 $this->loadSlug($animal);
+
                 return $animal->toArray();
             },
-            $result['animals']
+            $result['animals'],
         );
 
         return response()->json([
             'animals' => $animals,
-            'pagination' => $result['pagination']
+            'pagination' => $result['pagination'],
         ]);
     }
 
@@ -71,20 +72,21 @@ final class AnimalController extends Controller
             $request->getAgeMin(),
             $request->getAgeMax(),
             $request->getLimit(),
-            $request->getPage()
+            $request->getPage(),
         );
 
         $animals = array_map(
             function (Animal $animal) {
                 $this->loadSlug($animal);
+
                 return $animal->toArray();
             },
-            $result['animals']
+            $result['animals'],
         );
 
         return response()->json([
             'animals' => $animals,
-            'pagination' => $result['pagination']
+            'pagination' => $result['pagination'],
         ]);
     }
 
@@ -97,25 +99,27 @@ final class AnimalController extends Controller
         SlugCreateUseCase $slugCreateUseCase
     ): JsonResponse {
         $animal = $animalCreateUseCase->apply(
-            $request->validated()
+            $request->getDTO(),
         );
 
-        $slugString = $animal->info()->name() . ' ' .
-            $animal->info()->type()->value . ' ' .
-            $animal->info()->gender()->value . ' ' .
-            $animal->info()->breed();
+        $slugParts = [
+            $animal->info()->name(),
+            $animal->info()->type()->value,
+            $animal->info()->gender()->value,
+            $animal->info()->breed(),
+        ];
 
         $slug = $slugCreateUseCase->apply(
-            slugString: $slugString,
+            slugString: implode(' ', $slugParts),
             sluggableType: new AnimalModel(),
-            sluggableId: $animal->id()
+            sluggableId: $animal->id(),
         );
 
         $animal->addSlug(Slug::fromString($slug->value()));
 
         return response()->json(
             ['animal' => $animal->toArray()],
-            JsonResponse::HTTP_CREATED
+            JsonResponse::HTTP_CREATED,
         );
     }
 
@@ -124,14 +128,14 @@ final class AnimalController extends Controller
         AnimalGetByIdUseCase $animalGetByIdUseCase
     ): JsonResponse {
         $animal = $animalGetByIdUseCase->apply(
-            Uuid::fromString($id)
+            Uuid::fromString($id),
         );
 
         $this->loadSlug($animal);
 
         return response()->json(
             ['animal' => $animal->toArray()],
-            JsonResponse::HTTP_OK
+            JsonResponse::HTTP_OK,
         );
     }
 
@@ -149,7 +153,7 @@ final class AnimalController extends Controller
 
         return response()->json(
             ['animal' => $animal->toArray()],
-            JsonResponse::HTTP_OK
+            JsonResponse::HTTP_OK,
         );
     }
 
@@ -167,7 +171,7 @@ final class AnimalController extends Controller
 
         return response()->json(
             ['animal' => $animal->toArray()],
-            JsonResponse::HTTP_ACCEPTED
+            JsonResponse::HTTP_ACCEPTED,
         );
     }
 
@@ -185,7 +189,7 @@ final class AnimalController extends Controller
 
         return response()->json(
             ['animal' => $animal->toArray()],
-            JsonResponse::HTTP_ACCEPTED
+            JsonResponse::HTTP_ACCEPTED,
         );
     }
 
@@ -194,14 +198,14 @@ final class AnimalController extends Controller
         AnimalPublishUseCase $animalPublishUseCase
     ): JsonResponse {
         $animal = $animalPublishUseCase->apply(
-            Uuid::fromString($id)
+            Uuid::fromString($id),
         );
 
         $this->loadSlug($animal);
 
         return response()->json(
             ['animal' => $animal->toArray()],
-            JsonResponse::HTTP_ACCEPTED
+            JsonResponse::HTTP_ACCEPTED,
         );
     }
 
@@ -210,14 +214,14 @@ final class AnimalController extends Controller
         AnimalUnpublishUseCase $animalUnpublishUseCase
     ): JsonResponse {
         $animal = $animalUnpublishUseCase->apply(
-            Uuid::fromString($id)
+            Uuid::fromString($id),
         );
 
         $this->loadSlug($animal);
 
         return response()->json(
             ['animal' => $animal->toArray()],
-            JsonResponse::HTTP_ACCEPTED
+            JsonResponse::HTTP_ACCEPTED,
         );
     }
 
@@ -226,12 +230,12 @@ final class AnimalController extends Controller
         AnimalDestroyUseCase $animalDestroyUseCase
     ): JsonResponse {
         $animalDestroyUseCase->apply(
-            Uuid::fromString($id)
+            Uuid::fromString($id),
         );
 
         return response()->json(
             [],
-            JsonResponse::HTTP_NO_CONTENT
+            JsonResponse::HTTP_NO_CONTENT,
         );
     }
 
@@ -240,7 +244,7 @@ final class AnimalController extends Controller
         $slugGetBySluggableUseCase = app(SlugGetBySluggableUseCase::class);
         $slug = $slugGetBySluggableUseCase->apply(
             sluggableType: new AnimalModel(),
-            sluggableId: $animal->id()
+            sluggableId: $animal->id(),
         );
 
         $animal->addSlug(Slug::fromString($slug->value()));

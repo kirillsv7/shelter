@@ -2,10 +2,14 @@
 
 namespace Source\Interface\Animal\Requests;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 use Source\Domain\Animal\Enums\AnimalGender;
 use Source\Domain\Animal\Enums\AnimalType;
+use Source\Domain\Animal\ValueObjects\Breed;
+use Source\Domain\Animal\ValueObjects\Name;
+use Source\Interface\Animal\DTOs\AnimalStoreRequestDTO;
 
 final class AnimalStoreRequest extends FormRequest
 {
@@ -19,5 +23,17 @@ final class AnimalStoreRequest extends FormRequest
             'birthdate' => ['required', 'date'],
             'entrydate' => ['required', 'date'],
         ];
+    }
+
+    public function getDTO(): AnimalStoreRequestDTO
+    {
+        return new AnimalStoreRequestDTO(
+            name: Name::fromString($this->validated('name')),
+            type: AnimalType::from($this->validated('type')),
+            gender: AnimalGender::from($this->validated('gender')),
+            breed: Breed::fromString($this->validated('breed')),
+            birthdate: new CarbonImmutable($this->validated('birthdate')),
+            entrydate: new CarbonImmutable($this->validated('entrydate')),
+        );
     }
 }

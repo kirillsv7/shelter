@@ -32,7 +32,7 @@ class AnimalTest extends UnitTestCase
     {
         $animal = $this->animalCreate();
 
-        $animalStatus = AnimalStatus::Adoption;
+        $animalStatus = AnimalStatus::Available;
 
         $animal->changeStatus($animalStatus);
 
@@ -45,7 +45,7 @@ class AnimalTest extends UnitTestCase
     {
         $animal = $this->animalCreate();
 
-        $animalStatus = AnimalStatus::Adoption;
+        $animalStatus = AnimalStatus::Available;
         $animal->changeStatus($animalStatus);
         $animal->releaseEvents();
         $animal->changeStatus($animalStatus);
@@ -156,7 +156,7 @@ class AnimalTest extends UnitTestCase
                 birthdate: Carbon::today()->subDays(rand(30, 365 * 5)),
                 entrydate: Carbon::today(),
             ),
-            createdAt: Carbon::now()
+            createdAt: Carbon::now(),
         );
     }
 }

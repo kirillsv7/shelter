@@ -2,7 +2,8 @@
 
 namespace Source\Domain\Animal\Aggregates;
 
-use Carbon\Carbon;
+use Carbon\CarbonImmutable;
+use Carbon\CarbonInterface;
 use Source\Domain\Animal\Enums\AnimalGender;
 use Source\Domain\Animal\Enums\AnimalType;
 use Source\Domain\Animal\ValueObjects\Breed;
@@ -15,18 +16,18 @@ final class AnimalInfo
         private AnimalType $type,
         private AnimalGender $gender,
         private Breed $breed,
-        private Carbon $birthdate,
-        private Carbon $entrydate,
+        private CarbonInterface $birthdate,
+        private CarbonInterface $entrydate,
     ) {
     }
 
     public static function create(
-        Name $name,
-        AnimalType $type,
-        AnimalGender $gender,
-        Breed $breed,
-        Carbon $birthdate,
-        Carbon $entrydate
+        Name              $name,
+        AnimalType        $type,
+        AnimalGender      $gender,
+        Breed             $breed,
+        CarbonInterface $birthdate,
+        CarbonInterface $entrydate
     ): self {
         return new self(
             name: $name,
@@ -34,17 +35,17 @@ final class AnimalInfo
             gender: $gender,
             breed: $breed,
             birthdate: $birthdate,
-            entrydate: $entrydate
+            entrydate: $entrydate,
         );
     }
 
     public function change(
-        ?Name $name,
-        ?AnimalType $type,
-        ?AnimalGender $gender,
-        ?Breed $breed,
-        ?Carbon $birthdate,
-        ?Carbon $entrydate
+        ?Name              $name,
+        ?AnimalType        $type,
+        ?AnimalGender      $gender,
+        ?Breed             $breed,
+        ?CarbonInterface $birthdate,
+        ?CarbonInterface $entrydate
     ): void {
         if ($name) {
             $this->changeName($name);
@@ -86,12 +87,12 @@ final class AnimalInfo
         return $this->breed;
     }
 
-    public function birthdate(): Carbon
+    public function birthdate(): CarbonInterface
     {
         return $this->birthdate;
     }
 
-    public function entrydate(): Carbon
+    public function entrydate(): CarbonInterface
     {
         return $this->entrydate;
     }
@@ -116,12 +117,12 @@ final class AnimalInfo
         $this->breed = $breed;
     }
 
-    private function changeBirthdate(Carbon $birthdate): void
+    private function changeBirthdate(CarbonInterface $birthdate): void
     {
         $this->birthdate = $birthdate;
     }
 
-    private function changeEntrydate(Carbon $entrydate): void
+    private function changeEntrydate(CarbonInterface $entrydate): void
     {
         $this->entrydate = $entrydate;
     }
@@ -133,8 +134,8 @@ final class AnimalInfo
             type: AnimalType::tryFrom($data['type']),
             gender: AnimalGender::tryFrom($data['gender']),
             breed: Breed::fromString($data['breed']),
-            birthdate: new \Illuminate\Support\Carbon($data['birthdate']),
-            entrydate: new Carbon($data['entrydate']),
+            birthdate: new CarbonImmutable($data['birthdate']),
+            entrydate: new CarbonImmutable($data['entrydate']),
         );
     }
 
@@ -145,8 +146,8 @@ final class AnimalInfo
             'type' => $this->type(),
             'gender' => $this->gender(),
             'breed' => $this->breed()->value(),
-            'birthdate' => $this->birthdate()->format('Y-m-d'),
-            'entrydate' => $this->entrydate()->format('Y-m-d'),
+            'birthdate' => $this->birthdate()->format(config('app.date_format')),
+            'entrydate' => $this->entrydate()->format(config('app.date_format')),
         ];
     }
 }

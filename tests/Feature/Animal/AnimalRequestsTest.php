@@ -38,7 +38,7 @@ class AnimalRequestsTest extends FeatureTestCase
 
         AnimalModel::factory(50)->create();
         AnimalModel::factory()->create([
-            'name' => $name
+            'name' => $name,
         ]);
         AnimalModel::factory(50)->create();
 
@@ -48,8 +48,8 @@ class AnimalRequestsTest extends FeatureTestCase
         $responseTypeCatsAndGenderFemale = $this->getJson(
             route('animal.index', [
                 'type' => 'cats',
-                'gender' => 'female'
-            ])
+                'gender' => 'female',
+            ]),
         );
         $responseAgeMin4 = $this->getJson(route('animal.index', ['age_min' => 4]));
         $responseAgeMax2 = $this->getJson(route('animal.index', ['age_max' => 2]));
@@ -89,25 +89,25 @@ class AnimalRequestsTest extends FeatureTestCase
     public function testAnimalIndexByType()
     {
         AnimalModel::factory(110)->create([
-            'type' => AnimalType::Dog->value
+            'type' => AnimalType::Dog->value,
         ]);
 
         $responsePage1 = $this->getJson(
             route('animal.index-by-type', [
-                'animals' => 'dogs'
-            ])
+                'animals' => 'dogs',
+            ]),
         );
         $responsePage2 = $this->getJson(
             route('animal.index-by-type', [
                 'animals' => 'dogs',
-                'page' => 2
-            ])
+                'page' => 2,
+            ]),
         );
         $responsePage6 = $this->getJson(
             route('animal.index-by-type', [
                 'animals' => 'dogs',
-                'page' => 6
-            ])
+                'page' => 6,
+            ]),
         );
 
         $responsePage1
@@ -134,7 +134,7 @@ class AnimalRequestsTest extends FeatureTestCase
 
         $response = $this->postJson(
             route('animal.store'),
-            $animal
+            $animal,
         );
 
         $response
@@ -153,7 +153,7 @@ class AnimalRequestsTest extends FeatureTestCase
     {
         $response = $this->postJson(
             route('animal.store'),
-            []
+            [],
         );
 
         $response
@@ -173,7 +173,7 @@ class AnimalRequestsTest extends FeatureTestCase
         $animal = AnimalModel::factory()->create();
 
         $response = $this->getJson(
-            route('animal.get-by-id', ['id' => $animal->id])
+            route('animal.get-by-id', ['id' => $animal->id]),
         );
 
         $response
@@ -199,7 +199,7 @@ class AnimalRequestsTest extends FeatureTestCase
         AnimalModel::factory()->create();
 
         $response = $this->getJson(
-            route('animal.get-by-id', ['id' => fake()->uuid()])
+            route('animal.get-by-id', ['id' => fake()->uuid()]),
         );
 
         $response->assertNotFound();
@@ -213,7 +213,7 @@ class AnimalRequestsTest extends FeatureTestCase
             route('animal.get-by-slug', [
                 'animal' => $animal->type,
                 'slug' => $animal->slug->slug,
-            ])
+            ]),
         );
 
         $response
@@ -242,7 +242,7 @@ class AnimalRequestsTest extends FeatureTestCase
             route('animal.get-by-slug', [
                 'animal' => $animal->type,
                 'slug' => $animal->slug->slug . '-false',
-            ])
+            ]),
         );
 
         $response->assertNotFound();
@@ -256,7 +256,7 @@ class AnimalRequestsTest extends FeatureTestCase
 
         $response = $this->putJson(
             route('animal.update', ['id' => $animal->id]),
-            $animalNewData
+            $animalNewData,
         );
 
         $response
@@ -274,14 +274,14 @@ class AnimalRequestsTest extends FeatureTestCase
     {
         $animal = AnimalModel::factory()
             ->create([
-                'status' => AnimalStatus::Adoption->value,
+                'status' => AnimalStatus::Available->value,
             ]);
 
         $animalNewStatus = ['status' => AnimalStatus::Adopted->value];
 
         $response = $this->putJson(
             route('animal.status-update', ['id' => $animal->id]),
-            $animalNewStatus
+            $animalNewStatus,
         );
 
         $response
@@ -335,8 +335,8 @@ class AnimalRequestsTest extends FeatureTestCase
             'type' => fake()->randomElement(AnimalType::cases())->value,
             'gender' => fake()->randomElement(AnimalGender::cases())->value,
             'breed' => fake()->text(20),
-            'birthdate' => Carbon::today()->subDays(rand(30, 365 * 5))->format('Y-m-d'),
-            'entrydate' => Carbon::today()->format('Y-m-d'),
+            'birthdate' => Carbon::today()->subDays(rand(30, 365 * 5))->format(config('app.date_format')),
+            'entrydate' => Carbon::today()->format(config('app.date_format')),
         ];
     }
 }

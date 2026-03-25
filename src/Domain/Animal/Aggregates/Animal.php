@@ -2,7 +2,7 @@
 
 namespace Source\Domain\Animal\Aggregates;
 
-use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Ramsey\Uuid\UuidInterface;
 use Source\Domain\Animal\Enums\AnimalStatus;
 use Source\Domain\Animal\Events\AnimalCreated;
@@ -23,22 +23,22 @@ final class Animal implements Entity, AggregateWithEvents
     private ?Slug $slug = null;
 
     private function __construct(
-        private readonly UuidInterface $id,
-        private readonly AnimalInfo $info,
-        private AnimalStatus $status,
-        private int|bool $published = false,
-        private readonly ?Carbon $createdAt = null,
-        private readonly ?Carbon $updatedAt = null,
+        private readonly UuidInterface    $id,
+        private readonly AnimalInfo       $info,
+        private AnimalStatus              $status,
+        private int|bool                  $published = false,
+        private readonly ?CarbonInterface $createdAt = null,
+        private readonly ?CarbonInterface $updatedAt = null,
     ) {
     }
 
     public static function make(
-        UuidInterface $id,
-        AnimalInfo $info,
-        AnimalStatus $status = AnimalStatus::Checking,
-        int|bool $published = false,
-        ?Carbon $createdAt = null,
-        ?Carbon $updatedAt = null,
+        UuidInterface    $id,
+        AnimalInfo       $info,
+        AnimalStatus     $status = AnimalStatus::Quarantine,
+        int|bool         $published = false,
+        ?CarbonInterface $createdAt = null,
+        ?CarbonInterface $updatedAt = null,
     ): self {
         return new self(
             id: $id,
@@ -51,12 +51,12 @@ final class Animal implements Entity, AggregateWithEvents
     }
 
     public static function create(
-        UuidInterface $id,
-        AnimalInfo $info,
-        AnimalStatus $status = AnimalStatus::Checking,
-        int|bool $published = false,
-        ?Carbon $createdAt = null,
-        ?Carbon $updatedAt = null,
+        UuidInterface    $id,
+        AnimalInfo       $info,
+        AnimalStatus     $status = AnimalStatus::Quarantine,
+        int|bool         $published = false,
+        ?CarbonInterface $createdAt = null,
+        ?CarbonInterface $updatedAt = null,
     ): self {
         $animal = self::make(
             id: $id,
@@ -70,8 +70,8 @@ final class Animal implements Entity, AggregateWithEvents
         $animal->addEvent(
             new AnimalCreated(
                 $animal->id(),
-                $animal->info()->name()
-            )
+                $animal->info()->name(),
+            ),
         );
 
         return $animal;
@@ -102,12 +102,12 @@ final class Animal implements Entity, AggregateWithEvents
         return $this->published;
     }
 
-    public function createdAt(): Carbon
+    public function createdAt(): CarbonInterface
     {
         return $this->createdAt;
     }
 
-    public function updatedAt(): ?Carbon
+    public function updatedAt(): ?CarbonInterface
     {
         return $this->updatedAt;
     }
@@ -131,8 +131,8 @@ final class Animal implements Entity, AggregateWithEvents
                 $this->id(),
                 $this->info()->name(),
                 $this->status(),
-                $oldStatus
-            )
+                $oldStatus,
+            ),
         );
     }
 

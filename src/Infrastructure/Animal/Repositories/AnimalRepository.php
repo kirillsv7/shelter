@@ -2,6 +2,7 @@
 
 namespace Source\Infrastructure\Animal\Repositories;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Carbon;
 use Ramsey\Uuid\Uuid;
@@ -40,7 +41,7 @@ final class AnimalRepository implements AnimalRepositoryContract
         return array_map(
             /** @phpstan-ignore-next-line */
             static fn (AnimalModel $model) => self::map($model),
-            $animals
+            $animals,
         );
     }
 
@@ -165,8 +166,8 @@ final class AnimalRepository implements AnimalRepositoryContract
                 type: AnimalType::tryFrom($model->type),
                 gender: AnimalGender::tryFrom($model->gender),
                 breed: Breed::fromString($model->breed),
-                birthdate: new Carbon($model->birthdate),
-                entrydate: new Carbon($model->entrydate)
+                birthdate: new CarbonImmutable($model->birthdate),
+                entrydate: new CarbonImmutable($model->entrydate),
             ),
             status: AnimalStatus::tryFrom($model->status),
             published: $model->published,

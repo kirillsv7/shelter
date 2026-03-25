@@ -2,12 +2,13 @@
 
 namespace Source\Application\Animal\UseCases;
 
-use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Ramsey\Uuid\Uuid;
 use Source\Domain\Animal\Aggregates\Animal;
 use Source\Domain\Animal\Aggregates\AnimalInfo;
 use Source\Domain\Animal\Repositories\AnimalRepository;
 use Source\Infrastructure\Laravel\Events\MultiDispatcher;
+use Source\Interface\Animal\DTOs\AnimalStoreRequestDTO;
 
 final class AnimalCreateUseCase
 {
@@ -17,12 +18,19 @@ final class AnimalCreateUseCase
     ) {
     }
 
-    public function apply(array $data): Animal
+    public function apply(AnimalStoreRequestDTO $dto): Animal
     {
         $animal = Animal::create(
             id: Uuid::uuid4(),
-            info: AnimalInfo::fromArray($data),
-            createdAt: Carbon::now()
+            info: AnimalInfo::create(
+                name: $dto->name,
+                type: $dto->type,
+                gender: $dto->gender,
+                breed: $dto->breed,
+                birthdate: $dto->birthdate,
+                entrydate: $dto->entrydate,
+            ),
+            createdAt: CarbonImmutable::now(),
         );
 
         $this->repository->create($animal);

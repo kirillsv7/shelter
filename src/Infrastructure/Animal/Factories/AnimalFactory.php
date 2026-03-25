@@ -29,8 +29,8 @@ final class AnimalFactory extends Factory
             'type' => fake()->randomElement(AnimalType::cases())->value,
             'gender' => fake()->randomElement(AnimalGender::cases())->value,
             'breed' => fake()->text(20),
-            'birthdate' => Carbon::today()->subDays(rand(30, 365 * 5))->format('Y-m-d'),
-            'entrydate' => Carbon::today()->format('Y-m-d'),
+            'birthdate' => Carbon::today()->subDays(rand(30, 365 * 5))->format(config('app.date_format')),
+            'entrydate' => Carbon::today()->format(config('app.date_format')),
             'status' => fake()->randomElement(AnimalStatus::cases())->value,
             'published' => fake()->boolean(),
         ];

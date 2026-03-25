@@ -16,16 +16,9 @@ use Source\Interface\Slug\Controllers\SlugController;
 |
 */
 
-Route::get('/', function () {
-    return config('app.name') . ' is running';
-});
+Route::get('/', fn () => config('app.name') . ' is running')->name('home');
 
 Route::get('animals', [AnimalController::class, 'index'])->name('animal.index');
-Route::get('{animals}', [AnimalController::class, 'indexByType'])->name('animal.index-by-type');
-
-Route::post('mediafile', [MediaFileController::class, 'store'])->name('media-file.store');
-Route::get('mediafile/{id}', [MediaFileController::class, 'getById'])->name('media-file.get-by-id');
-
 Route::post('animals', [AnimalController::class, 'store'])->name('animal.store');
 Route::get('animals/{id}', [AnimalController::class, 'getById'])->name('animal.get-by-id');
 Route::put('animals/{id}', [AnimalController::class, 'update'])->name('animal.update');
@@ -33,6 +26,11 @@ Route::put('animals/status/{id}', [AnimalController::class, 'statusUpdate'])->na
 Route::post('animals/publish/{id}', [AnimalController::class, 'publish'])->name('animal.publish');
 Route::post('animals/unpublish/{id}', [AnimalController::class, 'unpublish'])->name('animal.unpublish');
 Route::delete('animals/{id}', [AnimalController::class, 'destroy'])->name('animal.destroy');
-Route::get('{animal}/{slug}', [AnimalController::class, 'getBySlug'])->name('animal.get-by-slug');
+
+Route::post('mediafile', [MediaFileController::class, 'store'])->name('media-file.store');
+Route::get('mediafile/{id}', [MediaFileController::class, 'getById'])->name('media-file.get-by-id');
 
 Route::post('slug/{id}', [SlugController::class, 'update'])->name('slug.update');
+
+//Route::get('{animal}/{slug}', [AnimalController::class, 'getBySlug'])->name('animal.get-by-slug');
+//Route::get('{animals}', [AnimalController::class, 'indexByType'])->name('animal.index-by-type');

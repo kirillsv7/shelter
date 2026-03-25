@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,37 +16,37 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             \Source\Infrastructure\Laravel\Events\MultiDispatcher::class,
-            \Source\Infrastructure\Laravel\Events\LaravelMultiDispatcher::class
+            \Source\Infrastructure\Laravel\Events\LaravelMultiDispatcher::class,
         );
 
         $this->app->bind(
             \Source\Domain\MediaFile\Contracts\MediaFileRouteGenerator::class,
-            \Source\Infrastructure\MediaFile\Services\PublicStorageMediaFileRouteGenerator::class
+            \Source\Infrastructure\MediaFile\Services\PublicStorageMediaFileRouteGenerator::class,
         );
 
         $this->app->bind(
             \Source\Domain\MediaFile\Contracts\MediaFileNameGenerator::class,
-            \Source\Infrastructure\MediaFile\Services\GeneralMediaFileNameGenerator::class
+            \Source\Infrastructure\MediaFile\Services\GeneralMediaFileNameGenerator::class,
         );
 
         $this->app->bind(
             \Source\Domain\Animal\Repositories\AnimalRepository::class,
-            \Source\Infrastructure\Animal\Repositories\AnimalRepository::class
+            \Source\Infrastructure\Animal\Repositories\AnimalRepository::class,
         );
 
         $this->app->bind(
             \Source\Domain\Slug\Repositories\SlugRepository::class,
-            \Source\Infrastructure\Slug\Repositories\SlugRepository::class
+            \Source\Infrastructure\Slug\Repositories\SlugRepository::class,
         );
 
         $this->app->bind(
             \Source\Domain\MediaFile\Repositories\MediaFileRepository::class,
-            \Source\Infrastructure\MediaFile\Repositories\MediaFileRepository::class
+            \Source\Infrastructure\MediaFile\Repositories\MediaFileRepository::class,
         );
 
         $this->app->bind(
             \Source\Domain\MediaFile\Contracts\Storage::class,
-            \Source\Infrastructure\MediaFile\Storages\PublicStorage::class
+            \Source\Infrastructure\MediaFile\Storages\PublicStorage::class,
         );
     }
 
@@ -53,6 +55,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Date::use(CarbonImmutable::class);
+
         Model::shouldBeStrict(app()->isLocal());
     }
 }
