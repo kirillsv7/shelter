@@ -12,13 +12,13 @@
         "laravel/octane": "^2.3",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^3.0",
+        "nesbot/carbon": "^3.11",
         "ramsey/uuid": "^4.7"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.7.0",
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.11",
-        "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^8.1",
         "larastan/larastan": "^3.0",
