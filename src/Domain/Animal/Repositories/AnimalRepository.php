@@ -8,23 +8,31 @@ use Source\Domain\Animal\AnimalSearchCriteria;
 use Source\Domain\Animal\Enums\AnimalType;
 use Source\Domain\Animal\Exceptions\AnimalNotFoundException;
 use Source\Domain\Shared\Model\Pagination;
+use Source\Domain\Shared\ValueObjects\StringValueObject;
 
 interface AnimalRepository
 {
     public function index(
         AnimalSearchCriteria $criteria,
-        Pagination $pagination
+        Pagination $pagination,
+        StringValueObject $dateTimeFormat,
     ): array;
 
     /**
      * @throws AnimalNotFoundException
      */
-    public function getById(UuidInterface $id): Animal;
+    public function getById(
+        UuidInterface $id,
+        StringValueObject $dateTimeFormat,
+    ): Animal;
 
     /**
      * @throws AnimalNotFoundException
      */
-    public function getBySlug(AnimalType $type, string $slug): Animal;
+    public function getBySlug(
+        AnimalType $type,
+        StringValueObject $slug,
+    ): Animal;
 
     /**
      * @throws \Throwable
@@ -34,7 +42,10 @@ interface AnimalRepository
     /**
      * @throws \Throwable
      */
-    public function update(UuidInterface $id, Animal $animal): void;
+    public function update(
+        UuidInterface $id,
+        Animal $animal,
+    ): void;
 
     public function delete(UuidInterface $id): void;
 

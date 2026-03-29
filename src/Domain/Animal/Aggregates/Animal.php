@@ -10,17 +10,17 @@ use Source\Domain\Animal\Events\AnimalDeleted;
 use Source\Domain\Animal\Events\AnimalPublished;
 use Source\Domain\Animal\Events\AnimalStatusChanged;
 use Source\Domain\Animal\Events\AnimalUnpublished;
-use Source\Domain\Animal\ValueObjects\Slug;
 use Source\Domain\Shared\AggregateTraits\UseAggregateEvents;
 use Source\Domain\Shared\AggregateWithEvents;
 use Source\Domain\Shared\Entity;
 use Source\Domain\Shared\ValueObjects\IntegerValueObject;
+use Source\Domain\Slug\ValueObjects\SlugString;
 
 final class Animal implements Entity, AggregateWithEvents
 {
     use UseAggregateEvents;
 
-    private ?Slug $slug = null;
+    private ?SlugString $slug = null;
 
     private function __construct(
         private readonly UuidInterface    $id,
@@ -112,7 +112,7 @@ final class Animal implements Entity, AggregateWithEvents
         return $this->updatedAt;
     }
 
-    public function slug(): ?Slug
+    public function slug(): ?SlugString
     {
         return $this->slug;
     }
@@ -161,7 +161,7 @@ final class Animal implements Entity, AggregateWithEvents
         $this->addEvent(new AnimalDeleted($this->id()));
     }
 
-    public function addSlug(Slug $slug): void
+    public function addSlug(SlugString $slug): void
     {
         $this->slug = $slug;
     }

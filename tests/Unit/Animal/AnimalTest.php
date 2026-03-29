@@ -16,7 +16,8 @@ use Source\Domain\Animal\Events\AnimalStatusChanged;
 use Source\Domain\Animal\Events\AnimalUnpublished;
 use Source\Domain\Animal\ValueObjects\Breed;
 use Source\Domain\Animal\ValueObjects\Name;
-use Source\Domain\Animal\ValueObjects\Slug;
+use Source\Domain\Shared\ValueObjects\StringValueObject;
+use Source\Domain\Slug\ValueObjects\SlugString;
 use Tests\UnitTestCase;
 
 class AnimalTest extends UnitTestCase
@@ -117,7 +118,7 @@ class AnimalTest extends UnitTestCase
     {
         $animal = $this->animalCreate();
 
-        $slug = Slug::fromString('animal-slug');
+        $slug = SlugString::fromString('animal-slug');
 
         $animal->addSlug($slug);
 
@@ -155,6 +156,7 @@ class AnimalTest extends UnitTestCase
                 breed: Breed::fromString(fake()->word()),
                 birthdate: Carbon::today()->subDays(rand(30, 365 * 5)),
                 entrydate: Carbon::today(),
+                dateTimeFormat: StringValueObject::fromString('Y-m-d'),
             ),
             createdAt: Carbon::now(),
         );

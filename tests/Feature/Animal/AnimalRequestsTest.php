@@ -15,9 +15,9 @@ class AnimalRequestsTest extends FeatureTestCase
     {
         AnimalModel::factory(110)->create();
 
-        $responsePage1 = $this->getJson(route('animal.index'));
-        $responsePage2 = $this->getJson(route('animal.index', ['page' => 2]));
-        $responsePage6 = $this->getJson(route('animal.index', ['page' => 6]));
+        $responsePage1 = $this->getJson(route('animals.index'));
+        $responsePage2 = $this->getJson(route('animals.index', ['page' => 2]));
+        $responsePage6 = $this->getJson(route('animals.index', ['page' => 6]));
 
         $responsePage1
             ->assertOk()
@@ -42,17 +42,17 @@ class AnimalRequestsTest extends FeatureTestCase
         ]);
         AnimalModel::factory(50)->create();
 
-        $responseNameDobby = $this->getJson(route('animal.index', ['name' => $name]));
-        $responseTypeDogs = $this->getJson(route('animal.index', ['type' => 'dogs']));
-        $responseGenderMale = $this->getJson(route('animal.index', ['gender' => 'male']));
+        $responseNameDobby = $this->getJson(route('animals.index', ['name' => $name]));
+        $responseTypeDogs = $this->getJson(route('animals.index', ['type' => 'dogs']));
+        $responseGenderMale = $this->getJson(route('animals.index', ['gender' => 'male']));
         $responseTypeCatsAndGenderFemale = $this->getJson(
-            route('animal.index', [
+            route('animals.index', [
                 'type' => 'cats',
                 'gender' => 'female',
             ]),
         );
-        $responseAgeMin4 = $this->getJson(route('animal.index', ['age_min' => 4]));
-        $responseAgeMax2 = $this->getJson(route('animal.index', ['age_max' => 2]));
+        $responseAgeMin4 = $this->getJson(route('animals.index', ['age_min' => 4]));
+        $responseAgeMax2 = $this->getJson(route('animals.index', ['age_max' => 2]));
 
         $responseNameDobby
             ->assertOk()
@@ -93,18 +93,18 @@ class AnimalRequestsTest extends FeatureTestCase
         ]);
 
         $responsePage1 = $this->getJson(
-            route('animal.index-by-type', [
+            route('animals.index-by-type', [
                 'animals' => 'dogs',
             ]),
         );
         $responsePage2 = $this->getJson(
-            route('animal.index-by-type', [
+            route('animals.index-by-type', [
                 'animals' => 'dogs',
                 'page' => 2,
             ]),
         );
         $responsePage6 = $this->getJson(
-            route('animal.index-by-type', [
+            route('animals.index-by-type', [
                 'animals' => 'dogs',
                 'page' => 6,
             ]),
@@ -133,7 +133,7 @@ class AnimalRequestsTest extends FeatureTestCase
         $animal = $this->generateAnimalDataForRequest();
 
         $response = $this->postJson(
-            route('animal.store'),
+            route('animals.store'),
             $animal,
         );
 
@@ -152,7 +152,7 @@ class AnimalRequestsTest extends FeatureTestCase
     public function testAnimalStoreValidation()
     {
         $response = $this->postJson(
-            route('animal.store'),
+            route('animals.store'),
             [],
         );
 
@@ -173,7 +173,7 @@ class AnimalRequestsTest extends FeatureTestCase
         $animal = AnimalModel::factory()->create();
 
         $response = $this->getJson(
-            route('animal.get-by-id', ['id' => $animal->id]),
+            route('animals.get-by-id', ['id' => $animal->id]),
         );
 
         $response
@@ -199,7 +199,7 @@ class AnimalRequestsTest extends FeatureTestCase
         AnimalModel::factory()->create();
 
         $response = $this->getJson(
-            route('animal.get-by-id', ['id' => fake()->uuid()]),
+            route('animals.get-by-id', ['id' => fake()->uuid()]),
         );
 
         $response->assertNotFound();
@@ -210,7 +210,7 @@ class AnimalRequestsTest extends FeatureTestCase
         $animal = AnimalModel::factory()->create();
 
         $response = $this->getJson(
-            route('animal.get-by-slug', [
+            route('animals.get-by-slug', [
                 'animal' => $animal->type,
                 'slug' => $animal->slug->slug,
             ]),
@@ -239,7 +239,7 @@ class AnimalRequestsTest extends FeatureTestCase
         $animal = AnimalModel::factory()->create();
 
         $response = $this->getJson(
-            route('animal.get-by-slug', [
+            route('animals.get-by-slug', [
                 'animal' => $animal->type,
                 'slug' => $animal->slug->slug . '-false',
             ]),
@@ -255,7 +255,7 @@ class AnimalRequestsTest extends FeatureTestCase
         $animalNewData = $this->generateAnimalDataForRequest();
 
         $response = $this->putJson(
-            route('animal.update', ['id' => $animal->id]),
+            route('animals.update', ['id' => $animal->id]),
             $animalNewData,
         );
 
@@ -280,7 +280,7 @@ class AnimalRequestsTest extends FeatureTestCase
         $animalNewStatus = ['status' => AnimalStatus::Adopted->value];
 
         $response = $this->putJson(
-            route('animal.status-update', ['id' => $animal->id]),
+            route('animals.status-update', ['id' => $animal->id]),
             $animalNewStatus,
         );
 
@@ -295,7 +295,7 @@ class AnimalRequestsTest extends FeatureTestCase
             'published' => false,
         ]);
 
-        $response = $this->post(route('animal.publish', ['id' => $animal->id]));
+        $response = $this->post(route('animals.publish', ['id' => $animal->id]));
 
         $response
             ->assertAccepted()
@@ -310,7 +310,7 @@ class AnimalRequestsTest extends FeatureTestCase
             'published' => true,
         ]);
 
-        $response = $this->post(route('animal.unpublish', ['id' => $animal->id]));
+        $response = $this->post(route('animals.unpublish', ['id' => $animal->id]));
 
         $response
             ->assertAccepted()
@@ -323,7 +323,7 @@ class AnimalRequestsTest extends FeatureTestCase
     {
         $animal = AnimalModel::factory()->create();
 
-        $response = $this->delete(route('animal.destroy', ['id' => $animal->id]));
+        $response = $this->delete(route('animals.destroy', ['id' => $animal->id]));
 
         $response->assertNoContent();
     }

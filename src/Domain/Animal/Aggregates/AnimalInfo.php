@@ -8,6 +8,7 @@ use Source\Domain\Animal\Enums\AnimalGender;
 use Source\Domain\Animal\Enums\AnimalType;
 use Source\Domain\Animal\ValueObjects\Breed;
 use Source\Domain\Animal\ValueObjects\Name;
+use Source\Domain\Shared\ValueObjects\StringValueObject;
 
 final class AnimalInfo
 {
@@ -18,7 +19,9 @@ final class AnimalInfo
         private Breed $breed,
         private CarbonInterface $birthdate,
         private CarbonInterface $entrydate,
+        private readonly StringValueObject $dateTimeFormat,
     ) {
+
     }
 
     public static function create(
@@ -27,7 +30,8 @@ final class AnimalInfo
         AnimalGender      $gender,
         Breed             $breed,
         CarbonInterface $birthdate,
-        CarbonInterface $entrydate
+        CarbonInterface $entrydate,
+        StringValueObject $dateTimeFormat,
     ): self {
         return new self(
             name: $name,
@@ -36,6 +40,7 @@ final class AnimalInfo
             breed: $breed,
             birthdate: $birthdate,
             entrydate: $entrydate,
+            dateTimeFormat: $dateTimeFormat,
         );
     }
 
@@ -45,7 +50,7 @@ final class AnimalInfo
         ?AnimalGender      $gender,
         ?Breed             $breed,
         ?CarbonInterface $birthdate,
-        ?CarbonInterface $entrydate
+        ?CarbonInterface $entrydate,
     ): void {
         if ($name) {
             $this->changeName($name);
@@ -136,6 +141,7 @@ final class AnimalInfo
             breed: Breed::fromString($data['breed']),
             birthdate: new CarbonImmutable($data['birthdate']),
             entrydate: new CarbonImmutable($data['entrydate']),
+            dateTimeFormat: StringValueObject::fromString($data['dateTimeFormat']),
         );
     }
 
@@ -146,8 +152,8 @@ final class AnimalInfo
             'type' => $this->type(),
             'gender' => $this->gender(),
             'breed' => $this->breed()->value(),
-            'birthdate' => $this->birthdate()->format(config('app.date_format')),
-            'entrydate' => $this->entrydate()->format(config('app.date_format')),
+            'birthdate' => $this->birthdate()->format($this->dateTimeFormat),
+            'entrydate' => $this->entrydate()->format($this->dateTimeFormat),
         ];
     }
 }

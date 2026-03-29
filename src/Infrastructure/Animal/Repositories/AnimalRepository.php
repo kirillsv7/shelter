@@ -18,6 +18,7 @@ use Source\Domain\Animal\Repositories\AnimalRepository as AnimalRepositoryContra
 use Source\Domain\Animal\ValueObjects\Breed;
 use Source\Domain\Animal\ValueObjects\Name;
 use Source\Domain\Shared\Model\Pagination;
+use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Infrastructure\Animal\Models\AnimalModel;
 use Source\Infrastructure\Animal\QueryBuilders\AnimalQueryBuilder;
 
@@ -30,7 +31,8 @@ final class AnimalRepository implements AnimalRepositoryContract
 
     public function index(
         AnimalSearchCriteria $criteria,
-        Pagination $pagination
+        Pagination $pagination,
+        StringValueObject $dateTimeFormat,
     ): array {
         $animals = $this->handleCriteria($criteria)
             ->offset($pagination->offset()->value)
@@ -40,7 +42,7 @@ final class AnimalRepository implements AnimalRepositoryContract
 
         return array_map(
             /** @phpstan-ignore-next-line */
-            static fn (AnimalModel $model) => self::map($model),
+            static fn (AnimalModel $model) => self::map($model, $dateTimeFormat),
             $animals,
         );
     }
@@ -48,7 +50,7 @@ final class AnimalRepository implements AnimalRepositoryContract
     /**
      * @throws AnimalNotFoundException
      */
-    public function getById(UuidInterface $id): Animal
+    public function getById(UuidInterface $id, StringValueObject $dateTimeFormat): Animal
     {
         /** @var ?AnimalModel $model */
         $model = AnimalModel::query()->find($id);
@@ -57,13 +59,13 @@ final class AnimalRepository implements AnimalRepositoryContract
             throw new AnimalNotFoundException();
         }
 
-        return self::map($model);
+        return self::map($model, $dateTimeFormat);
     }
 
     /**
      * @throws AnimalNotFoundException
      */
-    public function getBySlug(AnimalType $type, string $slug): Animal
+    public function getBySlug(AnimalType $type, StringValueObject $slug): Animal
     {
         /** @var ?AnimalModel $model */
         $model = AnimalModel::query()
@@ -157,7 +159,7 @@ final class AnimalRepository implements AnimalRepositoryContract
         return $animalQueryBuilder;
     }
 
-    public static function map(AnimalModel $model): Animal
+    public static function map(AnimalModel $model, StringValueObject $dateTimeFormat): Animal
     {
         return Animal::make(
             id: Uuid::fromString($model->id),
@@ -168,6 +170,7 @@ final class AnimalRepository implements AnimalRepositoryContract
                 breed: Breed::fromString($model->breed),
                 birthdate: new CarbonImmutable($model->birthdate),
                 entrydate: new CarbonImmutable($model->entrydate),
+                dateTimeFormat: $dateTimeFormat,
             ),
             status: AnimalStatus::tryFrom($model->status),
             published: $model->published,

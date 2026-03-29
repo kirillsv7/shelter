@@ -10,7 +10,7 @@ use Source\Infrastructure\Laravel\Models\BaseModel;
 final class SlugGetBySluggableUseCase
 {
     public function __construct(
-        protected SlugRepository $repository
+        protected SlugRepository $repository,
     ) {
     }
 

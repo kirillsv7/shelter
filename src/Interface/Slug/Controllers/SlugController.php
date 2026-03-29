@@ -5,10 +5,9 @@ namespace Source\Interface\Slug\Controllers;
 use Illuminate\Http\JsonResponse;
 use Ramsey\Uuid\Uuid;
 use Source\Application\Slug\UseCases\SlugUpdateUseCase;
-use Source\Infrastructure\Laravel\Controllers\Controller;
 use Source\Interface\Slug\Requests\SlugUpdateRequest;
 
-final class SlugController extends Controller
+final class SlugController
 {
     public function update(
         SlugUpdateRequest $request,

@@ -1,5 +1,7 @@
 <?php
 
+use Source\Domain\Shared\ValueObjects\StringValueObject;
+
 return [
 
     /*
@@ -65,7 +67,7 @@ return [
     |
     */
 
-    'date_format' => env('DATE_FORMAT', 'Y-m-d'),
+    'date_format' => StringValueObject::fromString(env('DATE_FORMAT', 'Y-m-d')),
 
     'timezone' => 'UTC',
 

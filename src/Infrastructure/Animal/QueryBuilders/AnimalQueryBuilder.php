@@ -9,10 +9,11 @@ use Source\Domain\Animal\Enums\AnimalStatus;
 use Source\Domain\Animal\Enums\AnimalType;
 use Source\Domain\Animal\ValueObjects\Name;
 use Source\Domain\Shared\ValueObjects\IntegerValueObject;
+use Source\Domain\Shared\ValueObjects\StringValueObject;
 
 final class AnimalQueryBuilder extends Builder
 {
-    public function slug(string $slug): self
+    public function slug(StringValueObject $slug): self
     {
         return $this->whereRelation('slug', 'slug', '=', $slug);
     }
@@ -47,7 +48,7 @@ final class AnimalQueryBuilder extends Builder
         return $this->where('status', '=', $status);
     }
 
-    public function published($bool = true): self
+    public function published(bool $bool = true): self
     {
         return $this->where('published', '=', $bool);
     }

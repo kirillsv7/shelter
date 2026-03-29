@@ -7,10 +7,9 @@ use Ramsey\Uuid\Uuid;
 use Source\Application\MediaFile\UseCases\MediaFileGetByIdUseCase;
 use Source\Application\MediaFile\UseCases\MediaFileGetUrlUseCase;
 use Source\Application\MediaFile\UseCases\MediaFileUploadUseCase;
-use Source\Infrastructure\Laravel\Controllers\Controller;
 use Source\Interface\MediaFile\Requests\MediaFileStoreRequest;
 
-final class MediaFileController extends Controller
+final class MediaFileController
 {
     public function store(
         MediaFileStoreRequest $request,
