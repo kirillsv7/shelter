@@ -79,7 +79,7 @@ final class SlugRepository implements SlugRepositoryContract
             id: Uuid::fromString($model->id),
             value: SlugString::fromString($model->slug),
             sluggableType: new $model->sluggable_type(),
-            sluggableId: Uuid::fromString($model->sluggable_id)
+            sluggableId: Uuid::fromString($model->sluggable_id),
         );
     }
 }

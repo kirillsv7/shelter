@@ -58,12 +58,12 @@ class PaginationTest extends UnitTestCase
 
         $this->assertEquals(
             $total - ($limit * $page) > 0 ? max($page, 1) + 1 : null,
-            $paginationLinks['next']
+            $paginationLinks['next'],
         );
 
         $this->assertEquals(
             ceil($total / $limit),
-            $paginationLinks['last']
+            $paginationLinks['last'],
         );
     }
 

@@ -20,7 +20,7 @@ final class SlugGetBySluggableUseCase
     ): Slug {
         return $this->repository->getBySluggable(
             sluggableType: $sluggableType,
-            sluggableId: $sluggableId
+            sluggableId: $sluggableId,
         );
     }
 }

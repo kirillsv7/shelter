@@ -25,7 +25,7 @@ final class SlugCreateUseCase
             id: Uuid::uuid4(),
             value: SlugString::fromString($slugString),
             sluggableType: $sluggableType,
-            sluggableId: $sluggableId
+            sluggableId: $sluggableId,
         );
 
         $this->repository->create($slug);

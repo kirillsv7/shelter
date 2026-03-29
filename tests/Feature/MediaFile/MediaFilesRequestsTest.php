@@ -29,7 +29,7 @@ class MediaFilesRequestsTest extends FeatureTestCase
         $fileRoute = $mediaFileRouteGenerator(
             $animal,
             $animal->id,
-            $image
+            $image,
         );
 
         $response = $this->post(
@@ -37,8 +37,8 @@ class MediaFilesRequestsTest extends FeatureTestCase
             [
                 'model' => $model,
                 'id' => (string)$animal->id,
-                'file' => $image
-            ]
+                'file' => $image,
+            ],
         );
 
         $response
@@ -47,7 +47,7 @@ class MediaFilesRequestsTest extends FeatureTestCase
                 'storage_info' => [
                     'disk' => $disk,
                     'route' => $fileRoute,
-                    'fileName' => $fileName
+                    'fileName' => $fileName,
                 ],
                 'mediableType' => get_class(new AnimalModel()),
                 'mediableId' => $animal->id,

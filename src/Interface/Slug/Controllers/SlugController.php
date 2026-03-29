@@ -22,7 +22,7 @@ final class SlugController extends Controller
 
         return response()->json(
             ['slug' => (string)$slug],
-            JsonResponse::HTTP_ACCEPTED
+            JsonResponse::HTTP_ACCEPTED,
         );
     }
 

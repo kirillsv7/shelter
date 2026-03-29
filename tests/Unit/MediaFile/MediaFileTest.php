@@ -47,13 +47,13 @@ class MediaFileTest extends UnitTestCase
             storageInfo: StorageInfo::make(
                 disk: StringValueObject::fromString('public'),
                 route: StringValueObject::fromString('media_files'),
-                fileName: StringValueObject::fromString('test.jpg')
+                fileName: StringValueObject::fromString('test.jpg'),
             ),
             sizes: [],
             mimetype: StringValueObject::fromString('image/jpeg'),
             mediableType: new AnimalModel(),
             mediableId: Uuid::uuid4(),
-            createdAt: Carbon::now()
+            createdAt: Carbon::now(),
         );
     }
 }

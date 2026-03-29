@@ -17,7 +17,7 @@ final class MediaFileGetUrlUseCase
     ): string {
         return $this->storage->getFileUrl(
             $fileRoute,
-            $fileName
+            $fileName,
         );
     }
 }

@@ -29,7 +29,7 @@ class MediaFileUploadUseCaseTest extends FeatureTestCase
         $fileRoute = implode('/', [
             $animal->getTable(),
             $animal->id,
-            'images'
+            'images',
         ]);
 
         $fileName = $uploadedFile->hashName();
@@ -53,7 +53,7 @@ class MediaFileUploadUseCaseTest extends FeatureTestCase
             $fileRoute,
             $fileName,
             $animal,
-            $animal->id
+            $animal->id,
         );
 
         $this->assertDatabaseHas('media_files', [
@@ -84,7 +84,7 @@ class MediaFileUploadUseCaseTest extends FeatureTestCase
         $savedFile = $publicStorage->saveFile(
             $uploadedFile,
             '',
-            $uploadedFile->hashName()
+            $uploadedFile->hashName(),
         );
 
         Storage::disk($disk)->assertExists($uploadedFile->hashName());

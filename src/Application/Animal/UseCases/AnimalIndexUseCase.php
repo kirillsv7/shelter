@@ -36,12 +36,12 @@ final class AnimalIndexUseCase
 
         $pagination = Pagination::create(
             $limit,
-            $page
+            $page,
         );
 
         $animals = $this->repository->index(
             $criteria,
-            $pagination
+            $pagination,
         );
 
         $animalsTotalCount = $this->repository->totalCountByCriteria($criteria);
@@ -50,7 +50,7 @@ final class AnimalIndexUseCase
 
         return [
             'animals' => $animals,
-            'pagination' => $paginationLinks
+            'pagination' => $paginationLinks,
         ];
     }
 }

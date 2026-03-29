@@ -26,7 +26,7 @@ final class AnimalStatusUpdateUseCase
 
         $this->repository->update(
             id: $id,
-            animal: $animal
+            animal: $animal,
         );
 
         $this->dispatcher->multiDispatch($animal->releaseEvents());

@@ -30,7 +30,7 @@ final readonly class AnimalSearchCriteria
             $type,
             $gender,
             $ageMin,
-            $ageMax
+            $ageMax,
         );
     }
 }

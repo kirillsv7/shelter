@@ -17,7 +17,7 @@ enum MediableModel: string
         }
 
         throw new \ValueError(
-            sprintf('%s is not a valid backing value for enum %s', $modelName, self::class)
+            sprintf('%s is not a valid backing value for enum %s', $modelName, self::class),
         );
     }
 }

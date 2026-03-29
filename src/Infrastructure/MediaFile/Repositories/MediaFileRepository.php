@@ -73,7 +73,7 @@ final class MediaFileRepository implements MediaFileRepositoryContract
             storageInfo: StorageInfo::make(
                 disk: StringValueObject::fromString($model->storage_info['disk']),
                 route: StringValueObject::fromString($model->storage_info['route']),
-                fileName: StringValueObject::fromString($model->storage_info['fileName'])
+                fileName: StringValueObject::fromString($model->storage_info['fileName']),
             ),
             sizes: $model->sizes,
             mimetype: StringValueObject::fromString($model->mimetype),

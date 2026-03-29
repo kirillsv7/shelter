@@ -23,7 +23,7 @@ final class Pagination
     {
         return new self(
             Limit::fromInteger($limit ?? self::LIMIT),
-            Page::fromInteger(max($page, 1))
+            Page::fromInteger(max($page, 1)),
         );
     }
 
@@ -43,7 +43,7 @@ final class Pagination
             'current' => $this->page->value,
             'previous' => $this->previousPage()?->value,
             'next' => $this->nextPage()?->value,
-            'last' => $this->lastPage()->value
+            'last' => $this->lastPage()->value,
         ];
     }
 

@@ -21,7 +21,7 @@ final readonly class StorageInfo
         return new self(
             disk: $disk,
             route: $route,
-            fileName: $fileName
+            fileName: $fileName,
         );
     }
 

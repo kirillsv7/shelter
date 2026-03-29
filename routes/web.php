@@ -18,19 +18,25 @@ use Source\Interface\Slug\Controllers\SlugController;
 
 Route::get('/', fn () => config('app.name') . ' is running')->name('home');
 
-Route::get('animals', [AnimalController::class, 'index'])->name('animal.index');
-Route::post('animals', [AnimalController::class, 'store'])->name('animal.store');
-Route::get('animals/{id}', [AnimalController::class, 'getById'])->name('animal.get-by-id');
-Route::put('animals/{id}', [AnimalController::class, 'update'])->name('animal.update');
-Route::put('animals/status/{id}', [AnimalController::class, 'statusUpdate'])->name('animal.status-update');
-Route::post('animals/publish/{id}', [AnimalController::class, 'publish'])->name('animal.publish');
-Route::post('animals/unpublish/{id}', [AnimalController::class, 'unpublish'])->name('animal.unpublish');
-Route::delete('animals/{id}', [AnimalController::class, 'destroy'])->name('animal.destroy');
+Route::group([
+    'controller' => AnimalController::class,
+    'prefix' => 'animals',
+    'as' => 'animals.',
+], function () {
+    Route::get('/', 'index')->name('index');
+    Route::post('/', 'store')->name('store');
+    Route::get('/{id}', 'getById')->name('id');
+    Route::put('/{id}', 'update')->name('update');
+    Route::delete('/{id}', 'destroy')->name('destroy');
+    Route::put('/status/{id}', 'statusUpdate')->name('status-update');
+    Route::post('/publish/{id}', 'publish')->name('publish');
+    Route::post('/unpublish/{id}', 'unpublish')->name('unpublish');
+});
 
-Route::post('mediafile', [MediaFileController::class, 'store'])->name('media-file.store');
-Route::get('mediafile/{id}', [MediaFileController::class, 'getById'])->name('media-file.get-by-id');
+Route::post('mediafiles', [MediaFileController::class, 'store'])->name('media-file.store');
+Route::get('mediafiles/{id}', [MediaFileController::class, 'getById'])->name('media-file.get-by-id');
 
-Route::post('slug/{id}', [SlugController::class, 'update'])->name('slug.update');
+Route::post('slugs/{id}', [SlugController::class, 'update'])->name('slug.update');
 
-//Route::get('{animal}/{slug}', [AnimalController::class, 'getBySlug'])->name('animal.get-by-slug');
-//Route::get('{animals}', [AnimalController::class, 'indexByType'])->name('animal.index-by-type');
+//Route::get('{animal}/{slug}', 'getBySlug'])->name('animal.get-by-slug');
+//Route::get('{animals}', 'indexByType'])->name('animal.index-by-type');

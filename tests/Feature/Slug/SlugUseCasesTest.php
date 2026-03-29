@@ -19,7 +19,7 @@ class SlugUseCasesTest extends FeatureTestCase
 
         $slug = $slugGetBySluggableUseCase->apply(
             $animal->getModel(),
-            $animal->id
+            $animal->id,
         );
 
         $this->assertEquals(get_class($animal->getModel()), $slug->sluggableType());
@@ -35,7 +35,7 @@ class SlugUseCasesTest extends FeatureTestCase
 
         $slugGetBySluggableUseCase->apply(
             new MediaFileModel(),
-            Uuid::fromString(fake()->uuid())
+            Uuid::fromString(fake()->uuid()),
         );
     }
 }

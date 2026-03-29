@@ -25,15 +25,15 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         AnimalCreated::class => [
-            AnimalCreatedLogEventListener::class
+            AnimalCreatedLogEventListener::class,
         ],
         AnimalStatusChanged::class => [
-            AnimalStatusChangedLogEventListener::class
+            AnimalStatusChangedLogEventListener::class,
         ],
 
         MediaFileCreated::class => [
-            MediaFileGenerateThumbs::class
-        ]
+            MediaFileGenerateThumbs::class,
+        ],
     ];
 
     /**

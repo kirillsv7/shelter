@@ -19,7 +19,7 @@ final class AnimalGetBySlugUseCase
     ): Animal {
         return $this->repository->getBySlug(
             type: $type,
-            slug: $slug
+            slug: $slug,
         );
     }
 }

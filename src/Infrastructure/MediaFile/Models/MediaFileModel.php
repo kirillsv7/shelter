@@ -53,7 +53,7 @@ final class MediaFileModel extends BaseModel
 
     protected $casts = [
         'storage_info' => 'array',
-        'sizes' => 'array'
+        'sizes' => 'array',
     ];
 
     public function newEloquentBuilder($query): Builder

@@ -21,7 +21,7 @@ final class SlugUpdateUseCase
         $slug = $this->repository->getBySluggableUuid($id);
 
         $slug->changeSlug(
-            SlugString::fromString($slugString)
+            SlugString::fromString($slugString),
         );
 
         $this->repository->update($slug);

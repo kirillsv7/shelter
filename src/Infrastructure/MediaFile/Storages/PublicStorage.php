@@ -25,7 +25,7 @@ final class PublicStorage implements Storage
             ->disk(self::DISK)
             ->put(
                 $fileRoute . DIRECTORY_SEPARATOR . $fileName,
-                $file->getContent()
+                $file->getContent(),
             );
 
         if (!$result) {

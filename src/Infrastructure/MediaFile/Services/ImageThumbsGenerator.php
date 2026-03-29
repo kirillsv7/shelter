@@ -45,7 +45,7 @@ final readonly class ImageThumbsGenerator
             Storage::disk($mediaFile->storageInfo->disk->value())
                 ->put(
                     $mediaFile->storageInfo->route . DIRECTORY_SEPARATOR . $newSizeFileName,
-                    $imageContent
+                    $imageContent,
                 );
 
             $mediaFile->addSize($newSizeFileName);

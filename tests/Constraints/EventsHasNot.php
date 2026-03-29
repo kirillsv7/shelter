@@ -21,7 +21,7 @@ class EventsHasNot extends Constraint
     {
         return \sprintf(
             'do not contain event "%s"',
-            $this->eventClass
+            $this->eventClass,
         );
     }
 
@@ -30,7 +30,7 @@ class EventsHasNot extends Constraint
         return count(
             array_filter($events, function ($event) {
                 return $event instanceof $this->eventClass;
-            })
+            }),
         ) === 0;
     }
 

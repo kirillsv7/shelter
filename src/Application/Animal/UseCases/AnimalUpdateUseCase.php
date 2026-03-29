@@ -35,7 +35,7 @@ final class AnimalUpdateUseCase
 
         $this->repository->update(
             id: $id,
-            animal: $animal
+            animal: $animal,
         );
 
         return $animal;

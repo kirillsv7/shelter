@@ -14,13 +14,13 @@ class SlugsRequestsTest extends FeatureTestCase
         $newSlug = 'this-is-test-slug';
 
         $response = $this->post(route('slug.update', ['id' => $animal->id]), [
-            'slug' => $newSlug
+            'slug' => $newSlug,
         ]);
 
         $response
             ->assertAccepted()
             ->assertJsonFragment([
-                'slug' => $newSlug
+                'slug' => $newSlug,
             ]);
     }
 
@@ -31,7 +31,7 @@ class SlugsRequestsTest extends FeatureTestCase
         $newSlug = 'this-is-test-slug';
 
         $response = $this->post(route('slug.update', ['id' => fake()->uuid()]), [
-            'slug' => $newSlug
+            'slug' => $newSlug,
         ]);
 
         $response->assertNotFound();
