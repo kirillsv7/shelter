@@ -2,7 +2,7 @@
 
 namespace Source\Domain\MediaFile\Aggregates;
 
-use Illuminate\Support\Carbon;
+use Carbon\CarbonInterface;
 use Ramsey\Uuid\UuidInterface;
 use Source\Domain\MediaFile\Events\MediaFileCreated;
 use Source\Domain\Shared\AggregateTraits\UseAggregateEvents;
@@ -22,8 +22,8 @@ final class MediaFile implements Entity, AggregateWithEvents
         public readonly StringValueObject $mimetype,
         public readonly BaseModel $mediableType,
         public readonly UuidInterface $mediableId,
-        public readonly ?Carbon $createdAt = null,
-        public readonly ?Carbon $updatedAt = null,
+        public readonly ?CarbonInterface $createdAt = null,
+        public readonly ?CarbonInterface $updatedAt = null,
     ) {
     }
 
@@ -34,8 +34,8 @@ final class MediaFile implements Entity, AggregateWithEvents
         StringValueObject $mimetype,
         BaseModel $mediableType,
         UuidInterface $mediableId,
-        ?Carbon $createdAt = null,
-        ?Carbon $updatedAt = null,
+        ?CarbonInterface $createdAt = null,
+        ?CarbonInterface $updatedAt = null,
     ): self {
         return new self(
             id: $id,
@@ -56,8 +56,8 @@ final class MediaFile implements Entity, AggregateWithEvents
         StringValueObject $mimetype,
         BaseModel $mediableType,
         UuidInterface $mediableId,
-        ?Carbon $createdAt = null,
-        ?Carbon $updatedAt = null,
+        ?CarbonInterface $createdAt = null,
+        ?CarbonInterface $updatedAt = null,
     ): self {
         $mediaFile = self::make(
             id: $id,

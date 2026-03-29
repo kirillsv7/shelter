@@ -4,7 +4,9 @@ namespace Source\Interface\MediaFile\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Ramsey\Uuid\Uuid;
 use Source\Domain\MediaFile\Enums\MediableModel;
+use Source\Interface\MediaFile\DTOs\MediaFileStoreRequestDTO;
 
 final class MediaFileStoreRequest extends FormRequest
 {
@@ -13,10 +15,19 @@ final class MediaFileStoreRequest extends FormRequest
         return [
             'model' => [
                 'required',
-                Rule::in(array_column(MediableModel::cases(), 'name'))
+                Rule::in(array_column(MediableModel::cases(), 'name')),
             ],
             'id' => ['required', 'string'],
-            'file' => ['required', 'file']
+            'file' => ['required', 'file'],
         ];
+    }
+
+    public function getDTO(): MediaFileStoreRequestDTO
+    {
+        return new MediaFileStoreRequestDTO(
+            model: MediableModel::fromName($this->validated('model')),
+            id: Uuid::fromString($this->validated('id')),
+            file: $this->validated('file'),
+        );
     }
 }
