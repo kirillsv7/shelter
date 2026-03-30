@@ -15,6 +15,7 @@ use Source\Application\Animal\UseCases\AnimalUnpublishUseCase;
 use Source\Application\Animal\UseCases\AnimalUpdateUseCase;
 use Source\Domain\Animal\Enums\AnimalStatus;
 use Source\Domain\Animal\Enums\AnimalType;
+use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Domain\Slug\ValueObjects\SlugString;
 use Source\Interface\Animal\Mappers\AnimalMapper;
 use Source\Interface\Animal\Requests\AnimalIndexRequest;
@@ -113,7 +114,7 @@ final class AnimalController
     ): JsonResponse {
         $animal = $animalGetBySlugCase->apply(
             type: AnimalType::tryFrom($type),
-            slug: $slug,
+            slug: StringValueObject::fromString($slug),
         );
 
         $animal->addSlug(SlugString::fromString($slug));
