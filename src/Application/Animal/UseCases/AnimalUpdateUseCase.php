@@ -6,7 +6,6 @@ use Ramsey\Uuid\UuidInterface;
 use Source\Application\Animal\UseCases\Traits\LoadSlugTrait;
 use Source\Domain\Animal\Aggregates\Animal;
 use Source\Domain\Animal\Repositories\AnimalRepository;
-use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Infrastructure\Laravel\Events\MultiDispatcher;
 use Source\Interface\Animal\DTOs\AnimalUpdateRequestDTO;
 
@@ -23,12 +22,8 @@ final class AnimalUpdateUseCase
     public function apply(
         UuidInterface $id,
         AnimalUpdateRequestDTO $dto,
-        StringValueObject $dateTimeFormat,
     ): Animal {
-        $animal = $this->repository->getById(
-            id: $id,
-            dateTimeFormat: $dateTimeFormat,
-        );
+        $animal = $this->repository->getById($id);
 
         $animal->info()->change(
             $dto->name,

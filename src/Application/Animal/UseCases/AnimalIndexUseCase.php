@@ -11,7 +11,7 @@ use Source\Domain\Animal\Repositories\AnimalRepository;
 use Source\Domain\Animal\ValueObjects\Name;
 use Source\Domain\Shared\Model\Pagination;
 use Source\Domain\Shared\ValueObjects\IntegerValueObject;
-use Source\Domain\Shared\ValueObjects\StringValueObject;
+use Source\Interface\Animal\DTOs\AnimalIndexResponseDTO;
 
 final class AnimalIndexUseCase
 {
@@ -30,8 +30,7 @@ final class AnimalIndexUseCase
         ?IntegerValueObject $ageMax,
         ?int $limit,
         ?int $page,
-        StringValueObject $dateTimeFormat,
-    ): array {
+    ): AnimalIndexResponseDTO {
         $criteria = AnimalSearchCriteria::create(
             $name,
             $type,
@@ -48,25 +47,24 @@ final class AnimalIndexUseCase
         $animals = $this->repository->index(
             $criteria,
             $pagination,
-            $dateTimeFormat,
         );
 
         $animals = array_map(
             function (Animal $animal) {
                 $this->loadSlug($animal);
 
-                return $animal->toArray();
+                return $animal;
             },
             $animals,
         );
 
         $animalsTotalCount = $this->repository->totalCountByCriteria($criteria);
 
-        $paginationLinks = $pagination->generateLinks($animalsTotalCount);
+        $pagination->generateLinks($animalsTotalCount);
 
-        return [
-            'animals' => $animals,
-            'pagination' => $paginationLinks,
-        ];
+        return new AnimalIndexResponseDTO(
+            animals: $animals,
+            pagination: $pagination,
+        );
     }
 }

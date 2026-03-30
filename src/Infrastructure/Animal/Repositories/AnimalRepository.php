@@ -2,37 +2,31 @@
 
 namespace Source\Infrastructure\Animal\Repositories;
 
-use Carbon\CarbonImmutable;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Carbon;
-use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Source\Domain\Animal\Aggregates\Animal;
-use Source\Domain\Animal\Aggregates\AnimalInfo;
 use Source\Domain\Animal\AnimalSearchCriteria;
-use Source\Domain\Animal\Enums\AnimalGender;
-use Source\Domain\Animal\Enums\AnimalStatus;
 use Source\Domain\Animal\Enums\AnimalType;
 use Source\Domain\Animal\Exceptions\AnimalNotFoundException;
 use Source\Domain\Animal\Repositories\AnimalRepository as AnimalRepositoryContract;
-use Source\Domain\Animal\ValueObjects\Breed;
-use Source\Domain\Animal\ValueObjects\Name;
 use Source\Domain\Shared\Model\Pagination;
 use Source\Domain\Shared\ValueObjects\StringValueObject;
+use Source\Infrastructure\Animal\Mappers\AnimalMapper;
 use Source\Infrastructure\Animal\Models\AnimalModel;
 use Source\Infrastructure\Animal\QueryBuilders\AnimalQueryBuilder;
 
 final class AnimalRepository implements AnimalRepositoryContract
 {
     public function __construct(
-        protected ConnectionInterface $connection
+        protected ConnectionInterface $connection,
+        protected AnimalMapper $mapper,
     ) {
     }
 
     public function index(
         AnimalSearchCriteria $criteria,
         Pagination $pagination,
-        StringValueObject $dateTimeFormat,
     ): array {
         $animals = $this->handleCriteria($criteria)
             ->offset($pagination->offset()->value)
@@ -42,7 +36,7 @@ final class AnimalRepository implements AnimalRepositoryContract
 
         return array_map(
             /** @phpstan-ignore-next-line */
-            static fn (AnimalModel $model) => self::map($model, $dateTimeFormat),
+            fn (AnimalModel $model) => $this->mapper->modelToEntity($model),
             $animals,
         );
     }
@@ -50,7 +44,7 @@ final class AnimalRepository implements AnimalRepositoryContract
     /**
      * @throws AnimalNotFoundException
      */
-    public function getById(UuidInterface $id, StringValueObject $dateTimeFormat): Animal
+    public function getById(UuidInterface $id): Animal
     {
         /** @var ?AnimalModel $model */
         $model = AnimalModel::query()->find($id);
@@ -59,14 +53,16 @@ final class AnimalRepository implements AnimalRepositoryContract
             throw new AnimalNotFoundException();
         }
 
-        return self::map($model, $dateTimeFormat);
+        return $this->mapper->modelToEntity($model);
     }
 
     /**
      * @throws AnimalNotFoundException
      */
-    public function getBySlug(AnimalType $type, StringValueObject $slug): Animal
-    {
+    public function getBySlug(
+        AnimalType $type,
+        StringValueObject $slug,
+    ): Animal {
         /** @var ?AnimalModel $model */
         $model = AnimalModel::query()
             ->type($type)
@@ -77,7 +73,7 @@ final class AnimalRepository implements AnimalRepositoryContract
             throw new AnimalNotFoundException();
         }
 
-        return self::map($model);
+        return $this->mapper->modelToEntity($model);
     }
 
     public function create(Animal $animal): void
@@ -132,7 +128,7 @@ final class AnimalRepository implements AnimalRepositoryContract
         return $animalQueryBuilder->count();
     }
 
-    private function handleCriteria(AnimalSearchCriteria $criteria): AnimalQueryBuilder
+    protected function handleCriteria(AnimalSearchCriteria $criteria): AnimalQueryBuilder
     {
         $animalQueryBuilder = AnimalModel::query();
 
@@ -157,25 +153,5 @@ final class AnimalRepository implements AnimalRepositoryContract
         }
 
         return $animalQueryBuilder;
-    }
-
-    public static function map(AnimalModel $model, StringValueObject $dateTimeFormat): Animal
-    {
-        return Animal::make(
-            id: Uuid::fromString($model->id),
-            info: AnimalInfo::create(
-                name: Name::fromString($model->name),
-                type: AnimalType::tryFrom($model->type),
-                gender: AnimalGender::tryFrom($model->gender),
-                breed: Breed::fromString($model->breed),
-                birthdate: new CarbonImmutable($model->birthdate),
-                entrydate: new CarbonImmutable($model->entrydate),
-                dateTimeFormat: $dateTimeFormat,
-            ),
-            status: AnimalStatus::tryFrom($model->status),
-            published: $model->published,
-            createdAt: $model->created_at,
-            updatedAt: $model->updated_at,
-        );
     }
 }

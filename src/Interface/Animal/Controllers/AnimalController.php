@@ -16,22 +16,27 @@ use Source\Application\Animal\UseCases\AnimalUpdateUseCase;
 use Source\Domain\Animal\Enums\AnimalStatus;
 use Source\Domain\Animal\Enums\AnimalType;
 use Source\Domain\Slug\ValueObjects\SlugString;
-use Source\Infrastructure\Laravel\Traits\DateTimeFormatTrait;
+use Source\Interface\Animal\Mappers\AnimalMapper;
 use Source\Interface\Animal\Requests\AnimalIndexRequest;
 use Source\Interface\Animal\Requests\AnimalStatusUpdateRequest;
 use Source\Interface\Animal\Requests\AnimalStoreRequest;
 use Source\Interface\Animal\Requests\AnimalUpdateRequest;
+use Source\Interface\Shared\Mappers\PaginationMapper;
 use Throwable;
 
 final class AnimalController
 {
-    use DateTimeFormatTrait;
+    public function __construct(
+        protected AnimalMapper $animalMapper,
+        protected PaginationMapper $paginationMapper,
+    ) {
+    }
 
     public function index(
         AnimalIndexRequest $request,
         AnimalIndexUseCase $animalIndexUseCase,
     ): JsonResponse {
-        $result = $animalIndexUseCase->apply(
+        $responseDTO = $animalIndexUseCase->apply(
             name: $request->getName(),
             type: $request->getType(),
             gender: $request->getGender(),
@@ -39,10 +44,15 @@ final class AnimalController
             ageMax: $request->getAgeMax(),
             limit: $request->getLimit(),
             page: $request->getPage(),
-            dateTimeFormat: $this->dateTimeFormat(),
         );
 
-        return response()->json($result);
+        return response()->json([
+            'animals' => array_map(
+                fn ($animal) => $this->animalMapper->toArray($animal),
+                $responseDTO->animals,
+            ),
+            'pagination' => $this->paginationMapper->toArray($responseDTO->pagination),
+        ]);
     }
 
     public function indexByType(
@@ -60,7 +70,6 @@ final class AnimalController
             ageMax: $request->getAgeMax(),
             limit: $request->getLimit(),
             page: $request->getPage(),
-            dateTimeFormat: $this->dateTimeFormat(),
         );
 
         return response()->json($result);
@@ -75,11 +84,10 @@ final class AnimalController
     ): JsonResponse {
         $animal = $animalCreateUseCase->apply(
             dto: $request->getDTO(),
-            dateTimeFormat: $this->dateTimeFormat(),
         );
 
         return response()->json(
-            ['animal' => $animal->toArray()],
+            ['animal' => $this->animalMapper->toArray($animal)],
             JsonResponse::HTTP_CREATED,
         );
     }
@@ -90,11 +98,10 @@ final class AnimalController
     ): JsonResponse {
         $animal = $animalGetByIdUseCase->apply(
             id: Uuid::fromString($id),
-            dateTimeFormat: $this->dateTimeFormat(),
         );
 
         return response()->json(
-            ['animal' => $animal->toArray()],
+            ['animal' => $this->animalMapper->toArray($animal)],
             JsonResponse::HTTP_OK,
         );
     }
@@ -112,7 +119,7 @@ final class AnimalController
         $animal->addSlug(SlugString::fromString($slug));
 
         return response()->json(
-            ['animal' => $animal->toArray()],
+            ['animal' => $this->animalMapper->toArray($animal)],
             JsonResponse::HTTP_OK,
         );
     }
@@ -125,11 +132,10 @@ final class AnimalController
         $animal = $animalUpdateUseCase->apply(
             id: Uuid::fromString($id),
             dto: $request->getDTO(),
-            dateTimeFormat: $this->dateTimeFormat(),
         );
 
         return response()->json(
-            ['animal' => $animal->toArray()],
+            ['animal' => $this->animalMapper->toArray($animal)],
             JsonResponse::HTTP_ACCEPTED,
         );
     }
@@ -142,11 +148,10 @@ final class AnimalController
         $animal = $animalStatusUpdateUseCase->apply(
             id: Uuid::fromString($id),
             status: AnimalStatus::tryFrom($request->input('status')),
-            dateTimeFormat: $this->dateTimeFormat(),
         );
 
         return response()->json(
-            ['animal' => $animal->toArray()],
+            ['animal' => $this->animalMapper->toArray($animal)],
             JsonResponse::HTTP_ACCEPTED,
         );
     }
@@ -155,13 +160,10 @@ final class AnimalController
         string $id,
         AnimalPublishUseCase $animalPublishUseCase
     ): JsonResponse {
-        $animal = $animalPublishUseCase->apply(
-            id: Uuid::fromString($id),
-            dateTimeFormat: $this->dateTimeFormat(),
-        );
+        $animal = $animalPublishUseCase->apply(Uuid::fromString($id));
 
         return response()->json(
-            ['animal' => $animal->toArray()],
+            ['animal' => $this->animalMapper->toArray($animal)],
             JsonResponse::HTTP_ACCEPTED,
         );
     }
@@ -170,13 +172,10 @@ final class AnimalController
         string $id,
         AnimalUnpublishUseCase $animalUnpublishUseCase
     ): JsonResponse {
-        $animal = $animalUnpublishUseCase->apply(
-            id: Uuid::fromString($id),
-            dateTimeFormat: $this->dateTimeFormat(),
-        );
+        $animal = $animalUnpublishUseCase->apply(Uuid::fromString($id));
 
         return response()->json(
-            ['animal' => $animal->toArray()],
+            ['animal' => $this->animalMapper->toArray($animal)],
             JsonResponse::HTTP_ACCEPTED,
         );
     }
@@ -185,10 +184,7 @@ final class AnimalController
         string $id,
         AnimalDestroyUseCase $animalDestroyUseCase
     ): JsonResponse {
-        $animalDestroyUseCase->apply(
-            id: Uuid::fromString($id),
-            dateTimeFormat: $this->dateTimeFormat(),
-        );
+        $animalDestroyUseCase->apply(Uuid::fromString($id));
 
         return response()->json(
             [],

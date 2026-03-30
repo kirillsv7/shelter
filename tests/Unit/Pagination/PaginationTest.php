@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Pagination;
 
+use InvalidArgumentException;
 use Source\Domain\Shared\Model\Pagination;
 use Tests\UnitTestCase;
 
@@ -23,7 +24,7 @@ class PaginationTest extends UnitTestCase
 
     public function testPaginationLimitException()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         Pagination::create(-10);
     }
@@ -36,34 +37,38 @@ class PaginationTest extends UnitTestCase
             $page,
         );
 
-        $paginationLinks = $pagination->generateLinks($total);
+        $pagination->generateLinks($total);
 
         $calcToTotal = max($total - $limit * ($page - 1), 0);
         $onPage = min($calcToTotal, $limit);
 
-        $this->assertEquals($total, $paginationLinks['total_items']);
-        $this->assertEquals($limit, $paginationLinks['per_page']);
-        $this->assertEquals($onPage, $paginationLinks['on_page']);
-        $this->assertEquals(max($page, 1), $paginationLinks['current']);
+        $this->assertEquals($total, $pagination->totalItems?->value);
+        ;
+        $this->assertEquals($limit, $pagination->limit->value);
+        $this->assertEquals($onPage, $pagination->onPage?->value);
+        $this->assertEquals(
+            max($page, 1),
+            $pagination->current?->value,
+        );
 
         $previousPage = null;
-        if ($page > 1 && $page <= $paginationLinks['last']) {
+        if ($page > 1 && $page <= $pagination->last?->value) {
             $previousPage = $page - 1;
         }
-        if ($page > $paginationLinks['last']) {
-            $previousPage = $paginationLinks['last'];
+        if ($page > $pagination->last?->value) {
+            $previousPage = $pagination->last?->value;
         }
 
-        $this->assertEquals($previousPage, $paginationLinks['previous']);
+        $this->assertEquals($previousPage, $pagination->previous?->value);
 
         $this->assertEquals(
             $total - ($limit * $page) > 0 ? max($page, 1) + 1 : null,
-            $paginationLinks['next'],
+            $pagination->next?->value,
         );
 
         $this->assertEquals(
             ceil($total / $limit),
-            $paginationLinks['last'],
+            $pagination->last?->value,
         );
     }
 

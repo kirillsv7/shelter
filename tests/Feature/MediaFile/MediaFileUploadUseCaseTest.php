@@ -6,8 +6,10 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Source\Application\MediaFile\UseCases\MediaFileUploadUseCase;
 use Source\Domain\MediaFile\Contracts\Storage as StorageInterface;
+use Source\Domain\MediaFile\Enums\MediableModel;
 use Source\Infrastructure\Animal\Models\AnimalModel;
 use Source\Infrastructure\MediaFile\Storages\PublicStorage;
+use Source\Interface\MediaFile\DTOs\MediaFileStoreRequestDTO;
 use Tests\FeatureTestCase;
 
 class MediaFileUploadUseCaseTest extends FeatureTestCase
@@ -49,11 +51,11 @@ class MediaFileUploadUseCaseTest extends FeatureTestCase
         $mediaFileUploadUseCase = $this->app->make(MediaFileUploadUseCase::class);
 
         $mediaFile = $mediaFileUploadUseCase->upload(
-            $uploadedFile,
-            $fileRoute,
-            $fileName,
-            $animal,
-            $animal->id,
+            new MediaFileStoreRequestDTO(
+                MediableModel::fromName('Animal'),
+                $animal->id,
+                $uploadedFile,
+            )
         );
 
         $this->assertDatabaseHas('media_files', [

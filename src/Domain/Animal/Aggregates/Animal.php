@@ -12,31 +12,30 @@ use Source\Domain\Animal\Events\AnimalStatusChanged;
 use Source\Domain\Animal\Events\AnimalUnpublished;
 use Source\Domain\Shared\AggregateTraits\UseAggregateEvents;
 use Source\Domain\Shared\AggregateWithEvents;
-use Source\Domain\Shared\Entity;
 use Source\Domain\Shared\ValueObjects\IntegerValueObject;
 use Source\Domain\Slug\ValueObjects\SlugString;
 
-final class Animal implements Entity, AggregateWithEvents
+final class Animal implements AggregateWithEvents
 {
     use UseAggregateEvents;
 
     private ?SlugString $slug = null;
 
     private function __construct(
-        private readonly UuidInterface    $id,
-        private readonly AnimalInfo       $info,
-        private AnimalStatus              $status,
-        private int|bool                  $published = false,
-        private readonly ?CarbonInterface $createdAt = null,
-        private readonly ?CarbonInterface $updatedAt = null,
+        protected readonly UuidInterface $id,
+        protected readonly AnimalInfo $info,
+        protected AnimalStatus $status,
+        protected int|bool $published = false,
+        protected readonly ?CarbonInterface $createdAt = null,
+        protected readonly ?CarbonInterface $updatedAt = null,
     ) {
     }
 
     public static function make(
-        UuidInterface    $id,
-        AnimalInfo       $info,
-        AnimalStatus     $status = AnimalStatus::Quarantine,
-        int|bool         $published = false,
+        UuidInterface $id,
+        AnimalInfo $info,
+        AnimalStatus $status = AnimalStatus::Quarantine,
+        int|bool $published = false,
         ?CarbonInterface $createdAt = null,
         ?CarbonInterface $updatedAt = null,
     ): self {
@@ -51,10 +50,10 @@ final class Animal implements Entity, AggregateWithEvents
     }
 
     public static function create(
-        UuidInterface    $id,
-        AnimalInfo       $info,
-        AnimalStatus     $status = AnimalStatus::Quarantine,
-        int|bool         $published = false,
+        UuidInterface $id,
+        AnimalInfo $info,
+        AnimalStatus $status = AnimalStatus::Quarantine,
+        int|bool $published = false,
         ?CarbonInterface $createdAt = null,
         ?CarbonInterface $updatedAt = null,
     ): self {
@@ -164,19 +163,5 @@ final class Animal implements Entity, AggregateWithEvents
     public function addSlug(SlugString $slug): void
     {
         $this->slug = $slug;
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->id(),
-            'info' => $this->info()->toArray(),
-            'age' => $this->age()->value,
-            'status' => $this->status,
-            'published' => $this->published(),
-            'created_at' => $this->createdAt(),
-            'updated_at' => $this->updatedAt(),
-            'slug' => $this->slug()?->value(),
-        ];
     }
 }

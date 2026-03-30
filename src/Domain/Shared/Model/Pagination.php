@@ -9,13 +9,19 @@ use Source\Domain\Shared\ValueObjects\IntegerValueObject;
 
 final class Pagination
 {
-    private const LIMIT = 20;
+    private const int LIMIT = 20;
 
-    private ?TotalItems $totalItems = null;
+    public ?TotalItems $totalItems = null;
+    public ?IntegerValueObject $onPage = null;
+    public ?Page $current = null;
+    public ?Page $previous = null;
+    public ?Page $next = null;
+    public ?Page $last = null;
 
-    private function __construct(
+
+    protected function __construct(
         public readonly Limit $limit,
-        public readonly Page $page
+        public readonly Page $page,
     ) {
     }
 
@@ -32,22 +38,17 @@ final class Pagination
         return $this->page->decrement()->multiply($this->limit);
     }
 
-    public function generateLinks(int $itemsTotal): array
+    public function generateLinks(int $totalItems): void
     {
-        $this->totalItems = TotalItems::fromInteger($itemsTotal);
-
-        return [
-            'total_items' => $this->totalItems->value,
-            'per_page' => $this->limit->value,
-            'on_page' => $this->calculateItemsOnPage()->value,
-            'current' => $this->page->value,
-            'previous' => $this->previousPage()?->value,
-            'next' => $this->nextPage()?->value,
-            'last' => $this->lastPage()->value,
-        ];
+        $this->totalItems = TotalItems::fromInteger($totalItems);
+        $this->onPage = $this->calculateItemsOnPage();
+        $this->current = $this->page;
+        $this->previous = $this->previousPage();
+        $this->next = $this->nextPage();
+        $this->last = $this->lastPage();
     }
 
-    private function calculateItemsOnPage(): IntegerValueObject
+    public function calculateItemsOnPage(): IntegerValueObject
     {
         return $this->totalItems
             ->subtract($this->limit->multiply($this->page->decrement()))
@@ -55,9 +56,9 @@ final class Pagination
             ->min($this->limit);
     }
 
-    private function previousPage(): ?IntegerValueObject
+    public function previousPage(): ?Page
     {
-        if ($this->page->equals(IntegerValueObject::fromInteger(1))) {
+        if ($this->page->equals(Page::fromInteger(1))) {
             return null;
         }
 
@@ -68,7 +69,7 @@ final class Pagination
         return $this->page->decrement();
     }
 
-    private function nextPage(): ?IntegerValueObject
+    public function nextPage(): ?Page
     {
         if (
             $this->page->equals($this->lastPage()) ||
@@ -80,8 +81,8 @@ final class Pagination
         return $this->page->increment();
     }
 
-    private function lastPage(): IntegerValueObject
+    public function lastPage(): Page
     {
-        return $this->totalItems->divideCeil($this->limit);
+        return Page::fromInteger($this->totalItems->divideCeil($this->limit)->value);
     }
 }

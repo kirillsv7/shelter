@@ -88,6 +88,8 @@ class AnimalRequestsTest extends FeatureTestCase
 
     public function testAnimalIndexByType()
     {
+        $this->markTestSkipped('animals.index-by-type is disabled now');
+
         AnimalModel::factory(110)->create([
             'type' => AnimalType::Dog->value,
         ]);
@@ -205,8 +207,11 @@ class AnimalRequestsTest extends FeatureTestCase
         $response->assertNotFound();
     }
 
+
     public function testAnimalGetBySlug()
     {
+        $this->markTestSkipped('animals.get-by-slug is disabled now');
+
         $animal = AnimalModel::factory()->create();
 
         $response = $this->getJson(
@@ -236,6 +241,8 @@ class AnimalRequestsTest extends FeatureTestCase
 
     public function testAnimalGetBySlugNotFound()
     {
+        $this->markTestSkipped('animals.get-by-slug is disabled now');
+
         $animal = AnimalModel::factory()->create();
 
         $response = $this->getJson(
@@ -335,8 +342,8 @@ class AnimalRequestsTest extends FeatureTestCase
             'type' => fake()->randomElement(AnimalType::cases())->value,
             'gender' => fake()->randomElement(AnimalGender::cases())->value,
             'breed' => fake()->text(20),
-            'birthdate' => Carbon::today()->subDays(rand(30, 365 * 5))->format(config('app.date_format')),
-            'entrydate' => Carbon::today()->format(config('app.date_format')),
+            'birthdate' => Carbon::today()->subDays(rand(30, 365 * 5)),
+            'entrydate' => Carbon::today(),
         ];
     }
 }

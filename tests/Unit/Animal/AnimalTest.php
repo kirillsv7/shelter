@@ -16,8 +16,9 @@ use Source\Domain\Animal\Events\AnimalStatusChanged;
 use Source\Domain\Animal\Events\AnimalUnpublished;
 use Source\Domain\Animal\ValueObjects\Breed;
 use Source\Domain\Animal\ValueObjects\Name;
-use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Domain\Slug\ValueObjects\SlugString;
+use Source\Interface\Animal\Mappers\AnimalInfoMapper;
+use Source\Interface\Animal\Mappers\AnimalMapper;
 use Tests\UnitTestCase;
 
 class AnimalTest extends UnitTestCase
@@ -129,13 +130,17 @@ class AnimalTest extends UnitTestCase
     {
         $animal = $this->animalCreate();
 
-        $animalArray = $animal->toArray();
+        $animalMapper = app(AnimalMapper::class);
+
+        $animalInfoMapper = app(AnimalInfoMapper::class);
+
+        $animalArray = $animalMapper->toArray($animal);
 
         $this->assertIsArray($animalArray);
 
         $this->assertEquals($animalArray, [
             'id' => $animal->id(),
-            'info' => $animal->info()->toArray(),
+            'info' => $animalInfoMapper->toArray($animal->info()),
             'age' => $animal->age()->value,
             'status' => $animal->status(),
             'published' => $animal->published(),
@@ -156,7 +161,6 @@ class AnimalTest extends UnitTestCase
                 breed: Breed::fromString(fake()->word()),
                 birthdate: Carbon::today()->subDays(rand(30, 365 * 5)),
                 entrydate: Carbon::today(),
-                dateTimeFormat: StringValueObject::fromString('Y-m-d'),
             ),
             createdAt: Carbon::now(),
         );

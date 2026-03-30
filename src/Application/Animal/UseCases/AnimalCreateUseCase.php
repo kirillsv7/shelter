@@ -7,7 +7,6 @@ use Ramsey\Uuid\Uuid;
 use Source\Domain\Animal\Aggregates\Animal;
 use Source\Domain\Animal\Aggregates\AnimalInfo;
 use Source\Domain\Animal\Repositories\AnimalRepository;
-use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Domain\Slug\Aggregates\Slug;
 use Source\Domain\Slug\Repositories\SlugRepository;
 use Source\Domain\Slug\ValueObjects\SlugString;
@@ -26,7 +25,6 @@ final class AnimalCreateUseCase
 
     public function apply(
         AnimalStoreRequestDTO $dto,
-        StringValueObject $dateTimeFormat,
     ): Animal {
         $animal = Animal::create(
             id: Uuid::uuid4(),
@@ -37,7 +35,6 @@ final class AnimalCreateUseCase
                 breed: $dto->breed,
                 birthdate: $dto->birthdate,
                 entrydate: $dto->entrydate,
-                dateTimeFormat: $dateTimeFormat,
             ),
             createdAt: CarbonImmutable::now(),
         );

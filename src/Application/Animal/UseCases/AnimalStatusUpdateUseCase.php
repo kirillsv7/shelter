@@ -7,7 +7,6 @@ use Source\Application\Animal\UseCases\Traits\LoadSlugTrait;
 use Source\Domain\Animal\Aggregates\Animal;
 use Source\Domain\Animal\Enums\AnimalStatus;
 use Source\Domain\Animal\Repositories\AnimalRepository;
-use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Infrastructure\Laravel\Events\MultiDispatcher;
 
 final class AnimalStatusUpdateUseCase
@@ -23,12 +22,8 @@ final class AnimalStatusUpdateUseCase
     public function apply(
         UuidInterface $id,
         AnimalStatus $status,
-        StringValueObject $dateTimeFormat,
     ): Animal {
-        $animal = $this->repository->getById(
-            id: $id,
-            dateTimeFormat: $dateTimeFormat,
-        );
+        $animal = $this->repository->getById($id);
 
         $animal->changeStatus($status);
 
