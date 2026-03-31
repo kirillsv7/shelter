@@ -2,8 +2,11 @@
 
 namespace Source\Domain\Shared\ValueObjects;
 
+use JsonSerializable;
+use Stringable;
+
 /** @phpstan-consistent-constructor */
-readonly class StringValueObject
+readonly class StringValueObject implements Stringable, JsonSerializable
 {
     protected function __construct(
         private string $value
@@ -34,6 +37,11 @@ readonly class StringValueObject
     }
 
     public function __toString(): string
+    {
+        return $this->value;
+    }
+
+    public function jsonSerialize(): string
     {
         return $this->value;
     }

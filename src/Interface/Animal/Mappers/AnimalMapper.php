@@ -21,7 +21,7 @@ final readonly class AnimalMapper
             'published' => $animal->published(),
             'created_at' => $animal->createdAt(),
             'updated_at' => $animal->updatedAt(),
-            'slug' => $animal->slug()?->value(),
+            'slug' => $animal->slug(),
         ];
     }
 }

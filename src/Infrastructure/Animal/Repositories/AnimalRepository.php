@@ -2,8 +2,8 @@
 
 namespace Source\Infrastructure\Animal\Repositories;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Database\ConnectionInterface;
-use Illuminate\Support\Carbon;
 use Ramsey\Uuid\UuidInterface;
 use Source\Domain\Animal\Aggregates\Animal;
 use Source\Domain\Animal\AnimalSearchCriteria;
@@ -78,22 +78,15 @@ final class AnimalRepository implements AnimalRepositoryContract
 
     public function create(Animal $animal): void
     {
-        $model = new AnimalModel();
+        $this->connection
+            ->transaction(function () use ($animal) {
+                $model = $this->mapper->entityToModel($animal);
 
-        $this->connection->transaction(function () use ($model, $animal) {
-            $model->id = $animal->id();
-            $model->name = $animal->info()->name();
-            $model->type = $animal->info()->type()->value;
-            $model->gender = $animal->info()->gender()->value;
-            $model->breed = $animal->info()->breed();
-            $model->birthdate = $animal->info()->birthdate();
-            $model->entrydate = $animal->info()->entrydate();
-            $model->status = $animal->status()->value;
-            $model->published = $animal->published();
-            $model->created_at = Carbon::now();
+                $model->setAttribute('id', $animal->id());
+                $model->setAttribute('created_at', CarbonImmutable::now());
 
-            $model->save();
-        });
+                $model->save();
+            });
     }
 
     public function update(UuidInterface $id, Animal $animal): void
@@ -101,16 +94,10 @@ final class AnimalRepository implements AnimalRepositoryContract
         /** @var AnimalModel $model */
         $model = AnimalModel::query()->find($id);
 
-        $this->connection->transaction(function () use ($model, $animal) {
-            $model->name = $animal->info()->name();
-            $model->type = $animal->info()->type()->value;
-            $model->gender = $animal->info()->gender()->value;
-            $model->breed = $animal->info()->breed();
-            $model->birthdate = $animal->info()->birthdate();
-            $model->entrydate = $animal->info()->entrydate();
-            $model->status = $animal->status()->value;
-            $model->published = $animal->published();
-            $model->updated_at = Carbon::now();
+        $this->connection->transaction(function () use ($animal, $model) {
+            $model = $this->mapper->entityToModel($animal, $model);
+
+            $model->setAttribute('updated_at', CarbonImmutable::now());
 
             $model->save();
         });
