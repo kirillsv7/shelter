@@ -2,11 +2,9 @@
 
 namespace Source\Domain\Animal\Exceptions;
 
-use Illuminate\Http\JsonResponse;
-use Source\Infrastructure\Laravel\Exceptions\DefaultException;
+use Source\Infrastructure\Laravel\Exceptions\NotFoundException;
 
-class AnimalNotFoundException extends DefaultException
+class AnimalNotFoundException extends NotFoundException
 {
-    protected $code = JsonResponse::HTTP_NOT_FOUND;
-    protected $message = 'Animal doesn\'t exists';
+    protected $message = "Animal doesn't exists";
 }
