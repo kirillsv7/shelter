@@ -153,7 +153,7 @@ class AnimalTest extends UnitTestCase
     private function animalCreate(): Animal
     {
         return Animal::create(
-            id: Uuid::uuid4(),
+            id: Uuid::uuid7(),
             info: AnimalInfo::create(
                 name: Name::fromString(fake()->firstName()),
                 type: fake()->randomElement(AnimalType::cases()),

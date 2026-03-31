@@ -27,7 +27,7 @@ final class AnimalCreateUseCase
         AnimalStoreRequestDTO $dto,
     ): Animal {
         $animal = Animal::create(
-            id: Uuid::uuid4(),
+            id: Uuid::uuid7(),
             info: AnimalInfo::create(
                 name: $dto->name,
                 type: $dto->type,
@@ -49,7 +49,7 @@ final class AnimalCreateUseCase
         ];
 
         $slug = Slug::create(
-            id: Uuid::uuid4(),
+            id: Uuid::uuid7(),
             value: SlugString::fromArray($slugParts),
             sluggableType: new AnimalModel(),
             sluggableId: $animal->id(),

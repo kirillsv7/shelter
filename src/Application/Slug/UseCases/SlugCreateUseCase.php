@@ -22,7 +22,7 @@ final class SlugCreateUseCase
         UuidInterface $sluggableId,
     ): Slug {
         $slug = Slug::create(
-            id: Uuid::uuid4(),
+            id: Uuid::uuid7(),
             value: SlugString::fromString($slugString),
             sluggableType: $sluggableType,
             sluggableId: $sluggableId,

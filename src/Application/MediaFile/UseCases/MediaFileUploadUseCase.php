@@ -49,7 +49,7 @@ final class MediaFileUploadUseCase
         );
 
         $mediaFile = MediaFile::create(
-            id: Uuid::uuid4(),
+            id: Uuid::uuid7(),
             storageInfo: StorageInfo::make(
                 disk: StringValueObject::fromString($savedFile->disk),
                 route: StringValueObject::fromString($savedFile->route),

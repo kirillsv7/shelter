@@ -24,7 +24,7 @@ final class AnimalFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => Uuid::uuid4(),
+            'id' => Uuid::uuid7(),
             'name' => fake()->firstName(),
             'type' => fake()->randomElement(AnimalType::cases())->value,
             'gender' => fake()->randomElement(AnimalGender::cases())->value,

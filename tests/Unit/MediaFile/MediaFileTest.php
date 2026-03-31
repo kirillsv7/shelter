@@ -43,7 +43,7 @@ class MediaFileTest extends UnitTestCase
     private function mediaFileCreate(): MediaFile
     {
         return MediaFile::create(
-            id: Uuid::uuid4(),
+            id: Uuid::uuid7(),
             storageInfo: StorageInfo::make(
                 disk: StringValueObject::fromString('public'),
                 route: StringValueObject::fromString('media_files'),
@@ -52,7 +52,7 @@ class MediaFileTest extends UnitTestCase
             sizes: [],
             mimetype: StringValueObject::fromString('image/jpeg'),
             mediableType: new AnimalModel(),
-            mediableId: Uuid::uuid4(),
+            mediableId: Uuid::uuid7(),
             createdAt: Carbon::now(),
         );
     }
