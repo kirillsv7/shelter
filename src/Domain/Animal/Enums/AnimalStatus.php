@@ -11,4 +11,6 @@ enum AnimalStatus: string
     case OnHold = 'on_hold';
     case Quarantine = 'quarantine';
     case Deceased = 'deceased';
+    case Lost = 'lost';
+    case Transferred = 'transferred';
 }
