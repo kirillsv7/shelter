@@ -18,7 +18,7 @@ final readonly class AnimalMapper
     public function modelToEntity(AnimalModel $model): Animal
     {
         return Animal::make(
-            id: Uuid::fromString($model->id),
+            id: Uuid::fromString($model->getAttribute('id')),
             info: AnimalInfo::create(
                 name: Name::fromString($model->getAttribute('name')),
                 type: AnimalType::tryFrom($model->getAttribute('type')),

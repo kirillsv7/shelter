@@ -1,11 +1,8 @@
 <?php
 
-use App\Providers\AppServiceProvider;
-use App\Providers\EventServiceProvider;
-use App\Providers\RouteServiceProvider;
-
 return [
-    AppServiceProvider::class,
-    EventServiceProvider::class,
-    RouteServiceProvider::class,
+    App\Providers\AppServiceProvider::class,
+    App\Providers\EventServiceProvider::class,
+    App\Providers\RepositoryServiceProvider::class,
+    App\Providers\RouteServiceProvider::class,
 ];

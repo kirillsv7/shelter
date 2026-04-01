@@ -12,7 +12,7 @@ use Source\Domain\Animal\Enums\AnimalType;
 use Source\Domain\Animal\Events\AnimalCreated;
 use Source\Domain\Animal\Events\AnimalDeleted;
 use Source\Domain\Animal\Events\AnimalPublished;
-use Source\Domain\Animal\Events\AnimalStatusChanged;
+use Source\Domain\Animal\Events\AnimalStatusUpdated;
 use Source\Domain\Animal\Events\AnimalUnpublished;
 use Source\Domain\Animal\ValueObjects\Breed;
 use Source\Domain\Animal\ValueObjects\Name;
@@ -36,9 +36,9 @@ class AnimalTest extends UnitTestCase
 
         $animalStatus = AnimalStatus::Available;
 
-        $animal->changeStatus($animalStatus);
+        $animal->statusUpdate($animalStatus);
 
-        $this->assertEventsHas(AnimalStatusChanged::class, $animal->releaseEvents());
+        $this->assertEventsHas(AnimalStatusUpdated::class, $animal->releaseEvents());
 
         $this->assertEquals($animal->status(), $animalStatus);
     }
@@ -48,11 +48,11 @@ class AnimalTest extends UnitTestCase
         $animal = $this->animalCreate();
 
         $animalStatus = AnimalStatus::Available;
-        $animal->changeStatus($animalStatus);
+        $animal->statusUpdate($animalStatus);
         $animal->releaseEvents();
-        $animal->changeStatus($animalStatus);
+        $animal->statusUpdate($animalStatus);
 
-        $this->assertEventsHasNot(AnimalStatusChanged::class, $animal->releaseEvents());
+        $this->assertEventsHasNot(AnimalStatusUpdated::class, $animal->releaseEvents());
 
         $this->assertEquals($animal->status(), $animalStatus);
     }

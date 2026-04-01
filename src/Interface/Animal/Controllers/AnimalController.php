@@ -13,7 +13,6 @@ use Source\Application\Animal\UseCases\AnimalPublishUseCase;
 use Source\Application\Animal\UseCases\AnimalStatusUpdateUseCase;
 use Source\Application\Animal\UseCases\AnimalUnpublishUseCase;
 use Source\Application\Animal\UseCases\AnimalUpdateUseCase;
-use Source\Domain\Animal\Enums\AnimalStatus;
 use Source\Domain\Animal\Enums\AnimalType;
 use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Domain\Slug\ValueObjects\SlugString;
@@ -148,7 +147,7 @@ final class AnimalController
     ): JsonResponse {
         $animal = $animalStatusUpdateUseCase->apply(
             id: Uuid::fromString($id),
-            status: AnimalStatus::tryFrom($request->input('status')),
+            dto: $request->getDTO(),
         );
 
         return response()->json(

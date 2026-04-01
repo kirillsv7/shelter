@@ -8,7 +8,7 @@ use Source\Domain\Animal\Enums\AnimalStatus;
 use Source\Domain\Animal\Events\AnimalCreated;
 use Source\Domain\Animal\Events\AnimalDeleted;
 use Source\Domain\Animal\Events\AnimalPublished;
-use Source\Domain\Animal\Events\AnimalStatusChanged;
+use Source\Domain\Animal\Events\AnimalStatusUpdated;
 use Source\Domain\Animal\Events\AnimalUnpublished;
 use Source\Domain\Shared\AggregateTraits\UseAggregateEvents;
 use Source\Domain\Shared\AggregateWithEvents;
@@ -116,23 +116,25 @@ final class Animal implements AggregateWithEvents
         return $this->slug;
     }
 
-    public function changeStatus(AnimalStatus $status): void
+    public function statusUpdate(AnimalStatus $status): bool
     {
         if ($this->status === $status) {
-            return;
+            return false;
         }
 
         $oldStatus = $this->status;
         $this->status = $status;
 
         $this->addEvent(
-            new AnimalStatusChanged(
+            new AnimalStatusUpdated(
                 $this->id(),
                 $this->info()->name(),
                 $this->status(),
                 $oldStatus,
             ),
         );
+
+        return true;
     }
 
     public function publish(): void
@@ -164,4 +166,6 @@ final class Animal implements AggregateWithEvents
     {
         $this->slug = $slug;
     }
+
+
 }

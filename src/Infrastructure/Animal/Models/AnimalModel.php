@@ -4,6 +4,7 @@ namespace Source\Infrastructure\Animal\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -62,5 +63,10 @@ final class AnimalModel extends BaseModel
     public function mediaFiles(): MorphMany
     {
         return $this->morphMany(MediaFileModel::class, 'mediable');
+    }
+
+    public function statusUpdates(): HasMany
+    {
+        return $this->hasMany(AnimalStatusUpdateModel::class, 'animal_id');
     }
 }

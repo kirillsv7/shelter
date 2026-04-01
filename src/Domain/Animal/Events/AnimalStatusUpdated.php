@@ -6,7 +6,7 @@ use Ramsey\Uuid\UuidInterface;
 use Source\Domain\Animal\Enums\AnimalStatus;
 use Source\Domain\Animal\ValueObjects\Name;
 
-final readonly class AnimalStatusChanged
+final readonly class AnimalStatusUpdated
 {
     public function __construct(
         public UuidInterface $id,
