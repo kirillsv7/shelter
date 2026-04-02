@@ -4,6 +4,7 @@ namespace Tests\Feature\Slug;
 
 use Ramsey\Uuid\Uuid;
 use Source\Application\Slug\UseCases\SlugGetBySluggableUseCase;
+use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Domain\Slug\Exceptions\SlugNotFoundException;
 use Source\Infrastructure\Animal\Models\AnimalModel;
 use Source\Infrastructure\MediaFile\Models\MediaFileModel;
@@ -18,11 +19,14 @@ class SlugUseCasesTest extends FeatureTestCase
         $slugGetBySluggableUseCase = app(SlugGetBySluggableUseCase::class);
 
         $slug = $slugGetBySluggableUseCase->apply(
-            $animal->getModel(),
+            StringValueObject::fromString(AnimalModel::class),
             $animal->id,
         );
 
-        $this->assertEquals(get_class($animal->getModel()), $slug->sluggableType());
+        $this->assertEquals(
+            StringValueObject::fromString(AnimalModel::class),
+            $slug->sluggableType(),
+        );
     }
 
     public function testGetBySluggableNotFound(): void
@@ -34,7 +38,7 @@ class SlugUseCasesTest extends FeatureTestCase
         $slugGetBySluggableUseCase = app(SlugGetBySluggableUseCase::class);
 
         $slugGetBySluggableUseCase->apply(
-            new MediaFileModel(),
+            StringValueObject::fromString(AnimalModel::class),
             Uuid::fromString(fake()->uuid()),
         );
     }

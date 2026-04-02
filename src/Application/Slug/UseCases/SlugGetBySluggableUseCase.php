@@ -3,6 +3,7 @@
 namespace Source\Application\Slug\UseCases;
 
 use Ramsey\Uuid\UuidInterface;
+use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Domain\Slug\Aggregates\Slug;
 use Source\Domain\Slug\Repositories\SlugRepository;
 use Source\Infrastructure\Laravel\Models\BaseModel;
@@ -15,7 +16,7 @@ final class SlugGetBySluggableUseCase
     }
 
     public function apply(
-        BaseModel $sluggableType,
+        StringValueObject $sluggableType,
         UuidInterface $sluggableId,
     ): Slug {
         return $this->repository->getBySluggable(
