@@ -5,11 +5,11 @@ namespace Source\Infrastructure\Slug\Repositories;
 use Illuminate\Database\ConnectionInterface;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
+use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Domain\Slug\Aggregates\Slug;
 use Source\Domain\Slug\Exceptions\SlugNotFoundException;
 use Source\Domain\Slug\Repositories\SlugRepository as SlugRepositoryContract;
 use Source\Domain\Slug\ValueObjects\SlugString;
-use Source\Infrastructure\Laravel\Models\BaseModel;
 use Source\Infrastructure\Slug\Models\SlugModel;
 
 final class SlugRepository implements SlugRepositoryContract
@@ -34,11 +34,11 @@ final class SlugRepository implements SlugRepositoryContract
     }
 
     public function getBySluggable(
-        BaseModel $sluggableType,
+        StringValueObject $sluggableType,
         UuidInterface $sluggableId
     ): Slug {
         $model = SlugModel::query()
-            ->where('sluggable_type', get_class($sluggableType))
+            ->where('sluggable_type', $sluggableType)
             ->where('sluggable_id', $sluggableId)
             ->first();
 

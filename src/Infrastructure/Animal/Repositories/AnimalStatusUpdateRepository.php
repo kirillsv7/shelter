@@ -7,8 +7,8 @@ use Illuminate\Database\ConnectionInterface;
 use Ramsey\Uuid\UuidInterface;
 use Source\Domain\Animal\Aggregates\AnimalStatusUpdate;
 use Source\Domain\Animal\Repositories\AnimalStatusUpdateRepository as AnimalStatusUpdateRepositoryContract;
-use Source\Infrastructure\Animal\Models\AnimalStatusUpdateModel;
 use Source\Infrastructure\Animal\Mappers\AnimalStatusUpdateMapper;
+use Source\Infrastructure\Animal\Models\AnimalStatusUpdateModel;
 
 final class AnimalStatusUpdateRepository implements AnimalStatusUpdateRepositoryContract
 {

@@ -10,6 +10,8 @@ use Source\Domain\Animal\Aggregates\Animal;
 use Source\Domain\Animal\Aggregates\AnimalStatusUpdate;
 use Source\Domain\Animal\Repositories\AnimalRepository;
 use Source\Domain\Animal\Repositories\AnimalStatusUpdateRepository;
+use Source\Domain\Shared\ValueObjects\StringValueObject;
+use Source\Infrastructure\Animal\Models\AnimalModel;
 use Source\Infrastructure\Laravel\Events\MultiDispatcher;
 use Source\Interface\Animal\DTOs\AnimalStatusUpdateRequestDTO;
 
@@ -41,7 +43,10 @@ final class AnimalStatusUpdateUseCase
             $this->createAnimalStatusUpdate($animal, $dto);
         }
 
-        $this->loadSlug($animal);
+        $this->loadSlug(
+            $animal,
+            StringValueObject::fromString(AnimalModel::class),
+        );
 
         $this->dispatcher->multiDispatch(
             $animal->releaseEvents(),

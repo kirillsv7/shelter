@@ -6,6 +6,8 @@ use Ramsey\Uuid\UuidInterface;
 use Source\Application\Animal\UseCases\Traits\LoadSlugTrait;
 use Source\Domain\Animal\Aggregates\Animal;
 use Source\Domain\Animal\Repositories\AnimalRepository;
+use Source\Domain\Shared\ValueObjects\StringValueObject;
+use Source\Infrastructure\Animal\Models\AnimalModel;
 
 final class AnimalGetByIdUseCase
 {
@@ -20,7 +22,10 @@ final class AnimalGetByIdUseCase
     {
         $animal = $this->repository->getById($id);
 
-        $this->loadSlug($animal);
+        $this->loadSlug(
+            $animal,
+            StringValueObject::fromString(AnimalModel::class),
+        );
 
         return $animal;
     }

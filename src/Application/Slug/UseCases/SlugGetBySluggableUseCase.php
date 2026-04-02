@@ -16,7 +16,7 @@ final class SlugGetBySluggableUseCase
 
     public function apply(
         BaseModel $sluggableType,
-        UuidInterface $sluggableId
+        UuidInterface $sluggableId,
     ): Slug {
         return $this->repository->getBySluggable(
             sluggableType: $sluggableType,

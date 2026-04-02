@@ -12,10 +12,11 @@ use Source\Domain\Animal\Events\AnimalStatusUpdated;
 use Source\Domain\Animal\Events\AnimalUnpublished;
 use Source\Domain\Shared\AggregateTraits\UseAggregateEvents;
 use Source\Domain\Shared\AggregateWithEvents;
+use Source\Domain\Shared\AggregateWithSlug;
 use Source\Domain\Shared\ValueObjects\IntegerValueObject;
 use Source\Domain\Slug\ValueObjects\SlugString;
 
-final class Animal implements AggregateWithEvents
+final class Animal implements AggregateWithEvents, AggregateWithSlug
 {
     use UseAggregateEvents;
 

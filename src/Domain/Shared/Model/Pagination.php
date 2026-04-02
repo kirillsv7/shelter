@@ -2,9 +2,9 @@
 
 namespace Source\Domain\Shared\Model;
 
-use Source\Domain\Shared\Model\PaginationValueObjects\TotalItems;
 use Source\Domain\Shared\Model\PaginationValueObjects\Limit;
 use Source\Domain\Shared\Model\PaginationValueObjects\Page;
+use Source\Domain\Shared\Model\PaginationValueObjects\TotalItems;
 use Source\Domain\Shared\ValueObjects\IntegerValueObject;
 
 final class Pagination

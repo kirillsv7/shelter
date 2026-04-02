@@ -11,6 +11,8 @@ use Source\Domain\Animal\Repositories\AnimalRepository;
 use Source\Domain\Animal\ValueObjects\Name;
 use Source\Domain\Shared\Model\Pagination;
 use Source\Domain\Shared\ValueObjects\IntegerValueObject;
+use Source\Domain\Shared\ValueObjects\StringValueObject;
+use Source\Infrastructure\Animal\Models\AnimalModel;
 use Source\Interface\Animal\DTOs\AnimalIndexResponseDTO;
 
 final class AnimalIndexUseCase
@@ -51,7 +53,10 @@ final class AnimalIndexUseCase
 
         $animals = array_map(
             function (Animal $animal) {
-                $this->loadSlug($animal);
+                $this->loadSlug(
+                    $animal,
+                    StringValueObject::fromString(AnimalModel::class),
+                );
 
                 return $animal;
             },
