@@ -32,6 +32,24 @@ final class MediaFileRepository implements MediaFileRepositoryContract
         return self::map($model);
     }
 
+    public function getByMediableUuid(UuidInterface $id): array
+    {
+        return MediaFileModel::query()
+            ->where('mediable_id', $id)
+            ->get()
+            ->map(fn (MediaFileModel $model) => self::map($model))
+            ->toArray();
+    }
+
+    public function getByMediableUuids(array $ids): array
+    {
+        return MediaFileModel::query()
+            ->whereIn('mediable_id', $ids)
+            ->get()
+            ->map(fn (MediaFileModel $model) => self::map($model))
+            ->toArray();
+    }
+
     public function create(MediaFile $mediaFile): void
     {
         $model = new MediaFileModel();

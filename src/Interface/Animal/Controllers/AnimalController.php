@@ -15,23 +15,14 @@ use Source\Application\Animal\UseCases\AnimalUnpublishUseCase;
 use Source\Application\Animal\UseCases\AnimalUpdateUseCase;
 use Source\Domain\Animal\Enums\AnimalType;
 use Source\Domain\Shared\ValueObjects\StringValueObject;
-use Source\Domain\Slug\ValueObjects\SlugString;
-use Source\Interface\Animal\Mappers\AnimalMapper;
 use Source\Interface\Animal\Requests\AnimalIndexRequest;
 use Source\Interface\Animal\Requests\AnimalStatusUpdateRequest;
 use Source\Interface\Animal\Requests\AnimalStoreRequest;
 use Source\Interface\Animal\Requests\AnimalUpdateRequest;
-use Source\Interface\Shared\Mappers\PaginationMapper;
 use Throwable;
 
 final class AnimalController
 {
-    public function __construct(
-        protected AnimalMapper $animalMapper,
-        protected PaginationMapper $paginationMapper,
-    ) {
-    }
-
     public function index(
         AnimalIndexRequest $request,
         AnimalIndexUseCase $animalIndexUseCase,
@@ -46,13 +37,7 @@ final class AnimalController
             page: $request->getPage(),
         );
 
-        return response()->json([
-            'animals' => array_map(
-                fn ($animal) => $this->animalMapper->toArray($animal),
-                $responseDTO->animals,
-            ),
-            'pagination' => $this->paginationMapper->toArray($responseDTO->pagination),
-        ]);
+        return response()->json($responseDTO);
     }
 
     public function indexByType(
@@ -62,7 +47,7 @@ final class AnimalController
     ): JsonResponse {
         $type = AnimalType::single($type);
 
-        $result = $animalIndexUseCase->apply(
+        $responseDTO = $animalIndexUseCase->apply(
             name: $request->getName(),
             type: $type,
             gender: $request->getGender(),
@@ -72,36 +57,19 @@ final class AnimalController
             page: $request->getPage(),
         );
 
-        return response()->json($result);
-    }
-
-    /**
-     * @throws Throwable
-     */
-    public function store(
-        AnimalStoreRequest $request,
-        AnimalCreateUseCase $animalCreateUseCase,
-    ): JsonResponse {
-        $animal = $animalCreateUseCase->apply(
-            dto: $request->getDTO(),
-        );
-
-        return response()->json(
-            ['animal' => $this->animalMapper->toArray($animal)],
-            JsonResponse::HTTP_CREATED,
-        );
+        return response()->json($responseDTO);
     }
 
     public function getById(
         string $id,
         AnimalGetByIdUseCase $animalGetByIdUseCase
     ): JsonResponse {
-        $animal = $animalGetByIdUseCase->apply(
+        $responseDTO = $animalGetByIdUseCase->apply(
             id: Uuid::fromString($id),
         );
 
         return response()->json(
-            ['animal' => $this->animalMapper->toArray($animal)],
+            $responseDTO,
             JsonResponse::HTTP_OK,
         );
     }
@@ -111,16 +79,31 @@ final class AnimalController
         string $slug,
         AnimalGetBySlugUseCase $animalGetBySlugCase
     ): JsonResponse {
-        $animal = $animalGetBySlugCase->apply(
+        $responseDTO = $animalGetBySlugCase->apply(
             type: AnimalType::tryFrom($type),
             slug: StringValueObject::fromString($slug),
         );
 
-        $animal->addSlug(SlugString::fromString($slug));
+        return response()->json(
+            $responseDTO,
+            JsonResponse::HTTP_OK,
+        );
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function store(
+        AnimalStoreRequest $request,
+        AnimalCreateUseCase $animalCreateUseCase,
+    ): JsonResponse {
+        $responseDTO = $animalCreateUseCase->apply(
+            dto: $request->getDTO(),
+        );
 
         return response()->json(
-            ['animal' => $this->animalMapper->toArray($animal)],
-            JsonResponse::HTTP_OK,
+            $responseDTO,
+            JsonResponse::HTTP_CREATED,
         );
     }
 
@@ -129,13 +112,13 @@ final class AnimalController
         string $id,
         AnimalUpdateUseCase $animalUpdateUseCase,
     ): JsonResponse {
-        $animal = $animalUpdateUseCase->apply(
+        $responseDTO = $animalUpdateUseCase->apply(
             id: Uuid::fromString($id),
             dto: $request->getDTO(),
         );
 
         return response()->json(
-            ['animal' => $this->animalMapper->toArray($animal)],
+            $responseDTO,
             JsonResponse::HTTP_ACCEPTED,
         );
     }
@@ -145,13 +128,13 @@ final class AnimalController
         AnimalStatusUpdateRequest $request,
         AnimalStatusUpdateUseCase $animalStatusUpdateUseCase
     ): JsonResponse {
-        $animal = $animalStatusUpdateUseCase->apply(
+        $responseDTO = $animalStatusUpdateUseCase->apply(
             id: Uuid::fromString($id),
             dto: $request->getDTO(),
         );
 
         return response()->json(
-            ['animal' => $this->animalMapper->toArray($animal)],
+            $responseDTO,
             JsonResponse::HTTP_ACCEPTED,
         );
     }
@@ -160,10 +143,10 @@ final class AnimalController
         string $id,
         AnimalPublishUseCase $animalPublishUseCase
     ): JsonResponse {
-        $animal = $animalPublishUseCase->apply(Uuid::fromString($id));
+        $responseDTO = $animalPublishUseCase->apply(Uuid::fromString($id));
 
         return response()->json(
-            ['animal' => $this->animalMapper->toArray($animal)],
+            $responseDTO,
             JsonResponse::HTTP_ACCEPTED,
         );
     }
@@ -172,10 +155,10 @@ final class AnimalController
         string $id,
         AnimalUnpublishUseCase $animalUnpublishUseCase
     ): JsonResponse {
-        $animal = $animalUnpublishUseCase->apply(Uuid::fromString($id));
+        $responseDTO = $animalUnpublishUseCase->apply(Uuid::fromString($id));
 
         return response()->json(
-            ['animal' => $this->animalMapper->toArray($animal)],
+            $responseDTO,
             JsonResponse::HTTP_ACCEPTED,
         );
     }

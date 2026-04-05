@@ -10,21 +10,18 @@ use Source\Domain\Animal\Events\AnimalDeleted;
 use Source\Domain\Animal\Events\AnimalPublished;
 use Source\Domain\Animal\Events\AnimalStatusUpdated;
 use Source\Domain\Animal\Events\AnimalUnpublished;
+use Source\Domain\Animal\ValueObjects\AnimalInfo;
 use Source\Domain\Shared\AggregateTraits\UseAggregateEvents;
 use Source\Domain\Shared\AggregateWithEvents;
-use Source\Domain\Shared\AggregateWithSlug;
 use Source\Domain\Shared\ValueObjects\IntegerValueObject;
-use Source\Domain\Slug\ValueObjects\SlugString;
 
-final class Animal implements AggregateWithEvents, AggregateWithSlug
+final class Animal implements AggregateWithEvents
 {
     use UseAggregateEvents;
 
-    private ?SlugString $slug = null;
-
     private function __construct(
         protected readonly UuidInterface $id,
-        protected readonly AnimalInfo $info,
+        public readonly AnimalInfo $info,
         protected AnimalStatus $status,
         protected int|bool $published = false,
         protected readonly ?CarbonInterface $createdAt = null,
@@ -70,7 +67,7 @@ final class Animal implements AggregateWithEvents, AggregateWithSlug
         $animal->addEvent(
             new AnimalCreated(
                 $animal->id(),
-                $animal->info()->name(),
+                $animal->info()->name,
             ),
         );
 
@@ -89,7 +86,7 @@ final class Animal implements AggregateWithEvents, AggregateWithSlug
 
     public function age(): IntegerValueObject
     {
-        return IntegerValueObject::fromInteger($this->info()->birthdate()->age);
+        return IntegerValueObject::fromInteger($this->info()->birthdate->age);
     }
 
     public function status(): AnimalStatus
@@ -112,11 +109,6 @@ final class Animal implements AggregateWithEvents, AggregateWithSlug
         return $this->updatedAt;
     }
 
-    public function slug(): ?SlugString
-    {
-        return $this->slug;
-    }
-
     public function statusUpdate(AnimalStatus $status): bool
     {
         if ($this->status === $status) {
@@ -129,7 +121,7 @@ final class Animal implements AggregateWithEvents, AggregateWithSlug
         $this->addEvent(
             new AnimalStatusUpdated(
                 $this->id(),
-                $this->info()->name(),
+                $this->info()->name,
                 $this->status(),
                 $oldStatus,
             ),
@@ -162,11 +154,4 @@ final class Animal implements AggregateWithEvents, AggregateWithSlug
     {
         $this->addEvent(new AnimalDeleted($this->id()));
     }
-
-    public function addSlug(SlugString $slug): void
-    {
-        $this->slug = $slug;
-    }
-
-
 }

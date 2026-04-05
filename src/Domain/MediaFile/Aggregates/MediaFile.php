@@ -15,7 +15,7 @@ final class MediaFile implements Entity, AggregateWithEvents
 {
     use UseAggregateEvents;
 
-    private function __construct(
+    protected function __construct(
         public readonly UuidInterface $id,
         public readonly StorageInfo $storageInfo,
         private array $sizes,

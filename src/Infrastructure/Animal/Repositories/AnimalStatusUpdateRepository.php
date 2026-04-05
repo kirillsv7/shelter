@@ -22,10 +22,23 @@ final class AnimalStatusUpdateRepository implements AnimalStatusUpdateRepository
     {
         $animalStatusUpdates = AnimalStatusUpdateModel::query()
             ->where('animal_id', $id)
-            ->get();
+            ->get()
+            ->all();
 
         return array_map(
-            /** @phpstan-ignore-next-line */
+            fn (AnimalStatusUpdateModel $model) => $this->mapper->modelToEntity($model),
+            $animalStatusUpdates,
+        );
+    }
+
+    public function getByAnimalIds(array $ids): array
+    {
+        $animalStatusUpdates = AnimalStatusUpdateModel::query()
+            ->whereIn('animal_id', $ids)
+            ->get()
+            ->all();
+
+        return array_map(
             fn (AnimalStatusUpdateModel $model) => $this->mapper->modelToEntity($model),
             $animalStatusUpdates,
         );

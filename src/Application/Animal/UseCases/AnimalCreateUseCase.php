@@ -4,14 +4,18 @@ namespace Source\Application\Animal\UseCases;
 
 use Carbon\CarbonImmutable;
 use Ramsey\Uuid\Uuid;
+use Source\Application\Animal\DTOs\AnimalDetailsDTO;
+use Source\Application\Animal\DTOs\AnimalDTO;
+use Source\Application\Slug\DTOs\SlugDTO;
 use Source\Domain\Animal\Aggregates\Animal;
-use Source\Domain\Animal\Aggregates\AnimalInfo;
 use Source\Domain\Animal\Repositories\AnimalRepository;
+use Source\Domain\Animal\ValueObjects\AnimalInfo;
 use Source\Domain\Slug\Aggregates\Slug;
 use Source\Domain\Slug\Repositories\SlugRepository;
 use Source\Domain\Slug\ValueObjects\SlugString;
 use Source\Infrastructure\Animal\Models\AnimalModel;
 use Source\Infrastructure\Laravel\Events\MultiDispatcher;
+use Source\Interface\Animal\DTOs\AnimalResponseDTO;
 use Source\Interface\Animal\DTOs\AnimalStoreRequestDTO;
 
 final class AnimalCreateUseCase
@@ -23,12 +27,11 @@ final class AnimalCreateUseCase
     ) {
     }
 
-    public function apply(
-        AnimalStoreRequestDTO $dto,
-    ): Animal {
+    public function apply(AnimalStoreRequestDTO $dto): AnimalResponseDTO
+    {
         $animal = Animal::create(
             id: Uuid::uuid7(),
-            info: AnimalInfo::create(
+            info: new AnimalInfo(
                 name: $dto->name,
                 type: $dto->type,
                 gender: $dto->gender,
@@ -38,8 +41,6 @@ final class AnimalCreateUseCase
             ),
             createdAt: CarbonImmutable::now(),
         );
-
-        $this->animalRepository->create($animal);
 
         $slugParts = [
             $dto->name,
@@ -55,12 +56,17 @@ final class AnimalCreateUseCase
             sluggableId: $animal->id(),
         );
 
-        $this->slugRepository->create($slug);
+        $this->animalRepository->create($animal);
 
-        $animal->addSlug($slug->value());
+        $this->slugRepository->create($slug);
 
         $this->dispatcher->multiDispatch($animal->releaseEvents());
 
-        return $animal;
+        return new AnimalResponseDTO(
+            animal: new AnimalDetailsDTO(
+                animal: new AnimalDTO($animal),
+                slug: new SlugDTO($slug),
+            )
+        );
     }
 }

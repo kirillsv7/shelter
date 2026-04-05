@@ -3,38 +3,60 @@
 namespace Source\Application\Animal\UseCases;
 
 use Ramsey\Uuid\UuidInterface;
-use Source\Application\Animal\UseCases\Traits\LoadSlugTrait;
-use Source\Domain\Animal\Aggregates\Animal;
+use Source\Application\Animal\DTOs\AnimalDetailsDTO;
+use Source\Application\Animal\DTOs\AnimalDTO;
+use Source\Application\Animal\DTOs\AnimalStatusUpdateDTO;
+use Source\Application\MediaFile\DTOs\MediaFileDTO;
+use Source\Application\Slug\DTOs\SlugDTO;
+use Source\Domain\Animal\Aggregates\AnimalStatusUpdate;
 use Source\Domain\Animal\Repositories\AnimalRepository;
-use Source\Domain\Shared\ValueObjects\StringValueObject;
-use Source\Infrastructure\Animal\Models\AnimalModel;
+use Source\Domain\Animal\Repositories\AnimalStatusUpdateRepository;
+use Source\Domain\MediaFile\Aggregates\MediaFile;
+use Source\Domain\MediaFile\Repositories\MediaFileRepository;
+use Source\Domain\Slug\Repositories\SlugRepository;
 use Source\Infrastructure\Laravel\Events\MultiDispatcher;
+use Source\Interface\Animal\DTOs\AnimalResponseDTO;
 
 final class AnimalUnpublishUseCase
 {
-    use LoadSlugTrait;
-
     public function __construct(
-        protected AnimalRepository $repository,
+        protected AnimalRepository $animalRepository,
+        protected AnimalStatusUpdateRepository $animalStatusUpdateRepository,
+        protected MediaFileRepository $mediaFileRepository,
+        protected SlugRepository $slugRepository,
         protected MultiDispatcher $dispatcher,
     ) {
     }
 
-    public function apply(UuidInterface $id): Animal
+    public function apply(UuidInterface $id): AnimalResponseDTO
     {
-        $animal = $this->repository->getById($id);
+        $animal = $this->animalRepository->getById($id);
 
         $animal->unpublish();
 
-        $this->repository->update($id, $animal);
-
-        $this->loadSlug(
-            $animal,
-            StringValueObject::fromString(AnimalModel::class),
-        );
+        $this->animalRepository->update($id, $animal);
 
         $this->dispatcher->multiDispatch($animal->releaseEvents());
 
-        return $animal;
+        $mediaFiles = $this->mediaFileRepository->getByMediableUuid($id);
+
+        $slug = $this->slugRepository->getBySluggableUuid($id);
+
+        $animalStatusUpdates = $this->animalStatusUpdateRepository->getByAnimalId($id);
+
+        return new AnimalResponseDTO(
+            animal: new AnimalDetailsDTO(
+                animal: new AnimalDTO($animal),
+                slug: new SlugDTO($slug),
+                mediaFiles: array_map(
+                    fn (MediaFile $mediaFile) => new MediaFileDTO($mediaFile),
+                    $mediaFiles,
+                ),
+                animalStatusUpdates: array_map(
+                    fn (AnimalStatusUpdate $animalStatusUpdate) => new AnimalStatusUpdateDTO($animalStatusUpdate),
+                    $animalStatusUpdates,
+                ),
+            )
+        );
     }
 }

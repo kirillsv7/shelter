@@ -24,8 +24,8 @@ Route::group([
     'as' => 'animals.',
 ], function () {
     Route::get('/', 'index')->name('index');
-    Route::post('/', 'store')->name('store');
     Route::get('/{id}', 'getById')->name('get-by-id');
+    Route::post('/', 'store')->name('store');
     Route::put('/{id}', 'update')->name('update');
     Route::delete('/{id}', 'destroy')->name('destroy');
     Route::put('/status/{id}', 'statusUpdate')->name('status-update');

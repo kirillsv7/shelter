@@ -6,7 +6,6 @@ use Ramsey\Uuid\UuidInterface;
 use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Domain\Slug\Aggregates\Slug;
 use Source\Domain\Slug\Repositories\SlugRepository;
-use Source\Infrastructure\Laravel\Models\BaseModel;
 
 final class SlugGetBySluggableUseCase
 {

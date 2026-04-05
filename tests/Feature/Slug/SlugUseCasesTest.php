@@ -7,7 +7,6 @@ use Source\Application\Slug\UseCases\SlugGetBySluggableUseCase;
 use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Domain\Slug\Exceptions\SlugNotFoundException;
 use Source\Infrastructure\Animal\Models\AnimalModel;
-use Source\Infrastructure\MediaFile\Models\MediaFileModel;
 use Tests\FeatureTestCase;
 
 class SlugUseCasesTest extends FeatureTestCase

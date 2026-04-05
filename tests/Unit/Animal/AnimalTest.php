@@ -5,7 +5,6 @@ namespace Tests\Unit\Animal;
 use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
 use Source\Domain\Animal\Aggregates\Animal;
-use Source\Domain\Animal\Aggregates\AnimalInfo;
 use Source\Domain\Animal\Enums\AnimalGender;
 use Source\Domain\Animal\Enums\AnimalStatus;
 use Source\Domain\Animal\Enums\AnimalType;
@@ -14,11 +13,9 @@ use Source\Domain\Animal\Events\AnimalDeleted;
 use Source\Domain\Animal\Events\AnimalPublished;
 use Source\Domain\Animal\Events\AnimalStatusUpdated;
 use Source\Domain\Animal\Events\AnimalUnpublished;
+use Source\Domain\Animal\ValueObjects\AnimalInfo;
 use Source\Domain\Animal\ValueObjects\Breed;
 use Source\Domain\Animal\ValueObjects\Name;
-use Source\Domain\Slug\ValueObjects\SlugString;
-use Source\Interface\Animal\Mappers\AnimalInfoMapper;
-use Source\Interface\Animal\Mappers\AnimalMapper;
 use Tests\UnitTestCase;
 
 class AnimalTest extends UnitTestCase
@@ -115,46 +112,11 @@ class AnimalTest extends UnitTestCase
         $this->assertEventsHas(AnimalDeleted::class, $animal->releaseEvents());
     }
 
-    public function testAnimalAddSlug()
-    {
-        $animal = $this->animalCreate();
-
-        $slug = SlugString::fromString('animal-slug');
-
-        $animal->addSlug($slug);
-
-        $this->assertEquals($animal->slug(), $slug);
-    }
-
-    public function testAnimalConvertToArray()
-    {
-        $animal = $this->animalCreate();
-
-        $animalMapper = app(AnimalMapper::class);
-
-        $animalInfoMapper = app(AnimalInfoMapper::class);
-
-        $animalArray = $animalMapper->toArray($animal);
-
-        $this->assertIsArray($animalArray);
-
-        $this->assertEquals($animalArray, [
-            'id' => $animal->id(),
-            'info' => $animalInfoMapper->toArray($animal->info()),
-            'age' => $animal->age()->value,
-            'status' => $animal->status(),
-            'published' => $animal->published(),
-            'created_at' => $animal->createdAt(),
-            'updated_at' => $animal->updatedAt(),
-            'slug' => $animal->slug(),
-        ]);
-    }
-
     private function animalCreate(): Animal
     {
         return Animal::create(
             id: Uuid::uuid7(),
-            info: AnimalInfo::create(
+            info: new AnimalInfo(
                 name: Name::fromString(fake()->firstName()),
                 type: fake()->randomElement(AnimalType::cases()),
                 gender: fake()->randomElement(AnimalGender::cases()),

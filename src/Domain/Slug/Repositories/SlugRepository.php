@@ -21,5 +21,12 @@ interface SlugRepository
      */
     public function getBySluggableUuid(UuidInterface $id): Slug;
 
+    /**
+     * @param  UuidInterface[]  $ids
+     *
+     * @return Slug[]
+     */
+    public function getBySluggableUuids(array $ids): array;
+
     public function update(Slug $slug): void;
 }

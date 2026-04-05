@@ -62,6 +62,15 @@ final class SlugRepository implements SlugRepositoryContract
         return $this->map($model);
     }
 
+    public function getBySluggableUuids(array $ids): array
+    {
+        return SlugModel::query()
+            ->whereIn('sluggable_id', $ids)
+            ->get()
+            ->map(fn (SlugModel $model) => $this->map($model))
+            ->toArray();
+    }
+
     public function update(Slug $slug): void
     {
         $model = SlugModel::query()->find($slug->id());
