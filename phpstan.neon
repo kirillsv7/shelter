@@ -5,6 +5,8 @@ parameters:
 
     paths:
         - app/
+        - bootstrap/app.php
+        - bootstrap/providers.php
         - src/
 
     # Level 10 is the highest level
