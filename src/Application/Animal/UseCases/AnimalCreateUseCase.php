@@ -6,6 +6,7 @@ use Carbon\CarbonImmutable;
 use Ramsey\Uuid\Uuid;
 use Source\Application\Animal\DTOs\AnimalDetailsDTO;
 use Source\Application\Animal\DTOs\AnimalDTO;
+use Source\Application\Animal\DTOs\AnimalResponseDTO;
 use Source\Application\Slug\DTOs\SlugDTO;
 use Source\Domain\Animal\Aggregates\Animal;
 use Source\Domain\Animal\Repositories\AnimalRepository;
@@ -15,7 +16,6 @@ use Source\Domain\Slug\Repositories\SlugRepository;
 use Source\Domain\Slug\ValueObjects\SlugString;
 use Source\Infrastructure\Animal\Models\AnimalModel;
 use Source\Infrastructure\Laravel\Events\MultiDispatcher;
-use Source\Interface\Animal\DTOs\AnimalResponseDTO;
 use Source\Interface\Animal\DTOs\AnimalStoreRequestDTO;
 
 final class AnimalCreateUseCase

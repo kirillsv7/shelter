@@ -1,8 +1,7 @@
 <?php
 
-namespace Source\Interface\Animal\DTOs;
+namespace Source\Application\Animal\DTOs;
 
-use Source\Application\Animal\DTOs\AnimalDetailsDTO;
 use Source\Application\Shared\DTOs\PaginationDTO;
 
 final readonly class AnimalListResponseDTO

@@ -25,11 +25,13 @@ final class Pagination
     ) {
     }
 
-    public static function create(?int $limit = null, ?int $page = null): self
-    {
+    public static function create(
+        ?Limit $limit = null,
+        ?Page $page = null,
+    ): self {
         return new self(
-            Limit::fromInteger($limit ?? self::LIMIT),
-            Page::fromInteger(max($page, 1)),
+            limit: $limit ?? Limit::fromInteger(self::LIMIT),
+            page: $page?->max(Page::fromInteger(1)) ?? Page::fromInteger(1),
         );
     }
 
@@ -41,11 +43,11 @@ final class Pagination
     public function generateLinks(int $totalItems): void
     {
         $this->totalItems = TotalItems::fromInteger($totalItems);
-        $this->onPage = $this->calculateItemsOnPage();
-        $this->current = $this->page;
-        $this->previous = $this->previousPage();
-        $this->next = $this->nextPage();
-        $this->last = $this->lastPage();
+        $this->onPage     = $this->calculateItemsOnPage();
+        $this->current    = $this->page;
+        $this->previous   = $this->previousPage();
+        $this->next       = $this->nextPage();
+        $this->last       = $this->lastPage();
     }
 
     public function calculateItemsOnPage(): IntegerValueObject

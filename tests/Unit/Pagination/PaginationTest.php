@@ -4,15 +4,20 @@ namespace Tests\Unit\Pagination;
 
 use InvalidArgumentException;
 use Source\Domain\Shared\Model\Pagination;
+use Source\Domain\Shared\Model\PaginationValueObjects\Limit;
+use Source\Domain\Shared\Model\PaginationValueObjects\Page;
 use Tests\UnitTestCase;
 
 class PaginationTest extends UnitTestCase
 {
     public function testPaginationCreate()
     {
-        $paginationWithLimitAndPage = Pagination::create(30, 2);
-        $paginationWithLimitOnly = Pagination::create(20);
-        $paginationWithPageOnly = Pagination::create(page: 4);
+        $paginationWithLimitAndPage = Pagination::create(
+            limit: Limit::fromInteger(30),
+            page: Page::fromInteger(2),
+        );
+        $paginationWithLimitOnly    = Pagination::create(limit: Limit::fromInteger(20));
+        $paginationWithPageOnly     = Pagination::create(page: Page::fromInteger(4));
 
         $this->assertEquals(30, $paginationWithLimitAndPage->offset()->value);
 
@@ -26,24 +31,23 @@ class PaginationTest extends UnitTestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        Pagination::create(-10);
+        Pagination::create(limit: Limit::fromInteger(-10));
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('paginationVariations')]
     public function testPaginationLinksGeneration($limit, $page, $total)
     {
         $pagination = Pagination::create(
-            $limit,
-            $page,
+            Limit::fromInteger($limit),
+            Page::fromInteger($page),
         );
 
         $pagination->generateLinks($total);
 
-        $calcToTotal = max($total - $limit * ($page - 1), 0);
-        $onPage = min($calcToTotal, $limit);
+        $calcToTotal = max($total - $limit*($page - 1), 0);
+        $onPage      = min($calcToTotal, $limit);
 
-        $this->assertEquals($total, $pagination->totalItems?->value);
-        ;
+        $this->assertEquals($total, $pagination->totalItems?->value);;
         $this->assertEquals($limit, $pagination->limit->value);
         $this->assertEquals($onPage, $pagination->onPage?->value);
         $this->assertEquals(
@@ -62,12 +66,12 @@ class PaginationTest extends UnitTestCase
         $this->assertEquals($previousPage, $pagination->previous?->value);
 
         $this->assertEquals(
-            $total - ($limit * $page) > 0 ? max($page, 1) + 1 : null,
+            $total - ($limit*$page) > 0 ? max($page, 1) + 1 : null,
             $pagination->next?->value,
         );
 
         $this->assertEquals(
-            ceil($total / $limit),
+            ceil($total/$limit),
             $pagination->last?->value,
         );
     }

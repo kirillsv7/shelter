@@ -28,13 +28,7 @@ final class AnimalController
         AnimalIndexUseCase $animalIndexUseCase,
     ): JsonResponse {
         $responseDTO = $animalIndexUseCase->apply(
-            name: $request->getName(),
-            type: $request->getType(),
-            gender: $request->getGender(),
-            ageMin: $request->getAgeMin(),
-            ageMax: $request->getAgeMax(),
-            limit: $request->getLimit(),
-            page: $request->getPage(),
+            dto: $request->getDTO(),
         );
 
         return response()->json($responseDTO);
@@ -48,13 +42,7 @@ final class AnimalController
         $type = AnimalType::single($type);
 
         $responseDTO = $animalIndexUseCase->apply(
-            name: $request->getName(),
-            type: $type,
-            gender: $request->getGender(),
-            ageMin: $request->getAgeMin(),
-            ageMax: $request->getAgeMax(),
-            limit: $request->getLimit(),
-            page: $request->getPage(),
+            dto: $request->getDTO(),
         );
 
         return response()->json($responseDTO);

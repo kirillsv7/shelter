@@ -7,6 +7,7 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Source\Application\Animal\DTOs\AnimalDetailsDTO;
 use Source\Application\Animal\DTOs\AnimalDTO;
+use Source\Application\Animal\DTOs\AnimalResponseDTO;
 use Source\Application\Animal\DTOs\AnimalStatusUpdateDTO;
 use Source\Application\MediaFile\DTOs\MediaFileDTO;
 use Source\Application\Slug\DTOs\SlugDTO;
@@ -18,7 +19,6 @@ use Source\Domain\MediaFile\Aggregates\MediaFile;
 use Source\Domain\MediaFile\Repositories\MediaFileRepository;
 use Source\Domain\Slug\Repositories\SlugRepository;
 use Source\Infrastructure\Laravel\Events\MultiDispatcher;
-use Source\Interface\Animal\DTOs\AnimalResponseDTO;
 use Source\Interface\Animal\DTOs\AnimalStatusUpdateRequestDTO;
 
 final class AnimalStatusUpdateUseCase
