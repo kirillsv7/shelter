@@ -36,11 +36,11 @@ final class AnimalGetBySlugUseCase
             slug: $slug,
         );
 
-        $mediaFiles = $this->mediaFileRepository->getByMediableUuid($animal->id());
+        $mediaFiles = $this->mediaFileRepository->getByMediableUuid($animal->id);
 
-        $slug = $this->slugRepository->getBySluggableUuid($animal->id());
+        $slug = $this->slugRepository->getBySluggableUuid($animal->id);
 
-        $animalStatusUpdates = $this->animalStatusUpdateRepository->getByAnimalId($animal->id());
+        $animalStatusUpdates = $this->animalStatusUpdateRepository->getByAnimalId($animal->id);
 
         return new AnimalResponseDTO(
             animal: new AnimalDetailsDTO(

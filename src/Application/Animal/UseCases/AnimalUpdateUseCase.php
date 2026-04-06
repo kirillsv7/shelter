@@ -37,7 +37,7 @@ final class AnimalUpdateUseCase
     ): AnimalResponseDTO {
         $animal = $this->animalRepository->getById($id);
 
-        $animalInfo = $animal->info()->change(
+        $animalInfo = $animal->info->change(
             $dto->name,
             $dto->type,
             $dto->gender,
@@ -51,7 +51,7 @@ final class AnimalUpdateUseCase
             info: $animalInfo,
             status: $animal->status(),
             published: $animal->published(),
-            createdAt: $animal->createdAt(),
+            createdAt: $animal->createdAt,
             updatedAt: CarbonImmutable::now(),
         );
 

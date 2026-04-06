@@ -19,13 +19,13 @@ final class Animal implements AggregateWithEvents
 {
     use UseAggregateEvents;
 
-    private function __construct(
-        protected readonly UuidInterface $id,
+    protected function __construct(
+        public readonly UuidInterface $id,
         public readonly AnimalInfo $info,
         protected AnimalStatus $status,
         protected int|bool $published = false,
-        protected readonly ?CarbonInterface $createdAt = null,
-        protected readonly ?CarbonInterface $updatedAt = null,
+        public readonly ?CarbonInterface $createdAt = null,
+        public readonly ?CarbonInterface $updatedAt = null,
     ) {
     }
 
@@ -66,28 +66,17 @@ final class Animal implements AggregateWithEvents
 
         $animal->addEvent(
             new AnimalCreated(
-                $animal->id(),
-                $animal->info()->name,
+                $animal->id,
+                $animal->info->name,
             ),
         );
 
         return $animal;
     }
 
-    public function id(): UuidInterface
-    {
-        return $this->id;
-    }
-
-    public function info(): AnimalInfo
-    {
-        return $this->info;
-    }
-
-    public function age(): IntegerValueObject
-    {
-        return IntegerValueObject::fromInteger($this->info()->birthdate->age);
-    }
+    /**
+     * Accessors
+     */
 
     public function status(): AnimalStatus
     {
@@ -99,15 +88,18 @@ final class Animal implements AggregateWithEvents
         return $this->published;
     }
 
-    public function createdAt(): CarbonInterface
+    /**
+     * Computed
+     */
+
+    public function age(): IntegerValueObject
     {
-        return $this->createdAt;
+        return IntegerValueObject::fromInteger($this->info->birthdate->age);
     }
 
-    public function updatedAt(): ?CarbonInterface
-    {
-        return $this->updatedAt;
-    }
+    /**
+     * Mutators
+     */
 
     public function statusUpdate(AnimalStatus $status): bool
     {
@@ -115,14 +107,14 @@ final class Animal implements AggregateWithEvents
             return false;
         }
 
-        $oldStatus = $this->status;
+        $oldStatus    = $this->status;
         $this->status = $status;
 
         $this->addEvent(
             new AnimalStatusUpdated(
-                $this->id(),
-                $this->info()->name,
-                $this->status(),
+                $this->id,
+                $this->info->name,
+                $this->status,
                 $oldStatus,
             ),
         );
@@ -137,7 +129,7 @@ final class Animal implements AggregateWithEvents
         }
 
         $this->published = true;
-        $this->addEvent(new AnimalPublished($this->id()));
+        $this->addEvent(new AnimalPublished($this->id));
     }
 
     public function unpublish(): void
@@ -147,11 +139,11 @@ final class Animal implements AggregateWithEvents
         }
 
         $this->published = false;
-        $this->addEvent(new AnimalUnpublished($this->id()));
+        $this->addEvent(new AnimalUnpublished($this->id));
     }
 
     public function delete(): void
     {
-        $this->addEvent(new AnimalDeleted($this->id()));
+        $this->addEvent(new AnimalDeleted($this->id));
     }
 }

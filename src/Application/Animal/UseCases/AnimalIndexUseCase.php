@@ -56,7 +56,7 @@ final class AnimalIndexUseCase
         );
 
         $animalIds = array_map(
-            fn(Animal $animal) => $animal->id(),
+            fn(Animal $animal) => $animal->id,
             $animals,
         );
 
@@ -75,12 +75,12 @@ final class AnimalIndexUseCase
         foreach ($animals as $animal) {
             $animalMediaFiles = array_filter(
                 $mediaFiles,
-                fn(MediaFile $mediaFile) => $mediaFile->mediableId->equals($animal->id()),
+                fn(MediaFile $mediaFile) => $mediaFile->mediableId->equals($animal->id),
             );
 
             $animalStatusUpdates = array_filter(
                 $animalStatusUpdates,
-                fn(AnimalStatusUpdate $animalStatusUpdate) => $animalStatusUpdate->animalId->equals($animal->id()),
+                fn(AnimalStatusUpdate $animalStatusUpdate) => $animalStatusUpdate->animalId->equals($animal->id),
             );
 
             $animalResponseDTOs[] = new AnimalDetailsDTO(
@@ -88,7 +88,7 @@ final class AnimalIndexUseCase
                 slug: new SlugDTO(
                     array_find(
                         $slugs,
-                        fn(Slug $slug) => $slug->sluggableId()->equals($animal->id()),
+                        fn(Slug $slug) => $slug->sluggableId()->equals($animal->id),
                     )
                 ),
                 mediaFiles: array_map(

@@ -9,6 +9,7 @@ use Source\Application\Animal\DTOs\AnimalDTO;
 use Source\Application\Animal\DTOs\AnimalResponseDTO;
 use Source\Application\Slug\DTOs\SlugDTO;
 use Source\Domain\Animal\Aggregates\Animal;
+use Source\Domain\Animal\Enums\AnimalStatus;
 use Source\Domain\Animal\Repositories\AnimalRepository;
 use Source\Domain\Animal\ValueObjects\AnimalInfo;
 use Source\Domain\Slug\Aggregates\Slug;
@@ -53,7 +54,7 @@ final class AnimalCreateUseCase
             id: Uuid::uuid7(),
             value: SlugString::fromArray($slugParts),
             sluggableType: new AnimalModel(),
-            sluggableId: $animal->id(),
+            sluggableId: $animal->id,
         );
 
         $this->animalRepository->create($animal);

@@ -40,12 +40,12 @@ final readonly class AnimalMapper
             $model = new AnimalModel();
         }
 
-        $model->setAttribute('name', $animal->info()->name);
-        $model->setAttribute('type', $animal->info()->type->value);
-        $model->setAttribute('gender', $animal->info()->gender);
-        $model->setAttribute('breed', $animal->info()->breed);
-        $model->setAttribute('birthdate', $animal->info()->birthdate);
-        $model->setAttribute('entrydate', $animal->info()->entrydate);
+        $model->setAttribute('name', $animal->info->name);
+        $model->setAttribute('type', $animal->info->type->value);
+        $model->setAttribute('gender', $animal->info->gender);
+        $model->setAttribute('breed', $animal->info->breed);
+        $model->setAttribute('birthdate', $animal->info->birthdate);
+        $model->setAttribute('entrydate', $animal->info->entrydate);
         $model->setAttribute('status', $animal->status()->value);
         $model->setAttribute('published', $animal->published());
 

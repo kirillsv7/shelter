@@ -82,7 +82,7 @@ final class AnimalRepository implements AnimalRepositoryContract
             ->transaction(function () use ($animal) {
                 $model = $this->mapper->entityToModel($animal);
 
-                $model->setAttribute('id', $animal->id());
+                $model->setAttribute('id', $animal->id);
                 $model->setAttribute('created_at', CarbonImmutable::now());
 
                 $model->save();

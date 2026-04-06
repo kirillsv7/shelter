@@ -15,13 +15,13 @@ final readonly class AnimalDTO implements JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            'id' => $this->animal->id(),
-            'info' => $this->animal->info(),
+            'id' => $this->animal->id,
+            'info' => $this->animal->info,
             'age' => $this->animal->age()->value,
             'status' => $this->animal->status(),
             'published' => $this->animal->published(),
-            'created_at' => $this->animal->createdAt(),
-            'updated_at' => $this->animal->updatedAt(),
+            'created_at' => $this->animal->createdAt,
+            'updated_at' => $this->animal->updatedAt,
         ];
     }
 }

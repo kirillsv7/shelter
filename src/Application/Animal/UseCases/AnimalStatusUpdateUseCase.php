@@ -81,7 +81,7 @@ final class AnimalStatusUpdateUseCase
     ): void {
         $animalStatusUpdate = AnimalStatusUpdate::create(
             id: Uuid::uuid7(),
-            animalId: $animal->id(),
+            animalId: $animal->id,
             status: $dto->status,
             notes: $dto->notes,
             createdAt: CarbonImmutable::now(),
