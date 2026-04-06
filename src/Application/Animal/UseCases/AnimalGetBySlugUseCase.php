@@ -5,13 +5,13 @@ namespace Source\Application\Animal\UseCases;
 use Source\Application\Animal\DTOs\AnimalDetailsDTO;
 use Source\Application\Animal\DTOs\AnimalDTO;
 use Source\Application\Animal\DTOs\AnimalResponseDTO;
-use Source\Application\Animal\DTOs\AnimalStatusUpdateDTO;
+use Source\Application\Animal\DTOs\AnimalStatusDTO;
 use Source\Application\MediaFile\DTOs\MediaFileDTO;
 use Source\Application\Slug\DTOs\SlugDTO;
-use Source\Domain\Animal\Aggregates\AnimalStatusUpdate;
+use Source\Domain\Animal\Aggregates\AnimalStatus;
 use Source\Domain\Animal\Enums\AnimalType;
 use Source\Domain\Animal\Repositories\AnimalRepository;
-use Source\Domain\Animal\Repositories\AnimalStatusUpdateRepository;
+use Source\Domain\Animal\Repositories\AnimalStatusRepository;
 use Source\Domain\MediaFile\Aggregates\MediaFile;
 use Source\Domain\MediaFile\Repositories\MediaFileRepository;
 use Source\Domain\Shared\ValueObjects\StringValueObject;
@@ -21,7 +21,7 @@ final class AnimalGetBySlugUseCase
 {
     public function __construct(
         protected AnimalRepository $animalRepository,
-        protected AnimalStatusUpdateRepository $animalStatusUpdateRepository,
+        protected AnimalStatusRepository $animalStatusRepository,
         protected MediaFileRepository $mediaFileRepository,
         protected SlugRepository $slugRepository,
     ) {
@@ -40,7 +40,7 @@ final class AnimalGetBySlugUseCase
 
         $slug = $this->slugRepository->getBySluggableUuid($animal->id);
 
-        $animalStatusUpdates = $this->animalStatusUpdateRepository->getByAnimalId($animal->id);
+        $animalStatuses = $this->animalStatusRepository->getByAnimalId($animal->id);
 
         return new AnimalResponseDTO(
             animal: new AnimalDetailsDTO(
@@ -50,9 +50,9 @@ final class AnimalGetBySlugUseCase
                     fn (MediaFile $mediaFile) => new MediaFileDTO($mediaFile),
                     $mediaFiles,
                 ),
-                animalStatusUpdates: array_map(
-                    fn (AnimalStatusUpdate $animalStatusUpdate) => new AnimalStatusUpdateDTO($animalStatusUpdate),
-                    $animalStatusUpdates,
+                animalStatuses: array_map(
+                    fn (AnimalStatus $animalStatus) => new AnimalStatusDTO($animalStatus),
+                    $animalStatuses,
                 ),
             )
         );

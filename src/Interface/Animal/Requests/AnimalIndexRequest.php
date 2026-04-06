@@ -17,13 +17,13 @@ final class AnimalIndexRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'    => ['string'],
-            'type'    => ['string'],
-            'gender'  => [new Enum(AnimalGender::class)],
+            'name' => ['string'],
+            'type' => ['string'],
+            'gender' => [new Enum(AnimalGender::class)],
             'age_min' => ['integer'],
             'age_max' => ['integer'],
-            'limit'   => ['integer'],
-            'page'    => ['integer'],
+            'limit' => ['integer'],
+            'page' => ['integer'],
         ];
     }
 

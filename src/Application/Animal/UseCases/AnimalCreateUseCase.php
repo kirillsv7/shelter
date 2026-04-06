@@ -7,10 +7,12 @@ use Ramsey\Uuid\Uuid;
 use Source\Application\Animal\DTOs\AnimalDetailsDTO;
 use Source\Application\Animal\DTOs\AnimalDTO;
 use Source\Application\Animal\DTOs\AnimalResponseDTO;
+use Source\Application\Animal\DTOs\AnimalStatusDTO;
 use Source\Application\Slug\DTOs\SlugDTO;
 use Source\Domain\Animal\Aggregates\Animal;
-use Source\Domain\Animal\Enums\AnimalStatus;
+use Source\Domain\Animal\Aggregates\AnimalStatus;
 use Source\Domain\Animal\Repositories\AnimalRepository;
+use Source\Domain\Animal\Repositories\AnimalStatusRepository;
 use Source\Domain\Animal\ValueObjects\AnimalInfo;
 use Source\Domain\Slug\Aggregates\Slug;
 use Source\Domain\Slug\Repositories\SlugRepository;
@@ -23,6 +25,7 @@ final class AnimalCreateUseCase
 {
     public function __construct(
         protected AnimalRepository $animalRepository,
+        protected AnimalStatusRepository $animalStatusRepository,
         protected SlugRepository $slugRepository,
         protected MultiDispatcher $dispatcher,
     ) {
@@ -40,6 +43,8 @@ final class AnimalCreateUseCase
                 birthdate: $dto->birthdate,
                 entrydate: $dto->entrydate,
             ),
+            status: $dto->status,
+            published: $dto->published,
             createdAt: CarbonImmutable::now(),
         );
 
@@ -57,9 +62,19 @@ final class AnimalCreateUseCase
             sluggableId: $animal->id,
         );
 
+        $animalStatus = AnimalStatus::create(
+            id: Uuid::uuid7(),
+            animalId: $animal->id,
+            status: $dto->status,
+            notes: $dto->notes,
+            createdAt: CarbonImmutable::now(),
+        );
+
         $this->animalRepository->create($animal);
 
         $this->slugRepository->create($slug);
+
+        $this->animalStatusRepository->create($animalStatus);
 
         $this->dispatcher->multiDispatch($animal->releaseEvents());
 
@@ -67,6 +82,9 @@ final class AnimalCreateUseCase
             animal: new AnimalDetailsDTO(
                 animal: new AnimalDTO($animal),
                 slug: new SlugDTO($slug),
+                animalStatuses: [
+                    new AnimalStatusDTO($animalStatus),
+                ]
             )
         );
     }

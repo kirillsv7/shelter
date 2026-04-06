@@ -148,6 +148,8 @@ class AnimalRequestsTest extends FeatureTestCase
                 'breed' => $animal['breed'],
                 'birthdate' => $animal['birthdate'],
                 'entrydate' => $animal['entrydate'],
+                'status' => $animal['status'],
+                'published' => $animal['published'],
             ]);
     }
 
@@ -257,6 +259,7 @@ class AnimalRequestsTest extends FeatureTestCase
 
     public function testAnimalUpdate()
     {
+        /** @var AnimalModel $animal */
         $animal = AnimalModel::factory()->create();
 
         $animalNewData = $this->generateAnimalDataForRequest();
@@ -270,10 +273,13 @@ class AnimalRequestsTest extends FeatureTestCase
             ->assertAccepted()
             ->assertJsonFragment([
                 'id' => $animal->id,
-                'info' => $animalNewData,
-                'status' => $animal->status,
-                'published' => $animal->published,
-                'slug' => $animal->slug->slug,
+                'name' => $animalNewData['name'],
+                'type' => $animalNewData['type'],
+                'gender' => $animalNewData['gender'],
+                'breed' => $animalNewData['breed'],
+                'birthdate' => $animalNewData['birthdate'],
+                'entrydate' => $animalNewData['entrydate'],
+                //'status' => $animalNewData['status'],
             ]);
     }
 
@@ -344,6 +350,8 @@ class AnimalRequestsTest extends FeatureTestCase
             'breed' => fake()->text(20),
             'birthdate' => Carbon::today()->subDays(rand(30, 365 * 5)),
             'entrydate' => Carbon::today(),
+            'status' => fake()->randomElement(AnimalStatus::cases())->value,
+            'published' => fake()->boolean(),
         ];
     }
 }

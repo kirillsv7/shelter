@@ -32,7 +32,7 @@ final class Animal implements AggregateWithEvents
     public static function make(
         UuidInterface $id,
         AnimalInfo $info,
-        AnimalStatus $status = AnimalStatus::Quarantine,
+        AnimalStatus $status,
         int|bool $published = false,
         ?CarbonInterface $createdAt = null,
         ?CarbonInterface $updatedAt = null,
@@ -50,7 +50,7 @@ final class Animal implements AggregateWithEvents
     public static function create(
         UuidInterface $id,
         AnimalInfo $info,
-        AnimalStatus $status = AnimalStatus::Quarantine,
+        AnimalStatus $status,
         int|bool $published = false,
         ?CarbonInterface $createdAt = null,
         ?CarbonInterface $updatedAt = null,
@@ -107,7 +107,7 @@ final class Animal implements AggregateWithEvents
             return false;
         }
 
-        $oldStatus    = $this->status;
+        $oldStatus = $this->status;
         $this->status = $status;
 
         $this->addEvent(

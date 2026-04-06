@@ -6,9 +6,11 @@ use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 use Source\Domain\Animal\Enums\AnimalGender;
+use Source\Domain\Animal\Enums\AnimalStatus;
 use Source\Domain\Animal\Enums\AnimalType;
 use Source\Domain\Animal\ValueObjects\Breed;
 use Source\Domain\Animal\ValueObjects\Name;
+use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Interface\Animal\DTOs\AnimalUpdateRequestDTO;
 
 final class AnimalUpdateRequest extends FormRequest
@@ -22,6 +24,9 @@ final class AnimalUpdateRequest extends FormRequest
             'breed' => ['required', 'string'],
             'birthdate' => ['required', 'date'],
             'entrydate' => ['required', 'date'],
+            'status' => ['required', new Enum(AnimalStatus::class)],
+            'notes' => ['nullable', 'string'],
+            'published' => ['required', 'boolean'],
         ];
     }
 
@@ -34,6 +39,11 @@ final class AnimalUpdateRequest extends FormRequest
             breed: Breed::fromString($this->validated('breed')),
             birthdate: new CarbonImmutable($this->validated('birthdate')),
             entrydate: new CarbonImmutable($this->validated('entrydate')),
+            status: AnimalStatus::from($this->validated('status')),
+            notes: $this->validated('notes')
+                ? StringValueObject::fromString($this->validated('notes'))
+                : null,
+            published: $this->validated('published'),
         );
     }
 }

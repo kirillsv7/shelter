@@ -3,25 +3,25 @@
 namespace Source\Domain\Animal\Repositories;
 
 use Ramsey\Uuid\UuidInterface;
-use Source\Domain\Animal\Aggregates\AnimalStatusUpdate;
+use Source\Domain\Animal\Aggregates\AnimalStatus;
 use Throwable;
 
-interface AnimalStatusUpdateRepository
+interface AnimalStatusRepository
 {
     /**
-     * @return AnimalStatusUpdate[]
+     * @return AnimalStatus[]
      */
     public function getByAnimalId(UuidInterface $id): array;
 
     /**
      * @param  UuidInterface[]  $ids
      *
-     * @return AnimalStatusUpdate[]
+     * @return AnimalStatus[]
      */
     public function getByAnimalIds(array $ids): array;
 
     /**
      * @throws Throwable
      */
-    public function create(AnimalStatusUpdate $animalStatusUpdate): void;
+    public function create(AnimalStatus $animalStatus): void;
 }

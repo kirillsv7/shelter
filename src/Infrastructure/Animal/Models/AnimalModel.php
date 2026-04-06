@@ -67,6 +67,6 @@ final class AnimalModel extends BaseModel
 
     public function statusUpdates(): HasMany
     {
-        return $this->hasMany(AnimalStatusUpdateModel::class, 'animal_id');
+        return $this->hasMany(AnimalStatusModel::class, 'animal_id');
     }
 }

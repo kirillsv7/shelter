@@ -3,19 +3,19 @@
 namespace Source\Infrastructure\Animal\Mappers;
 
 use Ramsey\Uuid\Uuid;
-use Source\Domain\Animal\Aggregates\AnimalStatusUpdate;
-use Source\Domain\Animal\Enums\AnimalStatus;
+use Source\Domain\Animal\Aggregates\AnimalStatus;
+use Source\Domain\Animal\Enums\AnimalStatus as AnimalStatusEnum;
 use Source\Domain\Shared\ValueObjects\StringValueObject;
-use Source\Infrastructure\Animal\Models\AnimalStatusUpdateModel;
+use Source\Infrastructure\Animal\Models\AnimalStatusModel;
 
 final readonly class AnimalStatusUpdateMapper
 {
-    public function modelToEntity(AnimalStatusUpdateModel $model): AnimalStatusUpdate
+    public function modelToEntity(AnimalStatusModel $model): AnimalStatus
     {
-        return AnimalStatusUpdate::make(
+        return AnimalStatus::make(
             id: Uuid::fromString($model->getAttribute('id')),
             animalId: Uuid::fromString($model->getAttribute('animal_id')),
-            status: AnimalStatus::tryFrom($model->getAttribute('status')),
+            status: AnimalStatusEnum::tryFrom($model->getAttribute('status')),
             notes: $model->getAttribute('notes')
                 ? StringValueObject::fromString($model->getAttribute('notes'))
                 : null,
@@ -25,16 +25,16 @@ final readonly class AnimalStatusUpdateMapper
     }
 
     public function entityToModel(
-        AnimalStatusUpdate $animalStatusUpdate,
-        ?AnimalStatusUpdateModel $model = null,
-    ): AnimalStatusUpdateModel {
+        AnimalStatus $animalStatus,
+        ?AnimalStatusModel $model = null,
+    ): AnimalStatusModel {
         if (null === $model) {
-            $model = new AnimalStatusUpdateModel();
+            $model = new AnimalStatusModel();
         }
 
-        $model->setAttribute('animal_id', $animalStatusUpdate->animalId);
-        $model->setAttribute('status', $animalStatusUpdate->status->value);
-        $model->setAttribute('notes', $animalStatusUpdate->notes);
+        $model->setAttribute('animal_id', $animalStatus->animalId);
+        $model->setAttribute('status', $animalStatus->status->value);
+        $model->setAttribute('notes', $animalStatus->notes);
 
         return $model;
     }

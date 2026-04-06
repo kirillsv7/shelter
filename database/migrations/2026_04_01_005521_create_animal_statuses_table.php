@@ -10,7 +10,7 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::create('animal_status_updates', function (Blueprint $table) {
+        Schema::create('animal_statuses', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('animal_id')
                 ->constrained('animals', 'id')
@@ -26,6 +26,6 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('animal_status_updates');
+        Schema::dropIfExists('animal_statuses');
     }
 };

@@ -9,13 +9,13 @@ final readonly class AnimalDetailsDTO
 {
     /**
      * @param  MediaFileDTO[]  $mediaFiles
-     * @param  AnimalStatusUpdateDTO[]  $animalStatusUpdates
+     * @param  AnimalStatusDTO[]  $animalStatuses
      */
     public function __construct(
         public AnimalDTO $animal,
         public SlugDTO $slug,
         public ?array $mediaFiles = [],
-        public ?array $animalStatusUpdates = [],
+        public ?array $animalStatuses = [],
     ) {
     }
 }

@@ -43,11 +43,11 @@ final class Pagination
     public function generateLinks(int $totalItems): void
     {
         $this->totalItems = TotalItems::fromInteger($totalItems);
-        $this->onPage     = $this->calculateItemsOnPage();
-        $this->current    = $this->page;
-        $this->previous   = $this->previousPage();
-        $this->next       = $this->nextPage();
-        $this->last       = $this->lastPage();
+        $this->onPage = $this->calculateItemsOnPage();
+        $this->current = $this->page;
+        $this->previous = $this->previousPage();
+        $this->next = $this->nextPage();
+        $this->last = $this->lastPage();
     }
 
     public function calculateItemsOnPage(): IntegerValueObject

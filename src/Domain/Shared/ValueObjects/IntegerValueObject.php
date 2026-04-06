@@ -6,7 +6,7 @@ namespace Source\Domain\Shared\ValueObjects;
 readonly class IntegerValueObject
 {
     protected function __construct(
-        public int $value
+        public int $value,
     ) {
     }
 
@@ -57,7 +57,7 @@ readonly class IntegerValueObject
 
     public function divide(IntegerValueObject $divider): static
     {
-        return new static((int) $this->value / $divider->value);
+        return new static($this->value / $divider->value);
     }
 
     public function divideCeil(IntegerValueObject $divider): static
@@ -65,12 +65,12 @@ readonly class IntegerValueObject
         return new static((int)ceil($this->value / $divider->value));
     }
 
-    public function max(IntegerValueObject $compared): IntegerValueObject
+    public function max(IntegerValueObject $compared): static
     {
         return new static(max($this->value, $compared->value));
     }
 
-    public function min(IntegerValueObject $compared): IntegerValueObject
+    public function min(IntegerValueObject $compared): static
     {
         return new static(min($this->value, $compared->value));
     }
