@@ -4,13 +4,14 @@ namespace Source\Domain\Animal\Enums;
 
 enum AnimalStatus: string
 {
-    case Available = 'available';
     case Adopted = 'adopted';
+    case Available = 'available';
+    case Deceased = 'deceased';
     case Fostered = 'fostered';
     case Hospitalized = 'hospitalized';
+    case Lost = 'lost';
     case OnHold = 'on_hold';
     case Quarantine = 'quarantine';
-    case Deceased = 'deceased';
-    case Lost = 'lost';
+    case Reserved = 'reserved';
     case Transferred = 'transferred';
 }
