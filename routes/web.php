@@ -38,5 +38,5 @@ Route::get('mediafiles/{id}', [MediaFileController::class, 'getById'])->name('me
 
 Route::post('slugs/{id}', [SlugController::class, 'update'])->name('slug.update');
 
-//Route::get('{animal}/{slug}', 'getBySlug'])->name('animal.get-by-slug');
-//Route::get('{animals}', 'indexByType'])->name('animal.index-by-type');
+Route::get('{animal}/{slug}', [AnimalController::class, 'getBySlug'])->name('animals.get-by-slug');
+Route::get('{animals}', [AnimalController::class, 'indexByType'])->name('animals.index-by-type');

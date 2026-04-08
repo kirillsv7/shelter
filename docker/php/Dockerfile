@@ -12,9 +12,13 @@ RUN apt-get update && apt-get install -y \
         --with-freetype \
     && docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd
 
-# Xdebug
+# Xdebug installation
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug
+
+# Xdebug configuration (persistent across builds)
+RUN echo "xdebug.mode=coverage" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.start_with_request=no" >> /usr/local/etc/php/conf.d/xdebug.ini
 
 # Increase memory limit for CLI tools (PHPStan, PHPUnit, etc.)
 RUN echo "memory_limit=1G" > /usr/local/etc/php/conf.d/memory-limit.ini
