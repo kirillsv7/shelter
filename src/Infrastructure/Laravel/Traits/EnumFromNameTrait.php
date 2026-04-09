@@ -2,11 +2,10 @@
 
 namespace Source\Infrastructure\Laravel\Traits;
 
+use BackedEnum;
 use ValueError;
 
-/**
- * @method static cases()
- */
+/** @phpstan-require-implements BackedEnum */
 trait EnumFromNameTrait
 {
     public static function fromName(string $name): self
