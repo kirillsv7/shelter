@@ -9,6 +9,7 @@ final readonly class MediaFileDTO implements JsonSerializable
 {
     public function __construct(
         protected MediaFile $mediaFile,
+        protected ?array $urls = null,
     ) {
     }
 
@@ -23,6 +24,7 @@ final readonly class MediaFileDTO implements JsonSerializable
             'mediableId' => $this->mediaFile->mediableId,
             'created_at' => $this->mediaFile->createdAt,
             'updated_at' => $this->mediaFile->updatedAt,
+            'urls' => $this->urls,
         ];
     }
 }
