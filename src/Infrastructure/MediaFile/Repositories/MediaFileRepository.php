@@ -2,21 +2,20 @@
 
 namespace Source\Infrastructure\MediaFile\Repositories;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Database\ConnectionInterface;
-use Illuminate\Support\Carbon;
-use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Source\Domain\MediaFile\Aggregates\MediaFile;
-use Source\Domain\MediaFile\Aggregates\StorageInfo;
 use Source\Domain\MediaFile\Exceptions\MediaFileNotFoundException;
 use Source\Domain\MediaFile\Repositories\MediaFileRepository as MediaFileRepositoryContract;
-use Source\Domain\Shared\ValueObjects\StringValueObject;
+use Source\Infrastructure\MediaFile\Mappers\MediaFileMapper;
 use Source\Infrastructure\MediaFile\Models\MediaFileModel;
 
 final class MediaFileRepository implements MediaFileRepositoryContract
 {
     public function __construct(
-        protected ConnectionInterface $connection
+        protected ConnectionInterface $connection,
+        protected MediaFileMapper $mapper,
     ) {
     }
 
@@ -29,7 +28,7 @@ final class MediaFileRepository implements MediaFileRepositoryContract
             throw new MediaFileNotFoundException();
         }
 
-        return self::map($model);
+        return $this->mapper->modelToEntity($model);
     }
 
     public function getByMediableUuid(UuidInterface $id): array
@@ -37,7 +36,7 @@ final class MediaFileRepository implements MediaFileRepositoryContract
         return MediaFileModel::query()
             ->where('mediable_id', $id)
             ->get()
-            ->map(fn (MediaFileModel $model) => self::map($model))
+            ->map(fn (MediaFileModel $model) => $this->mapper->modelToEntity($model))
             ->toArray();
     }
 
@@ -46,22 +45,17 @@ final class MediaFileRepository implements MediaFileRepositoryContract
         return MediaFileModel::query()
             ->whereIn('mediable_id', $ids)
             ->get()
-            ->map(fn (MediaFileModel $model) => self::map($model))
+            ->map(fn (MediaFileModel $model) => $this->mapper->modelToEntity($model))
             ->toArray();
     }
 
     public function create(MediaFile $mediaFile): void
     {
-        $model = new MediaFileModel();
+        $this->connection->transaction(function () use ($mediaFile) {
+            $model = $this->mapper->entityToModel($mediaFile);
 
-        $this->connection->transaction(function () use ($model, $mediaFile) {
-            $model->id = $mediaFile->id;
-            $model->storage_info = $mediaFile->storageInfo->toArray();
-            $model->sizes = $mediaFile->sizes();
-            $model->mimetype = $mediaFile->mimetype;
-            $model->mediable_type = $mediaFile->mediableType();
-            $model->mediable_id = $mediaFile->mediableId;
-            $model->created_at = Carbon::now();
+            $model->setAttribute('id', $mediaFile->id);
+            $model->setAttribute('created_at', CarbonImmutable::now());
 
             $model->save();
         });
@@ -72,33 +66,12 @@ final class MediaFileRepository implements MediaFileRepositoryContract
         /** @var MediaFileModel $model */
         $model = MediaFileModel::query()->find($id);
 
-        $this->connection->transaction(function () use ($model, $mediaFile) {
-            $model->storage_info = $mediaFile->storageInfo->toArray();
-            $model->sizes = $mediaFile->sizes();
-            $model->mimetype = $mediaFile->mimetype;
-            $model->mediable_type = $mediaFile->mediableType();
-            $model->mediable_id = $mediaFile->mediableId;
-            $model->updated_at = Carbon::now();
+        $this->connection->transaction(function () use ($mediaFile, $model) {
+            $model = $this->mapper->entityToModel($mediaFile, $model);
+
+            $model->setAttribute('updated_at', CarbonImmutable::now());
 
             $model->save();
         });
-    }
-
-    public static function map(MediaFileModel $model): MediaFile
-    {
-        return MediaFile::make(
-            id: Uuid::fromString($model->id),
-            storageInfo: StorageInfo::make(
-                disk: StringValueObject::fromString($model->storage_info['disk']),
-                route: StringValueObject::fromString($model->storage_info['route']),
-                fileName: StringValueObject::fromString($model->storage_info['fileName']),
-            ),
-            sizes: $model->sizes,
-            mimetype: StringValueObject::fromString($model->mimetype),
-            mediableType: new $model->mediable_type(),
-            mediableId: Uuid::fromString($model->mediable_id),
-            createdAt: $model->created_at,
-            updatedAt: $model->updated_at,
-        );
     }
 }

@@ -19,7 +19,7 @@ final readonly class MediaFileDTO implements JsonSerializable
             'storage_info' => $this->mediaFile->storageInfo->toArray(),
             'sizes' => $this->mediaFile->sizes(),
             'mimetype' => $this->mediaFile->mimetype->value(),
-            'mediableType' => $this->mediaFile->mediableType()->value(),
+            'mediableType' => $this->mediaFile->mediableType,
             'mediableId' => $this->mediaFile->mediableId,
             'created_at' => $this->mediaFile->createdAt,
             'updated_at' => $this->mediaFile->updatedAt,

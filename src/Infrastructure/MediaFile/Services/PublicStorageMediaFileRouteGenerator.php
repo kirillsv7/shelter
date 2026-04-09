@@ -6,17 +6,17 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use Ramsey\Uuid\UuidInterface;
 use Source\Domain\MediaFile\Contracts\MediaFileRouteGenerator;
-use Source\Infrastructure\Laravel\Models\BaseModel;
+use Source\Domain\Shared\ValueObjects\StringValueObject;
 
 final class PublicStorageMediaFileRouteGenerator implements MediaFileRouteGenerator
 {
     public function __invoke(
-        BaseModel $mediableModel,
+        StringValueObject $mediableModel,
         UuidInterface $mediableId,
         UploadedFile $uploadedFile
     ): string {
         $rootFolder = 'media_files';
-        $mediableModelFolder = $mediableModel->getTable();
+        $mediableModelFolder = $mediableModel;
         $mediableIdFolder = $mediableId->toString();
         $mimeTypeFolder = $this->guessFolderNameFromMimeType($uploadedFile);
         $hashedFolderBasedOnFileName = Str::before($uploadedFile->hashName(), '.');

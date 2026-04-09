@@ -12,7 +12,6 @@ use Source\Domain\MediaFile\Contracts\Storage;
 use Source\Domain\MediaFile\Repositories\MediaFileRepository;
 use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Infrastructure\Laravel\Events\MultiDispatcher;
-use Source\Infrastructure\Laravel\Models\BaseModel;
 use Source\Interface\MediaFile\DTOs\MediaFileStoreRequestDTO;
 
 final class MediaFileUploadUseCase
@@ -29,13 +28,8 @@ final class MediaFileUploadUseCase
     public function upload(
         MediaFileStoreRequestDTO $dto,
     ): MediaFile {
-        /** @var BaseModel $model */
-        $model = app($dto->model->value);
-
-        $model->findOrFail($dto->id);
-
         $fileRoute = $this->mediaFileRouteGenerator->__invoke(
-            $model,
+            StringValueObject::fromString($dto->model->value),
             $dto->id,
             $dto->file,
         );
@@ -57,7 +51,7 @@ final class MediaFileUploadUseCase
             ),
             sizes: [],
             mimetype: StringValueObject::fromString($dto->file->getMimeType()),
-            mediableType: $model,
+            mediableType: StringValueObject::fromString($dto->model->value),
             mediableId: $dto->id,
             createdAt: Carbon::now(),
         );

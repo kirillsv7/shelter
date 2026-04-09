@@ -9,13 +9,13 @@ use Source\Infrastructure\MediaFile\Services\ImageThumbsGenerator;
 final readonly class MediaFileGenerateThumbs //implements ShouldQueue
 {
     public function __construct(
-        protected ImageThumbsGenerator $imageThumbsGenerator
+        protected ImageThumbsGenerator $imageThumbsGenerator,
     ) {
     }
 
     public function handle(
         MediaFileCreated $mediaFileCreated
     ): void {
-        $this->imageThumbsGenerator->process($mediaFileCreated->id);
+        $this->imageThumbsGenerator->process($mediaFileCreated->mediaFile->id);
     }
 }

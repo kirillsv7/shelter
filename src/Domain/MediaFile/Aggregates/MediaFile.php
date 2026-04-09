@@ -9,7 +9,6 @@ use Source\Domain\Shared\AggregateTraits\UseAggregateEvents;
 use Source\Domain\Shared\AggregateWithEvents;
 use Source\Domain\Shared\Entity;
 use Source\Domain\Shared\ValueObjects\StringValueObject;
-use Source\Infrastructure\Laravel\Models\BaseModel;
 
 final class MediaFile implements Entity, AggregateWithEvents
 {
@@ -20,7 +19,7 @@ final class MediaFile implements Entity, AggregateWithEvents
         public readonly StorageInfo $storageInfo,
         private array $sizes,
         public readonly StringValueObject $mimetype,
-        public readonly BaseModel $mediableType,
+        public readonly StringValueObject $mediableType,
         public readonly UuidInterface $mediableId,
         public readonly ?CarbonInterface $createdAt = null,
         public readonly ?CarbonInterface $updatedAt = null,
@@ -32,7 +31,7 @@ final class MediaFile implements Entity, AggregateWithEvents
         StorageInfo $storageInfo,
         array $sizes,
         StringValueObject $mimetype,
-        BaseModel $mediableType,
+        StringValueObject $mediableType,
         UuidInterface $mediableId,
         ?CarbonInterface $createdAt = null,
         ?CarbonInterface $updatedAt = null,
@@ -54,7 +53,7 @@ final class MediaFile implements Entity, AggregateWithEvents
         StorageInfo $storageInfo,
         array $sizes,
         StringValueObject $mimetype,
-        BaseModel $mediableType,
+        StringValueObject $mediableType,
         UuidInterface $mediableId,
         ?CarbonInterface $createdAt = null,
         ?CarbonInterface $updatedAt = null,
@@ -70,24 +69,25 @@ final class MediaFile implements Entity, AggregateWithEvents
             updatedAt: $updatedAt,
         );
 
-        $mediaFile->addEvent(new MediaFileCreated($mediaFile->id));
+        $mediaFile->addEvent(new MediaFileCreated($mediaFile));
 
         return $mediaFile;
     }
 
     public function sizes(): array
     {
-        return  $this->sizes;
+        return $this->sizes;
     }
 
     public function filePath(): string
     {
-        return $this->storageInfo->route . DIRECTORY_SEPARATOR . $this->storageInfo->fileName;
-    }
-
-    public function mediableType(): StringValueObject
-    {
-        return StringValueObject::fromString(get_class($this->mediableType));
+        return implode(
+            DIRECTORY_SEPARATOR,
+            [
+                $this->storageInfo->route,
+                $this->storageInfo->fileName,
+            ]
+        );
     }
 
     public function addSize(string $size): void
@@ -102,7 +102,7 @@ final class MediaFile implements Entity, AggregateWithEvents
             'storage_info' => $this->storageInfo->toArray(),
             'sizes' => $this->sizes(),
             'mimetype' => $this->mimetype,
-            'mediableType' => $this->mediableType(),
+            'mediableType' => $this->mediableType,
             'mediableId' => $this->mediableId,
             'created_at' => $this->createdAt,
             'updated_at' => $this->updatedAt,
