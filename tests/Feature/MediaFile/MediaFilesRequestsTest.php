@@ -4,8 +4,9 @@ namespace Tests\Feature\MediaFile;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Infrastructure\Animal\Models\AnimalModel;
+use Source\Infrastructure\MediaFile\Enums\MediableFolder;
+use Source\Infrastructure\MediaFile\Enums\MediableModel;
 use Source\Infrastructure\MediaFile\Services\PublicStorageMediaFileRouteGenerator;
 use Tests\FeatureTestCase;
 
@@ -28,7 +29,7 @@ class MediaFilesRequestsTest extends FeatureTestCase
         $mediaFileRouteGenerator = $this->app->make(PublicStorageMediaFileRouteGenerator::class);
 
         $fileRoute = $mediaFileRouteGenerator(
-            StringValueObject::fromString(AnimalModel::class),
+            MediableFolder::fromName(MediableModel::Animal->name),
             $animal->id,
             $image,
         );

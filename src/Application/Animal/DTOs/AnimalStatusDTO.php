@@ -17,7 +17,7 @@ final readonly class AnimalStatusDTO implements JsonSerializable
         return [
             'id' => $this->animalStatus->id->toString(),
             'status' => $this->animalStatus->status->value,
-            'description' => $this->animalStatus->notes,
+            'notes' => $this->animalStatus->notes,
             'created_at' => $this->animalStatus->createdAt->toIso8601String(),
         ];
     }

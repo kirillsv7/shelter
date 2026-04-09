@@ -81,9 +81,9 @@ final class AnimalCreateUseCase
 
         return new AnimalResponseDTO(
             animal: new AnimalDetailsDTO(
-                animal: new AnimalDTO($animal),
-                slug: new SlugDTO($slug),
-                animalStatuses: [
+                animalDTO: new AnimalDTO($animal),
+                slugDTO: new SlugDTO($slug),
+                animalStatusDTOs: [
                     new AnimalStatusDTO($animalStatus),
                 ]
             )

@@ -4,14 +4,20 @@ namespace Source\Application\MediaFile\UseCases;
 
 use Illuminate\Support\Carbon;
 use Ramsey\Uuid\Uuid;
+use Source\Application\MediaFile\DTOs\MediaFileDTO;
+use Source\Application\MediaFile\DTOs\MediaFileResponseDTO;
 use Source\Domain\MediaFile\Aggregates\MediaFile;
 use Source\Domain\MediaFile\Aggregates\StorageInfo;
 use Source\Domain\MediaFile\Contracts\MediaFileNameGenerator;
 use Source\Domain\MediaFile\Contracts\MediaFileRouteGenerator;
 use Source\Domain\MediaFile\Contracts\Storage;
+use Source\Domain\MediaFile\Exceptions\MediableNotFoundException;
 use Source\Domain\MediaFile\Repositories\MediaFileRepository;
 use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Infrastructure\Laravel\Events\MultiDispatcher;
+use Source\Infrastructure\MediaFile\Enums\MediableFolder;
+use Source\Infrastructure\MediaFile\Enums\MediableRepository;
+use Source\Infrastructure\MediaFile\Repositories\MediableRepository as MediableRepositoryContract;
 use Source\Interface\MediaFile\DTOs\MediaFileStoreRequestDTO;
 
 final class MediaFileUploadUseCase
@@ -27,9 +33,18 @@ final class MediaFileUploadUseCase
 
     public function upload(
         MediaFileStoreRequestDTO $dto,
-    ): MediaFile {
+    ): MediaFileResponseDTO {
+        $mediableRepositoryEnum = MediableRepository::fromName($dto->model->name);
+
+        /** @var MediableRepositoryContract $mediableRepository */
+        $mediableRepository = app($mediableRepositoryEnum->value);
+
+        if (false === $mediableRepository->exists($dto->id)) {
+            throw new MediableNotFoundException();
+        }
+
         $fileRoute = $this->mediaFileRouteGenerator->__invoke(
-            StringValueObject::fromString($dto->model->value),
+            MediableFolder::fromName($dto->model->name),
             $dto->id,
             $dto->file,
         );
@@ -60,8 +75,10 @@ final class MediaFileUploadUseCase
 
         $this->dispatcher->multiDispatch($mediaFile->releaseEvents());
 
-        return $mediaFile;
+        return new MediaFileResponseDTO(
+            mediaFileDTO: new MediaFileDTO(
+                mediaFile: $mediaFile,
+            )
+        );
     }
-
-
 }

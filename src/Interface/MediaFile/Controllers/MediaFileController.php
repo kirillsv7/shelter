@@ -15,12 +15,12 @@ final class MediaFileController
         MediaFileStoreRequest $request,
         MediaFileUploadUseCase $mediaFileUploadUseCase,
     ): JsonResponse {
-        $mediaFile = $mediaFileUploadUseCase->upload(
+        $responseDTO = $mediaFileUploadUseCase->upload(
             $request->getDTO()
         );
 
         return response()->json(
-            ['mediafile' => $mediaFile->toArray()],
+            $responseDTO,
             JsonResponse::HTTP_CREATED,
         );
     }

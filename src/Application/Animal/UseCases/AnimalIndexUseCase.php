@@ -81,18 +81,18 @@ final class AnimalIndexUseCase
             );
 
             $animalResponseDTOs[] = new AnimalDetailsDTO(
-                animal: new AnimalDTO($animal),
-                slug: new SlugDTO(
+                animalDTO: new AnimalDTO($animal),
+                slugDTO: new SlugDTO(
                     array_find(
                         $slugs,
                         fn (Slug $slug) => $slug->sluggableId->equals($animal->id),
                     )
                 ),
-                mediaFiles: array_map(
+                mediaFileDTOs: array_map(
                     fn (MediaFile $mediaFile) => new MediaFileDTO($mediaFile),
                     $animalMediaFiles,
                 ),
-                animalStatuses: array_map(
+                animalStatusDTOs: array_map(
                     fn (AnimalStatus $animalStatus) => new AnimalStatusDTO($animalStatus),
                     $animalStatuses,
                 ),

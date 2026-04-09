@@ -61,13 +61,13 @@ final class AnimalStatusUpdateUseCase
 
         return new AnimalResponseDTO(
             animal: new AnimalDetailsDTO(
-                animal: new AnimalDTO($animal),
-                slug: new SlugDTO($slug),
-                mediaFiles: array_map(
+                animalDTO: new AnimalDTO($animal),
+                slugDTO: new SlugDTO($slug),
+                mediaFileDTOs: array_map(
                     fn (MediaFile $mediaFile) => new MediaFileDTO($mediaFile),
                     $mediaFiles,
                 ),
-                animalStatuses: array_map(
+                animalStatusDTOs: array_map(
                     fn (AnimalStatus $animalStatus) => new AnimalStatusDTO($animalStatus),
                     $animalStatuses,
                 ),

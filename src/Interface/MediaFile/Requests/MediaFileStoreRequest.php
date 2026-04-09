@@ -5,7 +5,7 @@ namespace Source\Interface\MediaFile\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Ramsey\Uuid\Uuid;
-use Source\Domain\MediaFile\Enums\MediableModel;
+use Source\Infrastructure\MediaFile\Enums\MediableModel;
 use Source\Interface\MediaFile\DTOs\MediaFileStoreRequestDTO;
 
 final class MediaFileStoreRequest extends FormRequest

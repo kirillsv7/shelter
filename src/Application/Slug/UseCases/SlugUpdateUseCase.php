@@ -28,8 +28,8 @@ final class SlugUpdateUseCase
         $this->repository->update($slug);
 
         return new SlugResponseDTO(
-            slug: new SlugDTO(
-                slug: $slug
+            slugDTO: new SlugDTO(
+                slug: $slug,
             )
         );
     }

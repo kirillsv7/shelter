@@ -15,8 +15,9 @@ use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Infrastructure\Animal\Mappers\AnimalMapper;
 use Source\Infrastructure\Animal\Models\AnimalModel;
 use Source\Infrastructure\Animal\QueryBuilders\AnimalQueryBuilder;
+use Source\Infrastructure\MediaFile\Repositories\MediableRepository;
 
-final class AnimalRepository implements AnimalRepositoryContract
+final class AnimalRepository implements AnimalRepositoryContract, MediableRepository
 {
     public function __construct(
         protected ConnectionInterface $connection,
@@ -106,6 +107,12 @@ final class AnimalRepository implements AnimalRepositoryContract
     public function delete(UuidInterface $id): void
     {
         AnimalModel::destroy([$id]);
+    }
+
+    public function exists(UuidInterface $id): bool
+    {
+        return AnimalModel::query()
+            ->where('id', $id)->exists();
     }
 
     public function totalCountByCriteria(AnimalSearchCriteria $criteria): int

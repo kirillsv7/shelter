@@ -33,8 +33,8 @@ final class SlugCreateUseCase
         $this->repository->create($slug);
 
         return new SlugResponseDTO(
-            slug: new SlugDTO(
-                slug: $slug
+            slugDTO: new SlugDTO(
+                slug: $slug,
             )
         );
     }

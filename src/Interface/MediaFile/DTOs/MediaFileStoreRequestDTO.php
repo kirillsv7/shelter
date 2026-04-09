@@ -4,7 +4,7 @@ namespace Source\Interface\MediaFile\DTOs;
 
 use Illuminate\Http\UploadedFile;
 use Ramsey\Uuid\UuidInterface;
-use Source\Domain\MediaFile\Enums\MediableModel;
+use Source\Infrastructure\MediaFile\Enums\MediableModel;
 
 final readonly class MediaFileStoreRequestDTO
 {
