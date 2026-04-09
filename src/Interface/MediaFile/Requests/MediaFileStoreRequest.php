@@ -15,7 +15,7 @@ final class MediaFileStoreRequest extends FormRequest
         return [
             'model' => [
                 'required',
-                Rule::in(array_column(MediableModel::cases(), 'name')),
+                Rule::in(array_column((array)MediableModel::cases(), 'name')),
             ],
             'id' => ['required', 'string'],
             'file' => ['required', 'file'],
