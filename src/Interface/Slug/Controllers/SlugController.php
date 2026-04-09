@@ -14,13 +14,13 @@ final class SlugController
         string $id,
         SlugUpdateUseCase $slugUpdateUseCase
     ): JsonResponse {
-        $slug = $slugUpdateUseCase->apply(
+        $responseDTO = $slugUpdateUseCase->apply(
             id: Uuid::fromString($id),
             slugString: $request->validated('slug'),
         );
 
         return response()->json(
-            ['slug' => (string)$slug],
+            $responseDTO,
             JsonResponse::HTTP_ACCEPTED,
         );
     }

@@ -2,32 +2,31 @@
 
 namespace Source\Infrastructure\Slug\Repositories;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Database\ConnectionInterface;
-use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Domain\Slug\Aggregates\Slug;
 use Source\Domain\Slug\Exceptions\SlugNotFoundException;
 use Source\Domain\Slug\Repositories\SlugRepository as SlugRepositoryContract;
-use Source\Domain\Slug\ValueObjects\SlugString;
+use Source\Infrastructure\Slug\Mappers\SlugMapper;
 use Source\Infrastructure\Slug\Models\SlugModel;
 
 final class SlugRepository implements SlugRepositoryContract
 {
     public function __construct(
-        protected ConnectionInterface $connection
+        protected ConnectionInterface $connection,
+        protected SlugMapper $mapper,
     ) {
     }
 
     public function create(Slug $slug): void
     {
-        $model = new SlugModel();
+        $this->connection->transaction(function () use ($slug) {
+            $model = $this->mapper->entityToModel($slug);
 
-        $this->connection->transaction(function () use ($model, $slug) {
-            $model->id = $slug->id();
-            $model->slug = $slug->value();
-            $model->sluggable_type = $slug->sluggableType();
-            $model->sluggable_id = $slug->sluggableId();
+            $model->setAttribute('id', $slug->id);
+            $model->setAttribute('created_at', CarbonImmutable::now());
 
             $model->save();
         });
@@ -46,7 +45,7 @@ final class SlugRepository implements SlugRepositoryContract
             throw new SlugNotFoundException();
         }
 
-        return $this->map($model);
+        return $this->mapper->modelToEntity($model);
     }
 
     public function getBySluggableUuid(UuidInterface $id): Slug
@@ -59,7 +58,7 @@ final class SlugRepository implements SlugRepositoryContract
             throw new SlugNotFoundException();
         }
 
-        return $this->map($model);
+        return $this->mapper->modelToEntity($model);
     }
 
     public function getBySluggableUuids(array $ids): array
@@ -67,28 +66,22 @@ final class SlugRepository implements SlugRepositoryContract
         return SlugModel::query()
             ->whereIn('sluggable_id', $ids)
             ->get()
-            ->map(fn (SlugModel $model) => $this->map($model))
+            ->map(fn (SlugModel $model) => $this->mapper->modelToEntity($model))
             ->toArray();
     }
 
     public function update(Slug $slug): void
     {
-        $model = SlugModel::query()->find($slug->id());
+        $model = SlugModel::query()->find($slug->id);
 
-        $this->connection->transaction(function () use ($model, $slug) {
-            $model->slug = $slug->value();
+        $this->connection->transaction(function () use ($slug, $model) {
+            $model = $this->mapper->entityToModel($slug, $model);
+
+            $model->setAttribute('updated_at', CarbonImmutable::now());
+
+            $model->save();
 
             $model->save();
         });
-    }
-
-    private function map(SlugModel $model): Slug
-    {
-        return Slug::create(
-            id: Uuid::fromString($model->id),
-            value: SlugString::fromString($model->slug),
-            sluggableType: new $model->sluggable_type(),
-            sluggableId: Uuid::fromString($model->sluggable_id),
-        );
     }
 }

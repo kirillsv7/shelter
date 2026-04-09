@@ -8,9 +8,13 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Source\Domain\Animal\Events\AnimalCreated;
 use Source\Domain\Animal\Events\AnimalStatusUpdated;
 use Source\Domain\MediaFile\Events\MediaFileCreated;
+use Source\Domain\Slug\Events\SlugCreated;
+use Source\Domain\Slug\Events\SlugUpdated;
 use Source\Infrastructure\Animal\EventListeners\AnimalCreatedLogEventListener;
 use Source\Infrastructure\Animal\EventListeners\AnimalStatusUpdatedLogEventListener;
 use Source\Infrastructure\MediaFile\EventListeners\MediaFileGenerateThumbs;
+use Source\Infrastructure\Slug\EventListeners\SlugCreatedLogEventListener;
+use Source\Infrastructure\Slug\EventListeners\SlugUpdatedLogEventListener;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -35,15 +39,15 @@ class EventServiceProvider extends ServiceProvider
         MediaFileCreated::class => [
             MediaFileGenerateThumbs::class,
         ],
-    ];
 
-    /**
-     * Register any events for your application.
-     */
-    public function boot(): void
-    {
-        //
-    }
+        SlugCreated::class => [
+            SlugCreatedLogEventListener::class,
+        ],
+
+        SlugUpdated::class => [
+            SlugUpdatedLogEventListener::class,
+        ],
+    ];
 
     /**
      * Determine if events and listeners should be automatically discovered.

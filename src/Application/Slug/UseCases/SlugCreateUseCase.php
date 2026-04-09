@@ -4,10 +4,12 @@ namespace Source\Application\Slug\UseCases;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
+use Source\Application\Slug\DTOs\SlugDTO;
+use Source\Application\Slug\DTOs\SlugResponseDTO;
+use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Domain\Slug\Aggregates\Slug;
 use Source\Domain\Slug\Repositories\SlugRepository;
 use Source\Domain\Slug\ValueObjects\SlugString;
-use Source\Infrastructure\Laravel\Models\BaseModel;
 
 final class SlugCreateUseCase
 {
@@ -18,9 +20,9 @@ final class SlugCreateUseCase
 
     public function apply(
         string $slugString,
-        BaseModel $sluggableType,
+        StringValueObject $sluggableType,
         UuidInterface $sluggableId,
-    ): Slug {
+    ): SlugResponseDTO {
         $slug = Slug::create(
             id: Uuid::uuid7(),
             value: SlugString::fromString($slugString),
@@ -30,6 +32,10 @@ final class SlugCreateUseCase
 
         $this->repository->create($slug);
 
-        return $slug;
+        return new SlugResponseDTO(
+            slug: new SlugDTO(
+                slug: $slug
+            )
+        );
     }
 }

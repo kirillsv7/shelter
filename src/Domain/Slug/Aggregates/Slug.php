@@ -2,41 +2,69 @@
 
 namespace Source\Domain\Slug\Aggregates;
 
+use Carbon\CarbonInterface;
 use Ramsey\Uuid\UuidInterface;
 use Source\Domain\Shared\AggregateTraits\UseAggregateEvents;
 use Source\Domain\Shared\AggregateWithEvents;
+use Source\Domain\Shared\ValueObjects\StringValueObject;
+use Source\Domain\Slug\Events\SlugCreated;
+use Source\Domain\Slug\Events\SlugUpdated;
 use Source\Domain\Slug\ValueObjects\SlugString;
-use Source\Infrastructure\Laravel\Models\BaseModel;
 
 final class Slug implements AggregateWithEvents
 {
     use UseAggregateEvents;
 
-    private function __construct(
-        private readonly UuidInterface $id,
-        private SlugString $value,
-        private readonly BaseModel $sluggableType,
-        private readonly UuidInterface $sluggableId,
+    protected function __construct(
+        public readonly UuidInterface $id,
+        protected SlugString $value,
+        public readonly StringValueObject $sluggableType,
+        public readonly UuidInterface $sluggableId,
+        public readonly ?CarbonInterface $createdAt = null,
+        public readonly ?CarbonInterface $updatedAt = null,
     ) {
     }
 
-    public static function create(
+    public static function make(
         UuidInterface $id,
         SlugString $value,
-        BaseModel $sluggableType,
+        StringValueObject $sluggableType,
         UuidInterface $sluggableId,
-    ): Slug {
+        ?CarbonInterface $createdAt = null,
+        ?CarbonInterface $updatedAt = null,
+    ): self {
         return new self(
             id: $id,
             value: $value,
             sluggableType: $sluggableType,
             sluggableId: $sluggableId,
+            createdAt: $createdAt,
+            updatedAt: $updatedAt,
         );
     }
 
-    public function id(): UuidInterface
-    {
-        return $this->id;
+    public static function create(
+        UuidInterface $id,
+        SlugString $value,
+        StringValueObject $sluggableType,
+        UuidInterface $sluggableId,
+        ?CarbonInterface $createdAt = null,
+        ?CarbonInterface $updatedAt = null,
+    ): self {
+        $slug = self::make(
+            id: $id,
+            value: $value,
+            sluggableType: $sluggableType,
+            sluggableId: $sluggableId,
+            createdAt: $createdAt,
+            updatedAt: $updatedAt,
+        );
+
+        $slug->addEvent(
+            new SlugCreated($slug),
+        );
+
+        return $slug;
     }
 
     public function value(): SlugString
@@ -44,23 +72,18 @@ final class Slug implements AggregateWithEvents
         return $this->value;
     }
 
-    public function sluggableType(): string
+    public function slugUpdate(SlugString $value): void
     {
-        return get_class($this->sluggableType);
-    }
+        if ($this->value->equals($value)) {
+            return;
+        }
 
-    public function sluggableId(): UuidInterface
-    {
-        return $this->sluggableId;
-    }
+        $oldSlug = $this->value;
 
-    public function changeSlug(SlugString $value): void
-    {
         $this->value = $value;
-    }
 
-    public function __toString(): string
-    {
-        return $this->value;
+        $this->addEvent(
+            new SlugUpdated($this, $oldSlug),
+        );
     }
 }

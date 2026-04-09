@@ -65,10 +65,7 @@ final class Animal implements AggregateWithEvents
         );
 
         $animal->addEvent(
-            new AnimalCreated(
-                $animal->id,
-                $animal->info->name,
-            ),
+            new AnimalCreated($animal),
         );
 
         return $animal;
@@ -108,6 +105,7 @@ final class Animal implements AggregateWithEvents
         }
 
         $oldStatus = $this->status;
+
         $this->status = $status;
 
         $this->addEvent(
@@ -129,6 +127,7 @@ final class Animal implements AggregateWithEvents
         }
 
         $this->published = true;
+
         $this->addEvent(new AnimalPublished($this->id));
     }
 
@@ -139,6 +138,7 @@ final class Animal implements AggregateWithEvents
         }
 
         $this->published = false;
+
         $this->addEvent(new AnimalUnpublished($this->id));
     }
 

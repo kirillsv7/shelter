@@ -6,7 +6,7 @@ trait UseAggregateEvents
 {
     private array $events = [];
 
-    protected function addEvent($event): void
+    protected function addEvent(object $event): void
     {
         $this->events[] = $event;
     }

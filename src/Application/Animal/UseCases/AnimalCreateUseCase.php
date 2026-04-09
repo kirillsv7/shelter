@@ -14,6 +14,7 @@ use Source\Domain\Animal\Aggregates\AnimalStatus;
 use Source\Domain\Animal\Repositories\AnimalRepository;
 use Source\Domain\Animal\Repositories\AnimalStatusRepository;
 use Source\Domain\Animal\ValueObjects\AnimalInfo;
+use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Domain\Slug\Aggregates\Slug;
 use Source\Domain\Slug\Repositories\SlugRepository;
 use Source\Domain\Slug\ValueObjects\SlugString;
@@ -58,7 +59,7 @@ final class AnimalCreateUseCase
         $slug = Slug::create(
             id: Uuid::uuid7(),
             value: SlugString::fromArray($slugParts),
-            sluggableType: new AnimalModel(),
+            sluggableType: StringValueObject::fromString(AnimalModel::class),
             sluggableId: $animal->id,
         );
 

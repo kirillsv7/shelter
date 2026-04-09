@@ -2,6 +2,8 @@
 
 namespace Source\Domain\Animal\Enums;
 
+use InvalidArgumentException;
+
 enum AnimalType: string
 {
     case Cat = 'cat';
@@ -18,7 +20,9 @@ enum AnimalType: string
             'rodents' => self::Rodent,
             'birds' => self::Bird,
             'others' => self::Other,
-            default => throw new \LogicException('This case doesn\t exist')
+            default => throw new InvalidArgumentException(
+                sprintf("Single for %s doesn't exist", $multi)
+            )
         };
     }
 }

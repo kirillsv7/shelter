@@ -24,7 +24,7 @@ class SlugUseCasesTest extends FeatureTestCase
 
         $this->assertEquals(
             StringValueObject::fromString(AnimalModel::class),
-            $slug->sluggableType(),
+            $slug->sluggableType,
         );
     }
 

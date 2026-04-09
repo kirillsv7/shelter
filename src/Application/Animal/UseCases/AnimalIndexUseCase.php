@@ -33,6 +33,7 @@ final class AnimalIndexUseCase
 
     public function apply(AnimalIndexRequestDTO $dto): AnimalListResponseDTO
     {
+        // TODO: Decouple pagination from repository
         $criteria = AnimalSearchCriteria::create(
             $dto->name,
             $dto->type,
@@ -84,7 +85,7 @@ final class AnimalIndexUseCase
                 slug: new SlugDTO(
                     array_find(
                         $slugs,
-                        fn (Slug $slug) => $slug->sluggableId()->equals($animal->id),
+                        fn (Slug $slug) => $slug->sluggableId->equals($animal->id),
                     )
                 ),
                 mediaFiles: array_map(

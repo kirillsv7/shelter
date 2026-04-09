@@ -34,8 +34,10 @@ final readonly class AnimalMapper
         );
     }
 
-    public function entityToModel(Animal $animal, ?AnimalModel $model = null): AnimalModel
-    {
+    public function entityToModel(
+        Animal $animal,
+        ?AnimalModel $model = null,
+    ): AnimalModel {
         if (null === $model) {
             $model = new AnimalModel();
         }

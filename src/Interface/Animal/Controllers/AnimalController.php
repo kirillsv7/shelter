@@ -19,7 +19,6 @@ use Source\Interface\Animal\Requests\AnimalIndexRequest;
 use Source\Interface\Animal\Requests\AnimalStatusUpdateRequest;
 use Source\Interface\Animal\Requests\AnimalStoreRequest;
 use Source\Interface\Animal\Requests\AnimalUpdateRequest;
-use Throwable;
 
 final class AnimalController
 {
@@ -39,8 +38,6 @@ final class AnimalController
         AnimalIndexRequest $request,
         AnimalIndexUseCase $animalIndexUseCase,
     ): JsonResponse {
-        $type = AnimalType::single($type);
-
         $responseDTO = $animalIndexUseCase->apply(
             dto: $request->getDTO(),
         );
@@ -78,9 +75,6 @@ final class AnimalController
         );
     }
 
-    /**
-     * @throws Throwable
-     */
     public function store(
         AnimalStoreRequest $request,
         AnimalCreateUseCase $animalCreateUseCase,
