@@ -7,7 +7,7 @@ use JsonSerializable;
 final readonly class SlugResponseDTO implements JsonSerializable
 {
     public function __construct(
-        public SlugDTO $slugDTO,
+        protected SlugDTO $slugDTO,
     ) {
     }
 

@@ -17,14 +17,16 @@ class SlugUseCasesTest extends FeatureTestCase
 
         $slugGetBySluggableUseCase = app(SlugGetBySluggableUseCase::class);
 
-        $slug = $slugGetBySluggableUseCase->apply(
+        $slugResponseDTO = $slugGetBySluggableUseCase->apply(
             StringValueObject::fromString(AnimalModel::class),
             $animal->id,
         );
 
+        $slugData = $slugResponseDTO->jsonSerialize()->jsonSerialize();
+
         $this->assertEquals(
             StringValueObject::fromString(AnimalModel::class),
-            $slug->sluggableType,
+            $slugData['sluggable_type'],
         );
     }
 
