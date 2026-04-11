@@ -46,7 +46,7 @@ class MediaFilesRequestsTest extends FeatureTestCase
         $response
             ->assertCreated()
             ->assertJsonFragment([
-                'storage_info' => [
+                'storageInfo' => [
                     'disk' => $disk,
                     'route' => $fileRoute,
                     'fileName' => $fileName,

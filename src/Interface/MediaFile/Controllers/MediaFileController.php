@@ -10,20 +10,6 @@ use Source\Interface\MediaFile\Requests\MediaFileStoreRequest;
 
 final class MediaFileController
 {
-    public function store(
-        MediaFileStoreRequest $request,
-        MediaFileUploadUseCase $mediaFileUploadUseCase,
-    ): JsonResponse {
-        $responseDTO = $mediaFileUploadUseCase->upload(
-            $request->getDTO()
-        );
-
-        return response()->json(
-            $responseDTO,
-            JsonResponse::HTTP_CREATED,
-        );
-    }
-
     public function getById(
         string $id,
         MediaFileGetByIdUseCase $mediaFileGetByIdUseCase,
@@ -35,6 +21,20 @@ final class MediaFileController
         return response()->json(
             $responseDTO,
             JsonResponse::HTTP_OK,
+        );
+    }
+
+    public function store(
+        MediaFileStoreRequest $request,
+        MediaFileUploadUseCase $mediaFileUploadUseCase,
+    ): JsonResponse {
+        $responseDTO = $mediaFileUploadUseCase->upload(
+            $request->getDTO()
+        );
+
+        return response()->json(
+            $responseDTO,
+            JsonResponse::HTTP_CREATED,
         );
     }
 }

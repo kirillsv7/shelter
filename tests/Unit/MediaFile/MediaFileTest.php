@@ -30,7 +30,7 @@ class MediaFileTest extends UnitTestCase
 
         $this->assertEquals($mediaFileArray, [
             'id' => $mediaFile->id,
-            'storage_info' => $mediaFile->storageInfo->toArray(),
+            'storageInfo' => $mediaFile->storageInfo->toArray(),
             'sizes' => $mediaFile->sizes(),
             'mimetype' => $mediaFile->mimetype,
             'mediableType' => $mediaFile->mediableType,

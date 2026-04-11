@@ -105,6 +105,18 @@ final class AnimalController
         );
     }
 
+    public function destroy(
+        string $id,
+        AnimalDestroyUseCase $animalDestroyUseCase
+    ): JsonResponse {
+        $animalDestroyUseCase->apply(Uuid::fromString($id));
+
+        return response()->json(
+            [],
+            JsonResponse::HTTP_NO_CONTENT,
+        );
+    }
+
     public function statusUpdate(
         string $id,
         AnimalStatusUpdateRequest $request,
@@ -142,18 +154,6 @@ final class AnimalController
         return response()->json(
             $responseDTO,
             JsonResponse::HTTP_ACCEPTED,
-        );
-    }
-
-    public function destroy(
-        string $id,
-        AnimalDestroyUseCase $animalDestroyUseCase
-    ): JsonResponse {
-        $animalDestroyUseCase->apply(Uuid::fromString($id));
-
-        return response()->json(
-            [],
-            JsonResponse::HTTP_NO_CONTENT,
         );
     }
 }

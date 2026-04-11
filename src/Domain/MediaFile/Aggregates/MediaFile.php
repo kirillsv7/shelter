@@ -99,7 +99,7 @@ final class MediaFile implements Entity, AggregateWithEvents
     {
         return [
             'id' => $this->id,
-            'storage_info' => $this->storageInfo->toArray(),
+            'storageInfo' => $this->storageInfo->toArray(),
             'sizes' => $this->sizes(),
             'mimetype' => $this->mimetype,
             'mediableType' => $this->mediableType,

@@ -29,12 +29,12 @@ Route::group([
     Route::put('/{id}', 'update')->name('update');
     Route::delete('/{id}', 'destroy')->name('destroy');
     Route::put('/status/{id}', 'statusUpdate')->name('status-update');
-    Route::post('/publish/{id}', 'publish')->name('publish');
-    Route::post('/unpublish/{id}', 'unpublish')->name('unpublish');
+    Route::put('/publish/{id}', 'publish')->name('publish');
+    Route::put('/unpublish/{id}', 'unpublish')->name('unpublish');
 });
 
-Route::post('mediafiles', [MediaFileController::class, 'store'])->name('media-file.store');
 Route::get('mediafiles/{id}', [MediaFileController::class, 'getById'])->name('media-file.get-by-id');
+Route::post('mediafiles', [MediaFileController::class, 'store'])->name('media-file.store');
 
 Route::post('slugs/{id}', [SlugController::class, 'update'])->name('slug.update');
 

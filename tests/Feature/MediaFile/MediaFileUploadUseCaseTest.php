@@ -16,8 +16,6 @@ class MediaFileUploadUseCaseTest extends FeatureTestCase
 {
     public function testMediaUploaderIsWorking(): void
     {
-        $this->markTestSkipped('Require adaptation to new DTOs');
-
         $disk = 'public';
 
         Storage::fake($disk);
@@ -52,7 +50,7 @@ class MediaFileUploadUseCaseTest extends FeatureTestCase
 
         $mediaFileUploadUseCase = $this->app->make(MediaFileUploadUseCase::class);
 
-        $mediaFile = $mediaFileUploadUseCase->upload(
+        $mediaFileResponseDTO = $mediaFileUploadUseCase->upload(
             new MediaFileStoreRequestDTO(
                 MediableModel::fromName('Animal'),
                 $animal->id,
@@ -60,14 +58,16 @@ class MediaFileUploadUseCaseTest extends FeatureTestCase
             )
         );
 
+        $mediaFileData = $mediaFileResponseDTO->jsonSerialize()->jsonSerialize();
+
         $this->assertDatabaseHas('media_files', [
-            'id' => $mediaFile->id,
-            /*'storage_info' => [
-                'disk' => $mediaFile->storageInfo->disk->value(),
-                'route' => $mediaFile->storageInfo->route->value(),
-                'fileName' => $mediaFile->storageInfo->fileName->value(),
-            ],*/
-            'mimetype' => $mediaFile->mimetype->value(),
+            'id' => $mediaFileData['id'],
+            'storage_info' => json_encode([
+                'disk' => $mediaFileData['storageInfo']['disk'],
+                'route' => $mediaFileData['storageInfo']['route'],
+                'fileName' => $mediaFileData['storageInfo']['fileName'],
+            ]),
+            'mimetype' => $mediaFileData['mimetype'],
             'mediable_type' => get_class($animal),
             'mediable_id' => $animal->id,
         ]);

@@ -302,7 +302,7 @@ class AnimalRequestsTest extends FeatureTestCase
             'published' => false,
         ]);
 
-        $response = $this->post(route('animals.publish', ['id' => $animal->id]));
+        $response = $this->put(route('animals.publish', ['id' => $animal->id]));
 
         $response
             ->assertAccepted()
@@ -317,7 +317,7 @@ class AnimalRequestsTest extends FeatureTestCase
             'published' => true,
         ]);
 
-        $response = $this->post(route('animals.unpublish', ['id' => $animal->id]));
+        $response = $this->put(route('animals.unpublish', ['id' => $animal->id]));
 
         $response
             ->assertAccepted()
