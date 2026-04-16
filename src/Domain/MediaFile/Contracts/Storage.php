@@ -3,7 +3,7 @@
 namespace Source\Domain\MediaFile\Contracts;
 
 use Illuminate\Http\UploadedFile;
-use Source\Domain\MediaFile\ValueObjects\SavedFile;
+use Source\Domain\MediaFile\ValueObjects\StorageInfo;
 
 interface Storage
 {
@@ -11,8 +11,9 @@ interface Storage
         UploadedFile $file,
         string $fileRoute,
         string $fileName
-    ): SavedFile;
+    ): StorageInfo;
 
+    // TODO: Rewrite implementation
     public function getFileUrl(
         string $fileRoute,
         string $fileName

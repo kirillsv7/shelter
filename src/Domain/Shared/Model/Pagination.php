@@ -40,9 +40,9 @@ final class Pagination
         return $this->page->decrement()->multiply($this->limit);
     }
 
-    public function generateLinks(int $totalItems): void
+    public function generateLinks(TotalItems $totalItems): void
     {
-        $this->totalItems = TotalItems::fromInteger($totalItems);
+        $this->totalItems = $totalItems;
         $this->onPage = $this->calculateItemsOnPage();
         $this->current = $this->page;
         $this->previous = $this->previousPage();

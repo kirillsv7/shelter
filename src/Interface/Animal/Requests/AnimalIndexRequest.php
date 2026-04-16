@@ -14,7 +14,7 @@ use Source\Interface\Animal\DTOs\AnimalIndexRequestDTO;
 
 final class AnimalIndexRequest extends FormRequest
 {
-    public function rules()
+    public function rules(): array
     {
         return [
             'name' => ['string'],
@@ -30,26 +30,26 @@ final class AnimalIndexRequest extends FormRequest
     public function getDTO(): AnimalIndexRequestDTO
     {
         return new AnimalIndexRequestDTO(
-            name: $this->input('name')
-                ? Name::fromString($this->input('name'))
+            name: $this->validated('name')
+                ? Name::fromString($this->validated('name'))
                 : null,
-            type: $this->input('type')
-                ? AnimalType::single($this->input('type'))
+            type: $this->validated('type')
+                ? AnimalType::single($this->validated('type'))
                 : null,
-            gender: $this->input('gender')
-                ? AnimalGender::tryFrom($this->input('gender'))
+            gender: $this->validated('gender')
+                ? AnimalGender::tryFrom($this->validated('gender'))
                 : null,
-            ageMin: $this->input('age_min')
-                ? IntegerValueObject::fromInteger($this->input('age_min'))
+            ageMin: $this->validated('age_min')
+                ? IntegerValueObject::fromInteger($this->validated('age_min'))
                 : null,
-            ageMax: $this->input('age_max')
-                ? IntegerValueObject::fromInteger($this->input('age_max'))
+            ageMax: $this->validated('age_max')
+                ? IntegerValueObject::fromInteger($this->validated('age_max'))
                 : null,
-            limit: $this->input('limit')
-                ? Limit::fromInteger($this->input('limit'))
+            limit: $this->validated('limit')
+                ? Limit::fromInteger($this->validated('limit'))
                 : null,
-            page: $this->input('page')
-                ? Page::fromInteger($this->input('page'))
+            page: $this->validated('page')
+                ? Page::fromInteger($this->validated('page'))
                 : null,
         );
     }

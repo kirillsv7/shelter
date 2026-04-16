@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Source\Interface\Animal\Controllers\AnimalController;
 use Source\Interface\MediaFile\Controllers\MediaFileController;
+use Source\Interface\Organization\Controllers\OrganizationController;
 use Source\Interface\Slug\Controllers\SlugController;
 
 /*
@@ -31,6 +32,22 @@ Route::group([
     Route::put('/status/{id}', 'statusUpdate')->name('status-update');
     Route::put('/publish/{id}', 'publish')->name('publish');
     Route::put('/unpublish/{id}', 'unpublish')->name('unpublish');
+});
+
+Route::group([
+    'controller' => OrganizationController::class,
+    'prefix' => 'organizations',
+    'as' => 'organizations.',
+], function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('/{id}', 'getById')->name('get-by-id');
+    Route::post('/', 'store')->name('store');
+    Route::put('/{id}', 'update')->name('update');
+    Route::delete('/{id}', 'destroy')->name('destroy');
+    Route::put('/verify/{id}', 'verify')->name('verify');
+    Route::put('/unverify/{id}', 'unverify')->name('unverify');
+    Route::put('/activate/{id}', 'activate')->name('activate');
+    Route::put('/deactivate/{id}', 'deactivate')->name('deactivate');
 });
 
 Route::get('mediafiles/{id}', [MediaFileController::class, 'getById'])->name('media-file.get-by-id');

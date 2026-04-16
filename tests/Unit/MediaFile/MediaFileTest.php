@@ -5,8 +5,9 @@ namespace Tests\Unit\MediaFile;
 use Illuminate\Support\Carbon;
 use Ramsey\Uuid\Uuid;
 use Source\Domain\MediaFile\Aggregates\MediaFile;
-use Source\Domain\MediaFile\Aggregates\StorageInfo;
 use Source\Domain\MediaFile\Events\MediaFileCreated;
+use Source\Domain\MediaFile\ValueObjects\StorageInfo;
+use Source\Domain\Shared\ValueObjects\PathValueObject;
 use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Infrastructure\Animal\Models\AnimalModel;
 use Tests\UnitTestCase;
@@ -44,9 +45,9 @@ class MediaFileTest extends UnitTestCase
     {
         return MediaFile::create(
             id: Uuid::uuid7(),
-            storageInfo: StorageInfo::make(
+            storageInfo: new StorageInfo(
                 disk: StringValueObject::fromString('public'),
-                route: StringValueObject::fromString('media_files'),
+                route: PathValueObject::fromString('media_files'),
                 fileName: StringValueObject::fromString('test.jpg'),
             ),
             sizes: [],

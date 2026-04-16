@@ -2,7 +2,6 @@
 
 namespace Source\Infrastructure\MediaFile\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -24,14 +23,12 @@ final class MediaFileModel extends BaseModel
         'mediable_id',
     ];
 
-    protected $casts = [
-        'storage_info' => 'array',
-        'sizes' => 'array',
-    ];
-
-    public function newEloquentBuilder($query): Builder
+    protected function casts(): array
     {
-        return new Builder($query);
+        return [
+            'storage_info' => 'array',
+            'sizes' => 'array',
+        ];
     }
 
     public static function newFactory(): MediaFileFactory

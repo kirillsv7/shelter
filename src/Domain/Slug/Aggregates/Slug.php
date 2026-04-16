@@ -4,8 +4,8 @@ namespace Source\Domain\Slug\Aggregates;
 
 use Carbon\CarbonInterface;
 use Ramsey\Uuid\UuidInterface;
+use Source\Domain\Shared\AggregateContracts\AggregateWithEvents;
 use Source\Domain\Shared\AggregateTraits\UseAggregateEvents;
-use Source\Domain\Shared\AggregateWithEvents;
 use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Domain\Slug\Events\SlugCreated;
 use Source\Domain\Slug\Events\SlugUpdated;

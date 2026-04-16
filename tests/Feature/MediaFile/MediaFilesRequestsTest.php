@@ -8,10 +8,18 @@ use Source\Infrastructure\Animal\Models\AnimalModel;
 use Source\Infrastructure\MediaFile\Enums\MediableFolder;
 use Source\Infrastructure\MediaFile\Enums\MediableModel;
 use Source\Infrastructure\MediaFile\Services\PublicStorageMediaFileRouteGenerator;
+use Source\Infrastructure\Organization\Models\OrganizationModel;
 use Tests\FeatureTestCase;
 
 class MediaFilesRequestsTest extends FeatureTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        OrganizationModel::factory(3)->create();
+    }
+
     public function testMediaFileUpload(): void
     {
         $disk = 'public';

@@ -50,6 +50,6 @@ final class AnimalQueryBuilder extends Builder
 
     public function published(bool $bool = true): self
     {
-        return $this->where('published', '=', $bool);
+        return $this->where('is_published', '=', $bool);
     }
 }

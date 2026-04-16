@@ -4,12 +4,15 @@ namespace Source\Infrastructure\MediaFile\Storages;
 
 use Illuminate\Filesystem\FilesystemManager;
 use Illuminate\Http\UploadedFile;
+use RuntimeException;
 use Source\Domain\MediaFile\Contracts\Storage;
-use Source\Domain\MediaFile\ValueObjects\SavedFile;
+use Source\Domain\MediaFile\ValueObjects\StorageInfo;
+use Source\Domain\Shared\ValueObjects\PathValueObject;
+use Source\Domain\Shared\ValueObjects\StringValueObject;
 
 final class PublicStorage implements Storage
 {
-    protected const DISK = 'public';
+    protected const string DISK = 'public';
 
     public function __construct(
         private readonly FilesystemManager $fileSystem
@@ -20,22 +23,27 @@ final class PublicStorage implements Storage
         UploadedFile $file,
         string $fileRoute,
         string $fileName,
-    ): SavedFile {
+    ): StorageInfo {
+        $path = PathValueObject::fromArray([
+            $fileRoute,
+            $fileName,
+        ]);
+
         $result = $this->fileSystem
             ->disk(self::DISK)
             ->put(
-                $fileRoute . DIRECTORY_SEPARATOR . $fileName,
+                $path->value(),
                 $file->getContent(),
             );
 
         if (!$result) {
-            throw new \RuntimeException('File not saved');
+            throw new RuntimeException('File not saved');
         }
 
-        return new SavedFile(
-            disk: self::DISK,
-            route: $fileRoute,
-            name: $fileName,
+        return new StorageInfo(
+            disk: StringValueObject::fromString(self::DISK),
+            route: PathValueObject::fromString($fileRoute),
+            fileName: StringValueObject::fromString($fileName),
         );
     }
 

@@ -9,11 +9,19 @@ use Source\Domain\MediaFile\Contracts\Storage as StorageInterface;
 use Source\Infrastructure\Animal\Models\AnimalModel;
 use Source\Infrastructure\MediaFile\Enums\MediableModel;
 use Source\Infrastructure\MediaFile\Storages\PublicStorage;
+use Source\Infrastructure\Organization\Models\OrganizationModel;
 use Source\Interface\MediaFile\DTOs\MediaFileStoreRequestDTO;
 use Tests\FeatureTestCase;
 
 class MediaFileUploadUseCaseTest extends FeatureTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        OrganizationModel::factory(3)->create();
+    }
+
     public function testMediaUploaderIsWorking(): void
     {
         $disk = 'public';
@@ -77,6 +85,8 @@ class MediaFileUploadUseCaseTest extends FeatureTestCase
     {
         $disk = 'public';
 
+        $path = 'test';
+
         Storage::fake($disk);
 
         $fileName = fake()->firstName . '.jpg';
@@ -87,10 +97,11 @@ class MediaFileUploadUseCaseTest extends FeatureTestCase
 
         $savedFile = $publicStorage->saveFile(
             $uploadedFile,
-            '',
+            $path,
             $uploadedFile->hashName(),
         );
 
-        Storage::disk($disk)->assertExists($uploadedFile->hashName());
+        Storage::disk($disk)
+            ->assertExists($path . DIRECTORY_SEPARATOR . $uploadedFile->hashName());
     }
 }

@@ -15,9 +15,8 @@ return new class () extends Migration {
             $table->string('slug');
             $table->string('sluggable_type');
             $table->uuid('sluggable_id');
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
-            $table->timestamp('deleted_at')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

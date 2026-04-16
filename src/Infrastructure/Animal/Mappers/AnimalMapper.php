@@ -28,7 +28,7 @@ final readonly class AnimalMapper
                 entrydate: new CarbonImmutable($model->getAttribute('entrydate')),
             ),
             status: AnimalStatus::tryFrom($model->getAttribute('status')),
-            published: $model->getAttribute('published'),
+            isPublished: $model->getAttribute('is_published'),
             createdAt: $model->getAttribute('created_at'),
             updatedAt: $model->getAttribute('updated_at'),
         );
@@ -49,7 +49,7 @@ final readonly class AnimalMapper
         $model->setAttribute('birthdate', $animal->info->birthdate);
         $model->setAttribute('entrydate', $animal->info->entrydate);
         $model->setAttribute('status', $animal->status()->value);
-        $model->setAttribute('published', $animal->published());
+        $model->setAttribute('is_published', $animal->IsPublished());
 
         return $model;
     }

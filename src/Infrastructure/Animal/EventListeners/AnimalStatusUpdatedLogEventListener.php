@@ -10,9 +10,9 @@ final readonly class AnimalStatusUpdatedLogEventListener
     public function handle(AnimalStatusUpdated $animalStatusUpdated): void
     {
         Log::channel('development')
-            ->info('New animal status', [
-                'id' => (string)$animalStatusUpdated->id,
-                'name' => (string)$animalStatusUpdated->name->value(),
+            ->info('Animal status updated', [
+                'id' => $animalStatusUpdated->id,
+                'name' => $animalStatusUpdated->name->value(),
                 'new status' => $animalStatusUpdated->newStatus->value,
                 'old status' => $animalStatusUpdated->oldStatus->value,
             ]);

@@ -6,11 +6,12 @@ use Carbon\CarbonImmutable;
 use Illuminate\Database\ConnectionInterface;
 use Ramsey\Uuid\UuidInterface;
 use Source\Domain\Animal\Aggregates\Animal;
-use Source\Domain\Animal\AnimalSearchCriteria;
 use Source\Domain\Animal\Enums\AnimalType;
 use Source\Domain\Animal\Exceptions\AnimalNotFoundException;
 use Source\Domain\Animal\Repositories\AnimalRepository as AnimalRepositoryContract;
+use Source\Domain\Animal\Search\AnimalSearchCriteria;
 use Source\Domain\Shared\Model\Pagination;
+use Source\Domain\Shared\Model\PaginationValueObjects\TotalItems;
 use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Infrastructure\Animal\Mappers\AnimalMapper;
 use Source\Infrastructure\Animal\Models\AnimalModel;
@@ -29,6 +30,7 @@ final class AnimalRepository implements AnimalRepositoryContract, MediableReposi
         AnimalSearchCriteria $criteria,
         Pagination $pagination,
     ): array {
+        /** @var AnimalModel[] $animals */
         $animals = $this->handleCriteria($criteria)
             ->offset($pagination->offset()->value)
             ->limit($pagination->limit->value)
@@ -36,7 +38,6 @@ final class AnimalRepository implements AnimalRepositoryContract, MediableReposi
             ->all();
 
         return array_map(
-            /** @phpstan-ignore-next-line */
             fn (AnimalModel $model) => $this->mapper->modelToEntity($model),
             $animals,
         );
@@ -85,13 +86,16 @@ final class AnimalRepository implements AnimalRepositoryContract, MediableReposi
 
                 $model->setAttribute('id', $animal->id);
                 $model->setAttribute('created_at', CarbonImmutable::now());
+                $model->setAttribute('updated_at', null);
 
                 $model->save();
             });
     }
 
-    public function update(UuidInterface $id, Animal $animal): void
-    {
+    public function update(
+        UuidInterface $id,
+        Animal $animal,
+    ): void {
         /** @var AnimalModel $model */
         $model = AnimalModel::query()->find($id);
 
@@ -112,39 +116,43 @@ final class AnimalRepository implements AnimalRepositoryContract, MediableReposi
     public function exists(UuidInterface $id): bool
     {
         return AnimalModel::query()
-            ->where('id', $id)->exists();
+            ->where('id', $id)
+            ->exists();
     }
 
-    public function totalCountByCriteria(AnimalSearchCriteria $criteria): int
+    public function totalCountByCriteria(AnimalSearchCriteria $criteria): TotalItems
     {
         $animalQueryBuilder = $this->handleCriteria($criteria);
 
-        return $animalQueryBuilder->count();
+        return TotalItems::fromInteger($animalQueryBuilder->count());
     }
 
     protected function handleCriteria(AnimalSearchCriteria $criteria): AnimalQueryBuilder
     {
+        /** @var AnimalQueryBuilder $animalQueryBuilder */
         $animalQueryBuilder = AnimalModel::query();
 
-        if ($criteria->name) {
-            $animalQueryBuilder = $animalQueryBuilder->name($criteria->name);
-        }
-
-        if ($criteria->type) {
-            $animalQueryBuilder = $animalQueryBuilder->type($criteria->type);
-        }
-
-        if ($criteria->gender) {
-            $animalQueryBuilder = $animalQueryBuilder->gender($criteria->gender);
-        }
-
-        if ($criteria->ageMin) {
-            $animalQueryBuilder = $animalQueryBuilder->ageMin($criteria->ageMin);
-        }
-
-        if ($criteria->ageMax) {
-            $animalQueryBuilder = $animalQueryBuilder->ageMax($criteria->ageMax);
-        }
+        $animalQueryBuilder
+            ->when(
+                $criteria->name,
+                fn (AnimalQueryBuilder $query, $name) => $query->name($name),
+            )
+            ->when(
+                $criteria->type,
+                fn (AnimalQueryBuilder $query, $type) => $query->type($type),
+            )
+            ->when(
+                $criteria->gender,
+                fn (AnimalQueryBuilder $query, $gender) => $query->gender($gender),
+            )
+            ->when(
+                $criteria->ageMin,
+                fn (AnimalQueryBuilder $query, $ageMin) => $query->ageMin($ageMin),
+            )
+            ->when(
+                $criteria->ageMax,
+                fn (AnimalQueryBuilder $query, $ageMax) => $query->ageMax($ageMax),
+            );
 
         return $animalQueryBuilder;
     }

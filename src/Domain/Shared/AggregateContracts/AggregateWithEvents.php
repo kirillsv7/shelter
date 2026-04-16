@@ -1,6 +1,6 @@
 <?php
 
-namespace Source\Domain\Shared;
+namespace Source\Domain\Shared\AggregateContracts;
 
 interface AggregateWithEvents
 {

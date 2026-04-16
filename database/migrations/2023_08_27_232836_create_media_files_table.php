@@ -17,8 +17,8 @@ return new class () extends Migration {
             $table->string('mimetype');
             $table->string('mediable_type');
             $table->uuid('mediable_id');
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -26,7 +26,7 @@ final class AnimalStoreRequest extends FormRequest
             'entrydate' => ['required', 'date'],
             'status' => ['required', new Enum(AnimalStatus::class)],
             'notes' => ['nullable', 'string'],
-            'published' => ['required', 'boolean'],
+            'isPublished' => ['required', 'boolean'],
         ];
     }
 
@@ -43,7 +43,7 @@ final class AnimalStoreRequest extends FormRequest
             notes: $this->validated('notes')
                 ? StringValueObject::fromString($this->validated('notes'))
                 : null,
-            published: $this->validated('published'),
+            isPublished: $this->validated('isPublished'),
         );
     }
 }

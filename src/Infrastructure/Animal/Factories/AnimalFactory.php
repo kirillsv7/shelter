@@ -3,6 +3,7 @@
 namespace Source\Infrastructure\Animal\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
@@ -10,6 +11,7 @@ use Source\Domain\Animal\Enums\AnimalGender;
 use Source\Domain\Animal\Enums\AnimalStatus;
 use Source\Domain\Animal\Enums\AnimalType;
 use Source\Infrastructure\Animal\Models\AnimalModel;
+use Source\Infrastructure\Organization\Models\OrganizationModel;
 use Source\Infrastructure\Slug\Models\SlugModel;
 
 final class AnimalFactory extends Factory
@@ -32,21 +34,36 @@ final class AnimalFactory extends Factory
             'birthdate' => Carbon::today()->subDays(rand(30, 365 * 5))->format(config('app.date_format')),
             'entrydate' => Carbon::today()->format(config('app.date_format')),
             'status' => fake()->randomElement(AnimalStatus::cases())->value,
-            'published' => fake()->boolean(),
+            'is_published' => fake()->boolean(),
         ];
     }
 
-    public function configure()
+    public function configure(): AnimalFactory
     {
-        /** @phpstan-ignore-next-line */
-        return $this->afterCreating(function (AnimalModel $animal) {
-            $slug = new SlugModel();
+        return $this
+            ->afterCreating(function (Model $model) {
+                /** @var AnimalModel $animal */
+                $animal = $model;
 
-            $slug->slug = Str::slug($animal->name.'-'.$animal->type.'-'.$animal->gender.'-'.$animal->breed);
-            $slug->sluggable_type = get_class($animal);
-            $slug->sluggable_id = $animal->id;
+                $randomOrganization = OrganizationModel::all()->random();
 
-            $slug->save();
-        });
+                $animal->organizations()
+                    ->attach($randomOrganization->getAttribute('id'));
+
+                $slug = new SlugModel();
+
+                $slugString = implode(DIRECTORY_SEPARATOR, [
+                    $animal->getAttribute('name'),
+                    $animal->getAttribute('type'),
+                    $animal->getAttribute('gender'),
+                    $animal->getAttribute('breed'),
+                ]);
+
+                $slug->setAttribute('slug', Str::slug($slugString));
+                $slug->setAttribute('sluggable_type', get_class($animal));
+                $slug->setAttribute('sluggable_id', $animal->getAttribute('id'));
+
+                $slug->save();
+            });
     }
 }

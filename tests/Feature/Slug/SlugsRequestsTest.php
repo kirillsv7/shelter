@@ -3,10 +3,18 @@
 namespace Tests\Feature\Slug;
 
 use Source\Infrastructure\Animal\Models\AnimalModel;
+use Source\Infrastructure\Organization\Models\OrganizationModel;
 use Tests\FeatureTestCase;
 
 class SlugsRequestsTest extends FeatureTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        OrganizationModel::factory(3)->create();
+    }
+
     public function testSlugUpdate()
     {
         $animal = AnimalModel::factory()->create();

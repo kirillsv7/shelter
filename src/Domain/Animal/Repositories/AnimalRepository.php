@@ -4,10 +4,11 @@ namespace Source\Domain\Animal\Repositories;
 
 use Ramsey\Uuid\UuidInterface;
 use Source\Domain\Animal\Aggregates\Animal;
-use Source\Domain\Animal\AnimalSearchCriteria;
 use Source\Domain\Animal\Enums\AnimalType;
 use Source\Domain\Animal\Exceptions\AnimalNotFoundException;
+use Source\Domain\Animal\Search\AnimalSearchCriteria;
 use Source\Domain\Shared\Model\Pagination;
+use Source\Domain\Shared\Model\PaginationValueObjects\TotalItems;
 use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Throwable;
 
@@ -16,7 +17,10 @@ interface AnimalRepository
     /**
      * @return Animal[]
      */
-    public function index(AnimalSearchCriteria $criteria, Pagination $pagination): array;
+    public function index(
+        AnimalSearchCriteria $criteria,
+        Pagination $pagination,
+    ): array;
 
     /**
      * @throws AnimalNotFoundException
@@ -26,7 +30,10 @@ interface AnimalRepository
     /**
      * @throws AnimalNotFoundException
      */
-    public function getBySlug(AnimalType $type, StringValueObject $slug): Animal;
+    public function getBySlug(
+        AnimalType $type,
+        StringValueObject $slug,
+    ): Animal;
 
     /**
      * @throws Throwable
@@ -36,9 +43,12 @@ interface AnimalRepository
     /**
      * @throws Throwable
      */
-    public function update(UuidInterface $id, Animal $animal): void;
+    public function update(
+        UuidInterface $id,
+        Animal $animal,
+    ): void;
 
     public function delete(UuidInterface $id): void;
 
-    public function totalCountByCriteria(AnimalSearchCriteria $criteria): int;
+    public function totalCountByCriteria(AnimalSearchCriteria $criteria): TotalItems;
 }

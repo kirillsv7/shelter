@@ -45,7 +45,7 @@ final class AnimalCreateUseCase
                 entrydate: $dto->entrydate,
             ),
             status: $dto->status,
-            published: $dto->published,
+            isPublished: $dto->isPublished,
             createdAt: CarbonImmutable::now(),
         );
 

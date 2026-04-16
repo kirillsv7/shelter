@@ -7,10 +7,18 @@ use Source\Application\Slug\UseCases\SlugGetBySluggableUseCase;
 use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Domain\Slug\Exceptions\SlugNotFoundException;
 use Source\Infrastructure\Animal\Models\AnimalModel;
+use Source\Infrastructure\Organization\Models\OrganizationModel;
 use Tests\FeatureTestCase;
 
 class SlugUseCasesTest extends FeatureTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        OrganizationModel::factory(3)->create();
+    }
+
     public function testGetBySluggable(): void
     {
         $animal = AnimalModel::factory()->create();

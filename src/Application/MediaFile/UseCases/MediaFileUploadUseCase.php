@@ -7,7 +7,6 @@ use Ramsey\Uuid\Uuid;
 use Source\Application\MediaFile\DTOs\MediaFileDTO;
 use Source\Application\MediaFile\DTOs\MediaFileResponseDTO;
 use Source\Domain\MediaFile\Aggregates\MediaFile;
-use Source\Domain\MediaFile\Aggregates\StorageInfo;
 use Source\Domain\MediaFile\Contracts\MediaFileNameGenerator;
 use Source\Domain\MediaFile\Contracts\MediaFileRouteGenerator;
 use Source\Domain\MediaFile\Contracts\Storage;
@@ -51,7 +50,7 @@ final class MediaFileUploadUseCase
 
         $fileName = $this->mediaFileNameGenerator->__invoke($dto->file);
 
-        $savedFile = $this->storage->saveFile(
+        $storageInfo = $this->storage->saveFile(
             file: $dto->file,
             fileRoute: $fileRoute,
             fileName: $fileName,
@@ -59,11 +58,7 @@ final class MediaFileUploadUseCase
 
         $mediaFile = MediaFile::create(
             id: Uuid::uuid7(),
-            storageInfo: StorageInfo::make(
-                disk: StringValueObject::fromString($savedFile->disk),
-                route: StringValueObject::fromString($savedFile->route),
-                fileName: StringValueObject::fromString($savedFile->name),
-            ),
+            storageInfo: $storageInfo,
             sizes: [],
             mimetype: StringValueObject::fromString($dto->file->getMimeType()),
             mediableType: StringValueObject::fromString($dto->model->value),

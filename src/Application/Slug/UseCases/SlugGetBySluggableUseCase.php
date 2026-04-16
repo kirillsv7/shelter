@@ -6,7 +6,6 @@ use Ramsey\Uuid\UuidInterface;
 use Source\Application\Slug\DTOs\SlugDTO;
 use Source\Application\Slug\DTOs\SlugResponseDTO;
 use Source\Domain\Shared\ValueObjects\StringValueObject;
-use Source\Domain\Slug\Aggregates\Slug;
 use Source\Domain\Slug\Repositories\SlugRepository;
 
 final class SlugGetBySluggableUseCase

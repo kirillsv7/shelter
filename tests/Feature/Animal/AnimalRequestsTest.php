@@ -7,10 +7,18 @@ use Source\Domain\Animal\Enums\AnimalGender;
 use Source\Domain\Animal\Enums\AnimalStatus;
 use Source\Domain\Animal\Enums\AnimalType;
 use Source\Infrastructure\Animal\Models\AnimalModel;
+use Source\Infrastructure\Organization\Models\OrganizationModel;
 use Tests\FeatureTestCase;
 
 class AnimalRequestsTest extends FeatureTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        OrganizationModel::factory(3)->create();
+    }
+
     public function testAnimalIndex()
     {
         AnimalModel::factory(110)->create();
@@ -147,7 +155,7 @@ class AnimalRequestsTest extends FeatureTestCase
                 'birthdate' => $animal['birthdate'],
                 'entrydate' => $animal['entrydate'],
                 'status' => $animal['status'],
-                'published' => $animal['published'],
+                'isPublished' => $animal['isPublished'],
             ]);
     }
 
@@ -181,18 +189,18 @@ class AnimalRequestsTest extends FeatureTestCase
         $response
             ->assertOk()
             ->assertJsonFragment([
-                'id' => $animal->id,
+                'id' => $animal->getAttribute('id'),
                 'info' => [
-                    'name' => $animal->name,
-                    'type' => $animal->type,
-                    'gender' => $animal->gender,
-                    'breed' => $animal->breed,
-                    'birthdate' => $animal->birthdate,
-                    'entrydate' => $animal->entrydate,
+                    'name' => $animal->getAttribute('name'),
+                    'type' => $animal->getAttribute('type'),
+                    'gender' => $animal->getAttribute('gender'),
+                    'breed' => $animal->getAttribute('breed'),
+                    'birthdate' => $animal->getAttribute('birthdate'),
+                    'entrydate' => $animal->getAttribute('entrydate'),
                 ],
-                'status' => $animal->status,
-                'published' => $animal->published,
-                'slug' => $animal->slug->slug,
+                'status' => $animal->getAttribute('status'),
+                'isPublished' => $animal->getAttribute('is_published'),
+                'slug' => $animal->getAttribute('slug')->getAttribute('slug'),
             ]);
     }
 
@@ -232,7 +240,7 @@ class AnimalRequestsTest extends FeatureTestCase
                     'entrydate' => $animal->entrydate,
                 ],
                 'status' => $animal->status,
-                'published' => $animal->published,
+                'isPublished' => $animal->is_published,
                 'slug' => $animal->slug->slug,
             ]);
     }
@@ -299,7 +307,7 @@ class AnimalRequestsTest extends FeatureTestCase
     public function testAnimalPublish()
     {
         $animal = AnimalModel::factory()->create([
-            'published' => false,
+            'is_published' => false,
         ]);
 
         $response = $this->put(route('animals.publish', ['id' => $animal->id]));
@@ -307,14 +315,14 @@ class AnimalRequestsTest extends FeatureTestCase
         $response
             ->assertAccepted()
             ->assertJsonFragment([
-                'published' => true,
+                'isPublished' => true,
             ]);
     }
 
     public function testAnimalUnpublish()
     {
         $animal = AnimalModel::factory()->create([
-            'published' => true,
+            'is_published' => true,
         ]);
 
         $response = $this->put(route('animals.unpublish', ['id' => $animal->id]));
@@ -322,7 +330,7 @@ class AnimalRequestsTest extends FeatureTestCase
         $response
             ->assertAccepted()
             ->assertJsonFragment([
-                'published' => false,
+                'isPublished' => false,
             ]);
     }
 
@@ -345,7 +353,7 @@ class AnimalRequestsTest extends FeatureTestCase
             'birthdate' => Carbon::today()->subDays(rand(30, 365 * 5)),
             'entrydate' => Carbon::today(),
             'status' => fake()->randomElement(AnimalStatus::cases())->value,
-            'published' => fake()->boolean(),
+            'isPublished' => fake()->boolean(),
         ];
     }
 }

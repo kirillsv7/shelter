@@ -1,6 +1,6 @@
 <?php
 
-namespace Source\Domain\Animal;
+namespace Source\Domain\Animal\Search;
 
 use Source\Domain\Animal\Enums\AnimalGender;
 use Source\Domain\Animal\Enums\AnimalType;

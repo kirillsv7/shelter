@@ -20,6 +20,8 @@ class RepositoryServiceProvider extends ServiceProvider
             \Source\Infrastructure\Animal\Repositories\AnimalRepository::class,
         \Source\Domain\Animal\Repositories\AnimalStatusRepository::class =>
             \Source\Infrastructure\Animal\Repositories\AnimalStatusRepository::class,
+        \Source\Domain\Organization\Repositories\OrganizationRepository::class =>
+            \Source\Infrastructure\Organization\Repositories\OrganizationRepository::class,
         \Source\Domain\Slug\Repositories\SlugRepository::class =>
             \Source\Infrastructure\Slug\Repositories\SlugRepository::class,
         \Source\Domain\MediaFile\Repositories\MediaFileRepository::class =>

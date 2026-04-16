@@ -62,7 +62,7 @@ class AnimalTest extends UnitTestCase
 
         $this->assertEventsHas(AnimalPublished::class, $animal->releaseEvents());
 
-        $this->assertTrue($animal->published());
+        $this->assertTrue($animal->IsPublished());
     }
 
     public function testAnimalAlreadyPublished()
@@ -76,7 +76,7 @@ class AnimalTest extends UnitTestCase
 
         $this->assertEventsHasNot(AnimalPublished::class, $animal->releaseEvents());
 
-        $this->assertTrue($animal->published());
+        $this->assertTrue($animal->IsPublished());
     }
 
     public function testAnimalUnpublish()
@@ -89,7 +89,7 @@ class AnimalTest extends UnitTestCase
 
         $this->assertEventsHas(AnimalUnpublished::class, $animal->releaseEvents());
 
-        $this->assertTrue(!$animal->published());
+        $this->assertTrue(!$animal->IsPublished());
     }
 
     public function testAnimalAlreadyUnpublished()
@@ -100,7 +100,7 @@ class AnimalTest extends UnitTestCase
 
         $this->assertEventsHasNot(AnimalUnpublished::class, $animal->releaseEvents());
 
-        $this->assertTrue(!$animal->published());
+        $this->assertTrue(!$animal->IsPublished());
     }
 
     public function testAnimalDelete()

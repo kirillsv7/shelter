@@ -4,7 +4,8 @@ namespace Source\Infrastructure\MediaFile\Mappers;
 
 use Ramsey\Uuid\Uuid;
 use Source\Domain\MediaFile\Aggregates\MediaFile;
-use Source\Domain\MediaFile\Aggregates\StorageInfo;
+use Source\Domain\MediaFile\ValueObjects\StorageInfo;
+use Source\Domain\Shared\ValueObjects\PathValueObject;
 use Source\Domain\Shared\ValueObjects\StringValueObject;
 use Source\Infrastructure\MediaFile\Models\MediaFileModel;
 
@@ -14,9 +15,9 @@ final readonly class MediaFileMapper
     {
         return MediaFile::make(
             id: Uuid::fromString($model->id),
-            storageInfo: StorageInfo::make(
+            storageInfo: new StorageInfo(
                 disk: StringValueObject::fromString($model->getAttribute('storage_info')['disk']),
-                route: StringValueObject::fromString($model->getAttribute('storage_info')['route']),
+                route: PathValueObject::fromString($model->getAttribute('storage_info')['route']),
                 fileName: StringValueObject::fromString($model->getAttribute('storage_info')['fileName']),
             ),
             sizes: $model->getAttribute('sizes'),

@@ -2,7 +2,6 @@
 
 namespace Source\Infrastructure\Slug\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,19 +19,6 @@ final class SlugModel extends BaseModel
         'sluggable_type',
         'sluggable_id',
     ];
-
-    protected function casts(): array
-    {
-        return [
-            'birthdate' => 'immutable_date',
-            'entrydate' => 'immutable_date',
-        ];
-    }
-
-    public function newEloquentBuilder($query): Builder
-    {
-        return new Builder($query);
-    }
 
     public function sluggable(): MorphTo
     {

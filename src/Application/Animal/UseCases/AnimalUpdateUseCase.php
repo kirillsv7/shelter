@@ -51,7 +51,7 @@ final class AnimalUpdateUseCase
             id: $id,
             info: $animalInfo,
             status: $animal->status(),
-            published: $dto->published,
+            isPublished: $dto->isPublished,
             createdAt: $animal->createdAt,
             updatedAt: CarbonImmutable::now(),
         );

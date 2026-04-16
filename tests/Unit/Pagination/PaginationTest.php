@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use Source\Domain\Shared\Model\Pagination;
 use Source\Domain\Shared\Model\PaginationValueObjects\Limit;
 use Source\Domain\Shared\Model\PaginationValueObjects\Page;
+use Source\Domain\Shared\Model\PaginationValueObjects\TotalItems;
 use Tests\UnitTestCase;
 
 class PaginationTest extends UnitTestCase
@@ -42,7 +43,7 @@ class PaginationTest extends UnitTestCase
             Page::fromInteger($page),
         );
 
-        $pagination->generateLinks($total);
+        $pagination->generateLinks(TotalItems::fromInteger($total));
 
         $calcToTotal = max($total - $limit * ($page - 1), 0);
         $onPage = min($calcToTotal, $limit);

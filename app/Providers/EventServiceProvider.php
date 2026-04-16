@@ -8,11 +8,21 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Source\Domain\Animal\Events\AnimalCreated;
 use Source\Domain\Animal\Events\AnimalStatusUpdated;
 use Source\Domain\MediaFile\Events\MediaFileCreated;
+use Source\Domain\Organization\Events\OrganizationActivated;
+use Source\Domain\Organization\Events\OrganizationCreated;
+use Source\Domain\Organization\Events\OrganizationDeactivated;
+use Source\Domain\Organization\Events\OrganizationDeleted;
+use Source\Domain\Organization\Events\OrganizationVerified;
 use Source\Domain\Slug\Events\SlugCreated;
 use Source\Domain\Slug\Events\SlugUpdated;
 use Source\Infrastructure\Animal\EventListeners\AnimalCreatedLogEventListener;
 use Source\Infrastructure\Animal\EventListeners\AnimalStatusUpdatedLogEventListener;
 use Source\Infrastructure\MediaFile\EventListeners\MediaFileGenerateThumbs;
+use Source\Infrastructure\Organization\EventListeners\OrganizationActivatedLogEventListener;
+use Source\Infrastructure\Organization\EventListeners\OrganizationCreatedLogEventListener;
+use Source\Infrastructure\Organization\EventListeners\OrganizationDeactivatedLogEventListener;
+use Source\Infrastructure\Organization\EventListeners\OrganizationDeletedLogEventListener;
+use Source\Infrastructure\Organization\EventListeners\OrganizationVerifiedLogEventListener;
 use Source\Infrastructure\Slug\EventListeners\SlugCreatedLogEventListener;
 use Source\Infrastructure\Slug\EventListeners\SlugUpdatedLogEventListener;
 
@@ -34,6 +44,26 @@ class EventServiceProvider extends ServiceProvider
 
         AnimalStatusUpdated::class => [
             AnimalStatusUpdatedLogEventListener::class,
+        ],
+
+        OrganizationCreated::class => [
+            OrganizationCreatedLogEventListener::class,
+        ],
+
+        OrganizationVerified::class => [
+            OrganizationVerifiedLogEventListener::class,
+        ],
+
+        OrganizationActivated::class => [
+            OrganizationActivatedLogEventListener::class,
+        ],
+
+        OrganizationDeactivated::class => [
+            OrganizationDeactivatedLogEventListener::class,
+        ],
+
+        OrganizationDeleted::class => [
+            OrganizationDeletedLogEventListener::class,
         ],
 
         MediaFileCreated::class => [

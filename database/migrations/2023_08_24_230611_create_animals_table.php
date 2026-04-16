@@ -19,10 +19,9 @@ return new class () extends Migration {
             $table->date('birthdate')->nullable();
             $table->date('entrydate')->nullable();
             $table->string('status');
-            $table->boolean('published')->default(false);
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
-            $table->timestamp('deleted_at')->nullable();
+            $table->boolean('is_published')->default(false);
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

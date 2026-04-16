@@ -5,9 +5,10 @@ namespace Source\Domain\MediaFile\Aggregates;
 use Carbon\CarbonInterface;
 use Ramsey\Uuid\UuidInterface;
 use Source\Domain\MediaFile\Events\MediaFileCreated;
+use Source\Domain\MediaFile\ValueObjects\StorageInfo;
+use Source\Domain\Shared\AggregateContracts\AggregateWithEvents;
+use Source\Domain\Shared\AggregateContracts\Entity;
 use Source\Domain\Shared\AggregateTraits\UseAggregateEvents;
-use Source\Domain\Shared\AggregateWithEvents;
-use Source\Domain\Shared\Entity;
 use Source\Domain\Shared\ValueObjects\StringValueObject;
 
 final class MediaFile implements Entity, AggregateWithEvents

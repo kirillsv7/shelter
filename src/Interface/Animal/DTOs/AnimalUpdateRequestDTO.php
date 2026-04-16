@@ -21,7 +21,7 @@ final readonly class AnimalUpdateRequestDTO
         public CarbonImmutable $entrydate,
         public AnimalStatus $status,
         public ?StringValueObject $notes,
-        public bool $published,
+        public bool $isPublished,
     ) {
     }
 }

@@ -11,8 +11,8 @@ use Source\Domain\Animal\Events\AnimalPublished;
 use Source\Domain\Animal\Events\AnimalStatusUpdated;
 use Source\Domain\Animal\Events\AnimalUnpublished;
 use Source\Domain\Animal\ValueObjects\AnimalInfo;
+use Source\Domain\Shared\AggregateContracts\AggregateWithEvents;
 use Source\Domain\Shared\AggregateTraits\UseAggregateEvents;
-use Source\Domain\Shared\AggregateWithEvents;
 use Source\Domain\Shared\ValueObjects\IntegerValueObject;
 
 final class Animal implements AggregateWithEvents
@@ -23,7 +23,7 @@ final class Animal implements AggregateWithEvents
         public readonly UuidInterface $id,
         public readonly AnimalInfo $info,
         protected AnimalStatus $status,
-        protected int|bool $published = false,
+        protected bool $isPublished = false,
         public readonly ?CarbonInterface $createdAt = null,
         public readonly ?CarbonInterface $updatedAt = null,
     ) {
@@ -33,7 +33,7 @@ final class Animal implements AggregateWithEvents
         UuidInterface $id,
         AnimalInfo $info,
         AnimalStatus $status,
-        int|bool $published = false,
+        bool $isPublished = false,
         ?CarbonInterface $createdAt = null,
         ?CarbonInterface $updatedAt = null,
     ): self {
@@ -41,7 +41,7 @@ final class Animal implements AggregateWithEvents
             id: $id,
             info: $info,
             status: $status,
-            published: $published,
+            isPublished: $isPublished,
             createdAt: $createdAt,
             updatedAt: $updatedAt,
         );
@@ -51,7 +51,7 @@ final class Animal implements AggregateWithEvents
         UuidInterface $id,
         AnimalInfo $info,
         AnimalStatus $status,
-        int|bool $published = false,
+        bool $isPublished = false,
         ?CarbonInterface $createdAt = null,
         ?CarbonInterface $updatedAt = null,
     ): self {
@@ -59,7 +59,7 @@ final class Animal implements AggregateWithEvents
             id: $id,
             info: $info,
             status: $status,
-            published: $published,
+            isPublished: $isPublished,
             createdAt: $createdAt,
             updatedAt: $updatedAt,
         );
@@ -80,9 +80,9 @@ final class Animal implements AggregateWithEvents
         return $this->status;
     }
 
-    public function published(): bool
+    public function IsPublished(): bool
     {
-        return $this->published;
+        return $this->isPublished;
     }
 
     /**
@@ -122,22 +122,22 @@ final class Animal implements AggregateWithEvents
 
     public function publish(): void
     {
-        if ($this->published) {
+        if ($this->isPublished) {
             return;
         }
 
-        $this->published = true;
+        $this->isPublished = true;
 
         $this->addEvent(new AnimalPublished($this->id));
     }
 
     public function unpublish(): void
     {
-        if (!$this->published) {
+        if (!$this->isPublished) {
             return;
         }
 
-        $this->published = false;
+        $this->isPublished = false;
 
         $this->addEvent(new AnimalUnpublished($this->id));
     }

@@ -19,9 +19,9 @@ final readonly class AnimalDTO implements JsonSerializable
             'info' => $this->animal->info,
             'age' => $this->animal->age()->value,
             'status' => $this->animal->status(),
-            'published' => $this->animal->published(),
-            'created_at' => $this->animal->createdAt,
-            'updated_at' => $this->animal->updatedAt,
+            'isPublished' => $this->animal->IsPublished(),
+            'createdAt' => $this->animal->createdAt,
+            'updatedAt' => $this->animal->updatedAt,
         ];
     }
 }

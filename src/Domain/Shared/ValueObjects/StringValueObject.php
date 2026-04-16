@@ -2,6 +2,7 @@
 
 namespace Source\Domain\Shared\ValueObjects;
 
+use InvalidArgumentException;
 use JsonSerializable;
 use Stringable;
 
@@ -12,7 +13,7 @@ readonly class StringValueObject implements Stringable, JsonSerializable
         private string $value
     ) {
         if ($this->empty()) {
-            throw new \InvalidArgumentException(sprintf('%s must have value', get_class($this)));
+            throw new InvalidArgumentException(sprintf('%s must have value', get_class($this)));
         }
     }
 
